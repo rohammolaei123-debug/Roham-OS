@@ -2,428 +2,2174 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Roham OS Beta 1</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Roham OS</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,sans-serif;background:#080b12;color:#fff;overflow:hidden}
-#os{height:100vh;background:linear-gradient(145deg,#172746,#0b101b 60%,#302047);position:relative}
-.status{height:38px;padding:8px 15px;display:flex;justify-content:space-between;font-size:13px}
-.home{height:calc(100vh - 38px);padding:20px 5%;overflow:auto}
-.searchbar{display:flex;gap:8px;max-width:850px;margin:auto auto 25px}
-input,textarea{font-family:inherit}
-.searchbar input,.browser input,.ai input{
- flex:1;padding:14px;border-radius:17px;border:1px solid #ffffff20;
- background:#ffffff12;color:#fff;outline:none;font-size:15px
+:root{
+  --glass:rgba(255,255,255,.10);
+  --glass2:rgba(255,255,255,.16);
+  --text:#fff;
+  --muted:#b9c0d0;
 }
-button{font-family:inherit;cursor:pointer}
-.btn{border:0;border-radius:16px;background:#ffffff16;color:white;padding:12px 16px}
-.apps{display:grid;grid-template-columns:repeat(auto-fit,minmax(75px,1fr));gap:20px;max-width:850px;margin:auto}
-.app{text-align:center;cursor:pointer}
-.icon{width:60px;height:60px;margin:auto;border-radius:19px;background:#ffffff15;display:grid;place-items:center;font-size:28px}
-.app small{display:block;margin-top:7px}
-.dock{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:8px 12px;background:#ffffff15;backdrop-filter:blur(20px);border-radius:23px}
-.dock button{width:48px;height:48px;border:0;border-radius:15px;background:#ffffff15;color:#fff;font-size:21px}
-.panel{display:none;position:absolute;inset:0;z-index:20;background:#080b12f5;backdrop-filter:blur(25px);padding:60px 7%;overflow:auto}
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+  background:#090d16;
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+#os{
+  width:100%;
+  height:100%;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(135deg,#14284b,#09101d 55%,#30204a);
+  transition:background .4s;
+}
+.status{
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  font-size:13px;
+  position:relative;
+  z-index:5;
+}
+.status-right{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.home{
+  height:calc(100% - 42px);
+  padding:18px 5% 100px;
+  overflow:auto;
+}
+.searchbar{
+  max-width:900px;
+  margin:0 auto 24px;
+  display:flex;
+  gap:8px;
+}
+.input{
+  flex:1;
+  min-width:0;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.09);
+  color:#fff;
+  outline:none;
+  border-radius:18px;
+  padding:14px 16px;
+}
+.input::placeholder{color:#aeb6c8}
+.btn{
+  border:0;
+  color:#fff;
+  background:var(--glass);
+  border-radius:15px;
+  padding:11px 15px;
+  transition:.18s;
+}
+.btn:hover{background:var(--glass2)}
+.btn:active{transform:scale(.96)}
+.apps{
+  max-width:900px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(82px,1fr));
+  gap:18px 12px;
+}
+.app{
+  border:0;
+  background:transparent;
+  color:#fff;
+  padding:4px;
+  text-align:center;
+  min-width:0;
+}
+.app-icon{
+  width:62px;
+  height:62px;
+  margin:auto;
+  display:grid;
+  place-items:center;
+  border-radius:20px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.08);
+  font-size:29px;
+  box-shadow:0 8px 22px rgba(0,0,0,.15);
+  transition:.18s;
+}
+.app:hover .app-icon{
+  transform:translateY(-3px) scale(1.04);
+  background:rgba(255,255,255,.19);
+}
+.app:active .app-icon{transform:scale(.92)}
+.app-name{
+  display:block;
+  margin-top:7px;
+  font-size:12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.dock{
+  position:absolute;
+  bottom:13px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  padding:8px;
+  border-radius:23px;
+  background:rgba(20,25,40,.72);
+  backdrop-filter:blur(25px);
+  border:1px solid rgba(255,255,255,.1);
+  z-index:10;
+}
+.dock button{
+  width:47px;
+  height:47px;
+  border:0;
+  border-radius:15px;
+  color:#fff;
+  background:rgba(255,255,255,.09);
+  font-size:21px;
+}
+.panel{
+  display:none;
+  position:absolute;
+  inset:0;
+  z-index:30;
+  background:rgba(7,10,17,.96);
+  backdrop-filter:blur(25px);
+  overflow:auto;
+  padding:64px 7% 40px;
+}
 .panel.active{display:block}
-.close{position:absolute;top:16px;left:16px;background:#ffffff15;color:white;border:0;border-radius:13px;padding:10px 14px}
-.card{max-width:850px;margin:10px auto;padding:16px;border-radius:17px;background:#ffffff0d;border:1px solid #ffffff10}
-.row{display:flex;justify-content:space-between;align-items:center}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.storeItem{padding:15px;border-radius:17px;background:#ffffff0d}
-.storeItem button{margin-top:10px;width:100%}
-.wallpapers{display:flex;gap:10px;flex-wrap:wrap}
-.wall{width:100px;height:65px;border:0;border-radius:14px}
-.calc{max-width:370px;margin:auto}
-.display{width:100%;height:65px;background:#ffffff0d;border:0;border-radius:15px;color:white;font-size:25px;padding:10px;margin-bottom:8px}
-.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.keys button{height:58px;border:0;border-radius:14px;background:#ffffff12;color:white;font-size:19px}
-.note{width:100%;height:330px;background:#ffffff0d;color:white;border:0;border-radius:17px;padding:15px;outline:none}
-#toast{display:none;position:absolute;z-index:50;bottom:90px;left:50%;transform:translateX(-50%);background:#000d;padding:11px 17px;border-radius:15px}
-@media(max-width:500px){.apps{grid-template-columns:repeat(4,1fr);gap:18px 7px}.icon{width:55px;height:55px}.home{padding:15px}.searchbar{flex-direction:column}}
+.panel-content{
+  max-width:900px;
+  margin:auto;
+}
+.close{
+  position:fixed;
+  top:13px;
+  left:14px;
+  z-index:100;
+  border:0;
+  border-radius:13px;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  padding:10px 14px;
+}
+h1,h2,h3{margin-top:0}
+.card{
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;
+  padding:16px;
+  margin:10px 0;
+}
+.row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:10px;
+}
+.small{
+  color:var(--muted);
+  font-size:13px;
+}
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.item{
+  background:rgba(255,255,255,.07);
+  border-radius:14px;
+  padding:13px;
+}
+textarea{
+  width:100%;
+  min-height:300px;
+  resize:vertical;
+  border:0;
+  outline:none;
+  border-radius:17px;
+  padding:15px;
+  color:#fff;
+  background:rgba(255,255,255,.07);
+}
+.calc{
+  max-width:390px;
+  margin:auto;
+}
+.calc-display{
+  width:100%;
+  height:70px;
+  border:0;
+  outline:0;
+  border-radius:17px;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  padding:10px;
+  font-size:27px;
+  text-align:right;
+  margin-bottom:8px;
+}
+.calc-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+}
+.calc-grid button{
+  height:58px;
+  border:0;
+  border-radius:14px;
+  color:#fff;
+  background:rgba(255,255,255,.09);
+  font-size:19px;
+}
+.wallpapers{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:10px;
+}
+.wall{
+  height:75px;
+  border:2px solid transparent;
+  border-radius:16px;
+}
+.wall:hover{border-color:#fff}
+video{
+  width:100%;
+  max-height:420px;
+  border-radius:18px;
+  background:#000;
+}
+.preview{
+  max-width:100%;
+  max-height:400px;
+  border-radius:18px;
+}
+.progress{
+  width:100%;
+  height:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.1);
+  overflow:hidden;
+}
+.progress div{
+  height:100%;
+  width:0;
+  background:#fff;
+  transition:width .2s;
+}
+.switch{
+  width:48px;
+  height:27px;
+  border:0;
+  border-radius:20px;
+  background:#555;
+  position:relative;
+}
+.switch:after{
+  content:"";
+  position:absolute;
+  top:4px;
+  left:4px;
+  width:19px;
+  height:19px;
+  border-radius:50%;
+  background:#fff;
+  transition:.2s;
+}
+.switch.on{background:#3b82f6}
+.switch.on:after{left:25px}
+#toast{
+  position:absolute;
+  z-index:200;
+  left:50%;
+  bottom:88px;
+  transform:translateX(-50%);
+  background:#000;
+  color:#fff;
+  padding:11px 17px;
+  border-radius:15px;
+  display:none;
+  max-width:90%;
+  text-align:center;
+}
+.hidden{display:none!important}
+@media(max-width:600px){
+  .home{padding-left:12px;padding-right:12px}
+  .apps{
+    grid-template-columns:repeat(4,1fr);
+    gap:17px 5px;
+  }
+  .app-icon{
+    width:55px;
+    height:55px;
+    font-size:25px;
+  }
+  .searchbar{flex-wrap:wrap}
+  .searchbar .input{flex-basis:100%}
+  .panel{padding:60px 14px 35px}
+}
 </style>
 </head>
 
 <body>
+
 <div id="os">
 
-<div class="status">
-<span>Roham OS</span>
-<span id="clock">--:--</span>
-</div>
+  <div class="status">
+    <span>Roham OS</span>
+    <div class="status-right">
+      <span id="networkStatus">● آنلاین</span>
+      <span id="batteryStatus">🔋 --%</span>
+      <span id="clock">--:--</span>
+    </div>
+  </div>
 
-<div class="home">
+  <main class="home">
 
-<div class="searchbar">
-<input id="search" placeholder="جستجو در Roham OS یا وب..." onkeydown="if(event.key==='Enter')doSearch()">
-<button class="btn" onclick="doSearch()">🔎 جستجو</button>
-<button class="btn" onclick="openPanel('aiPanel')">🤖 Roham AI</button>
-</div>
+    <div class="searchbar">
+      <input id="globalSearch" class="input"
+             placeholder="جستجو در Roham OS یا وب...">
+      <button class="btn" id="searchBtn">🔎 جستجو</button>
+      <button class="btn" data-open="ai">🤖 AI</button>
+    </div>
 
-<div class="apps">
+    <div class="apps" id="apps">
 
-<div class="app" onclick="openPanel('settings')"><div class="icon">⚙️</div><small>تنظیمات</small></div>
-<div class="app" onclick="openPanel('browser')"><div class="icon">🌐</div><small>مرورگر</small></div>
-<div class="app" onclick="openPanel('store')"><div class="icon">🛍️</div><small>Roham Store</small></div>
-<div class="app" onclick="openPanel('downloader')"><div class="icon">⬇️</div><small>دانلودر</small></div>
-<div class="app" onclick="openPanel('files')"><div class="icon">📁</div><small>فایل‌ها</small></div>
-<div class="app" onclick="openPanel('account')"><div class="icon">👤</div><small>حساب Roham</small></div>
-<div class="app" onclick="openPanel('aiPanel')"><div class="icon">🤖</div><small>Roham AI</small></div>
-<div class="app" onclick="openPanel('camera')"><div class="icon">📷</div><small>دوربین</small></div>
-<div class="app" onclick="openPanel('gallery')"><div class="icon">🖼️</div><small>گالری</small></div>
-<div class="app" onclick="openPanel('music')"><div class="icon">🎵</div><small>موسیقی</small></div>
-<div class="app" onclick="openPanel('contacts')"><div class="icon">👥</div><small>مخاطبین</small></div>
-<div class="app" onclick="openPanel('messages')"><div class="icon">💬</div><small>پیام‌ها</small></div>
-<div class="app" onclick="openPanel('calculator')"><div class="icon">🧮</div><small>ماشین حساب</small></div>
-<div class="app" onclick="openPanel('notes')"><div class="icon">📝</div><small>یادداشت</small></div>
-<div class="app" onclick="openPanel('notifications')"><div class="icon">🔔</div><small>اعلان‌ها</small></div>
-<div class="app" onclick="openPanel('battery')"><div class="icon">🔋</div><small>باتری</small></div>
-<div class="app" onclick="openPanel('network')"><div class="icon">📶</div><small>شبکه</small></div>
-<div class="app" onclick="openPanel('security')"><div class="icon">🔐</div><small>امنیت</small></div>
-<div class="app" onclick="openPanel('custom')"><div class="icon">🎨</div><small>شخصی‌سازی</small></div>
-<div class="app" onclick="openPanel('about')"><div class="icon">ℹ️</div><small>درباره Roham</small></div>
+      <button class="app" data-open="settings">
+        <span class="app-icon">⚙️</span>
+        <span class="app-name">تنظیمات</span>
+      </button>
+
+      <button class="app" data-open="browser">
+        <span class="app-icon">🌐</span>
+        <span class="app-name">مرورگر</span>
+      </button>
+
+      <button class="app" data-open="store">
+        <span class="app-icon">🛍️</span>
+        <span class="app-name">Roham Store</span>
+      </button>
+
+      <button class="app" data-open="downloader">
+        <span class="app-icon">⬇️</span>
+        <span class="app-name">دانلودر</span>
+      </button>
+
+      <button class="app" data-open="files">
+        <span class="app-icon">📁</span>
+        <span class="app-name">فایل‌ها</span>
+      </button>
+
+      <button class="app" data-open="account">
+        <span class="app-icon">👤</span>
+        <span class="app-name">حساب Roham</span>
+      </button>
+
+      <button class="app" data-open="ai">
+        <span class="app-icon">🤖</span>
+        <span class="app-name">Roham AI</span>
+      </button>
+
+      <button class="app" data-open="camera">
+        <span class="app-icon">📷</span>
+        <span class="app-name">دوربین</span>
+      </button>
+
+      <button class="app" data-open="gallery">
+        <span class="app-icon">🖼️</span>
+        <span class="app-name">گالری</span>
+      </button>
+
+      <button class="app" data-open="music">
+        <span class="app-icon">🎵</span>
+        <span class="app-name">موسیقی</span>
+      </button>
+
+      <button class="app" data-open="contacts">
+        <span class="app-icon">👥</span>
+        <span class="app-name">مخاطبین</span>
+      </button>
+
+      <button class="app" data-open="messages">
+        <span class="app-icon">💬</span>
+        <span class="app-name">پیام‌ها</span>
+      </button>
+
+      <button class="app" data-open="calculator">
+        <span class="app-icon">🧮</span>
+        <span class="app-name">ماشین حساب</span>
+      </button>
+
+      <button class="app" data-open="notes">
+        <span class="app-icon">📝</span>
+        <span class="app-name">یادداشت‌ها</span>
+      </button>
+
+      <button class="app" data-open="notifications">
+        <span class="app-icon">🔔</span>
+        <span class="app-name">اعلان‌ها</span>
+      </button>
+
+      <button class="app" data-open="battery">
+        <span class="app-icon">🔋</span>
+        <span class="app-name">باتری</span>
+      </button>
+
+      <button class="app" data-open="network">
+        <span class="app-icon">📶</span>
+        <span class="app-name">شبکه</span>
+      </button>
+
+      <button class="app" data-open="security">
+        <span class="app-icon">🔐</span>
+        <span class="app-name">امنیت</span>
+      </button>
+
+      <button class="app" data-open="custom">
+        <span class="app-icon">🎨</span>
+        <span class="app-name">شخصی‌سازی</span>
+      </button>
+
+      <button class="app" data-open="services">
+        <span class="app-icon">☁️</span>
+        <span class="app-name">سرویس‌ها</span>
+      </button>
+
+      <button class="app" data-open="control">
+        <span class="app-icon">🎛️</span>
+        <span class="app-name">مرکز کنترل</span>
+      </button>
+
+      <button class="app" data-open="about">
+        <span class="app-icon">ℹ️</span>
+        <span class="app-name">درباره</span>
+      </button>
+
+    </div>
+  </main>
+
+  <div class="dock">
+    <button data-open="browser">🌐</button>
+    <button data-open="messages">💬</button>
+    <button data-open="camera">📷</button>
+    <button data-open="settings">⚙️</button>
+    <button data-open="control">🎛️</button>
+  </div>
+
+  <div id="toast"></div>
+
+  <!-- SETTINGS -->
+  <section class="panel" id="panel-settings">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>⚙️ تنظیمات</h1>
+
+      <div class="card">
+        <div class="row">
+          <div>
+            <b>حالت تاریک</b>
+            <div class="small">ظاهر اصلی Roham OS</div>
+          </div>
+          <button class="switch on" data-toggle="dark"></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <div>
+            <b>اعلان‌ها</b>
+            <div class="small">نمایش اعلان‌های Roham</div>
+          </div>
+          <button class="switch on" data-toggle="notifications"></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>تنظیمات سریع</h3>
+        <button class="btn" data-open="network">📶 شبکه</button>
+        <button class="btn" data-open="security">🔐 امنیت</button>
+        <button class="btn" data-open="custom">🎨 شخصی‌سازی</button>
+        <button class="btn" data-open="about">ℹ️ درباره</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- BROWSER -->
+  <section class="panel" id="panel-browser">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>🌐 مرورگر Roham</h1>
+
+      <div class="searchbar">
+        <input id="browserUrl" class="input"
+               placeholder="آدرس سایت یا عبارت جستجو...">
+        <button class="btn" id="browserGo">برو</button>
+      </div>
+
+      <div class="card">
+        <h3>دسترسی سریع</h3>
+        <button class="btn web-link" data-url="https://www.google.com">Google</button>
+        <button class="btn web-link" data-url="https://www.youtube.com">YouTube</button>
+        <button class="btn web-link" data-url="https://www.wikipedia.org">Wikipedia</button>
+      </div>
+
+      <div class="card">
+        <p class="small">
+          مرورگر Roham در این نسخه یک مرورگر وب داخل پروتوتایپ است؛
+          سایت‌ها در تب جدید مرورگر دستگاه باز می‌شوند.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORE -->
+  <section class="panel" id="panel-store">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>🛍️ Roham Store</h1>
+
+      <div class="searchbar">
+        <input id="storeSearch" class="input" placeholder="جستجوی برنامه...">
+      </div>
+
+      <div class="grid" id="storeList"></div>
+    </div>
+  </section>
+
+  <!-- DOWNLOADER -->
+  <section class="panel" id="panel-downloader">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>⬇️ دانلودر</h1>
+
+      <div class="card">
+        <input id="downloadUrl" class="input"
+               placeholder="لینک فایل را وارد کنید">
+        <br><br>
+        <button class="btn" id="downloadBtn">شروع دانلود</button>
+      </div>
+
+      <div class="card">
+        <div class="progress"><div id="downloadProgress"></div></div>
+        <p id="downloadText" class="small">آماده</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILES -->
+  <section class="panel" id="panel-files">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>📁 فایل‌ها</h1>
+
+      <div class="card">
+        <input id="filePicker" type="file" multiple class="input">
+      </div>
+
+      <div class="card">
+        <div id="fileList" class="list">
+          <p class="small">هنوز فایلی انتخاب نشده است.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCOUNT -->
+  <section class="panel" id="panel-account">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>👤 حساب Roham</h1>
+
+      <div class="card">
+        <div id="accountState"></div>
+
+        <input id="accountName" class="input"
+               placeholder="نام کاربری">
+        <br><br>
+        <button class="btn" id="accountCreate">ایجاد حساب</button>
+        <button class="btn" id="accountLogout">خروج</button>
+      </div>
+
+      <div class="card">
+        <p class="small">
+          حساب این نسخه آزمایشی است و اطلاعات آن فقط در حافظه مرورگر ذخیره می‌شود.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI -->
+  <section class="panel" id="panel-ai">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>🤖 Roham AI</h1>
+
+      <div class="card">
+        <div id="aiMessages" class="list">
+          <div class="item">سلام! من Roham AI هستم.</div>
+        </div>
+      </div>
+
+      <div class="searchbar">
+        <input id="aiInput" class="input" placeholder="پیام خود را بنویس...">
+        <button class="btn" id="aiSend">ارسال</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAMERA -->
+  <section class="panel" id="panel-camera">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>📷 دوربین</h1>
+
+      <div class="card">
+        <video id="cameraVideo" autoplay playsinline></video>
+        <br><br>
+        <button class="btn" id="cameraStart">فعال کردن دوربین</button>
+        <button class="btn" id="cameraShot">📸 عکس</button>
+        <canvas id="cameraCanvas" class="hidden"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="panel" id="panel-gallery">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>🖼️ گالری</h1>
+
+      <div class="card">
+        <input id="galleryPicker" type="file" accept="image/*" multiple class="input">
+      </div>
+
+      <div id="galleryList" class="grid"></div>
+    </div>
+  </section>
+
+  <!-- MUSIC -->
+  <section class="panel" id="panel-music">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>🎵 موسیقی</h1>
+
+      <div class="card">
+        <input id="musicPicker" type="file" accept="audio/*" multiple class="input">
+      </div>
+
+      <div id="musicList" class="list"></div>
+    </div>
+  </section>
+
+  <!-- CONTACTS -->
+  <section class="panel" id="panel-contacts">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>👥 مخاطبین</h1>
+
+      <div class="card">
+        <input id="contactName" class="input" placeholder="نام">
+        <br><br>
+        <input id="contactPhone" class="input" placeholder="شماره">
+        <br><br>
+        <button class="btn" id="contactAdd">افزودن مخاطب</button>
+      </div>
+
+      <div id="contactsList" class="list"></div>
+    </div>
+  </section>
+
+  <!-- MESSAGES -->
+  <section class="panel" id="panel-messages">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>💬 پیام‌ها</h1>
+
+      <div class="card">
+        <input id="messageInput" class="input"
+               placeholder="پیام آزمایشی...">
+        <br><br>
+        <button class="btn" id="messageSend">ارسال</button>
+      </div>
+
+      <div id="messagesList" class="list"></div>
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section class="panel" id="panel-calculator">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>🧮 ماشین حساب</h1>
+
+      <div class="calc">
+        <input id="calcDisplay" class="calc-display" readonly>
+
+        <div class="calc-grid">
+          <button data-calc="C">C</button>
+          <button data-calc="⌫">⌫</button>
+          <button data-calc="%">%</button>
+          <button data-calc="/">÷</button>
+
+          <button data-calc="7">7</button>
+          <button data-calc="8">8</button>
+          <button data-calc="9">9</button>
+          <button data-calc="*">×</button>
+
+          <button data-calc="4">4</button>
+          <button data-calc="5">5</button>
+          <button data-calc="6">6</button>
+          <button data-calc="-">−</button>
+
+          <button data-calc="1">1</button>
+          <button data-calc="2">2</button>
+          <button data-calc="3">3</button>
+          <button data-calc="+">+</button>
+
+          <button data-calc="0">0</button>
+          <button data-calc=".">.</button>
+          <button data-calc="=">=</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTES -->
+  <section class="panel" id="panel-notes">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>📝 یادداشت‌ها</h1>
+
+      <div class="card">
+        <textarea id="notesArea"
+                  placeholder="یادداشت خود را بنویس..."></textarea>
+        <br><br>
+        <button class="btn" id="notesSave">💾 ذخیره</button>
+        <button class="btn" id="notesClear">پاک کردن</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTIFICATIONS -->
+  <section class="panel" id="panel-notifications">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>🔔 اعلان‌ها</h1>
+
+      <div id="notificationsList" class="list"></div>
+
+      <button class="btn" id="notificationAdd">
+        + اعلان آزمایشی
+      </button>
+    </div>
+  </section>
+
+  <!-- BATTERY -->
+  <section class="panel" id="panel-battery">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>🔋 باتری</h1>
+
+      <div class="card">
+        <h2 id="batteryBig">--%</h2>
+        <p id="batteryInfo" class="small">
+          در حال بررسی وضعیت باتری...
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NETWORK -->
+  <section class="panel" id="panel-network">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>📶 شبکه</h1>
+
+      <div class="card">
+        <div class="row">
+          <span>وضعیت اینترنت</span>
+          <b id="networkBig">بررسی...</b>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="small">
+          کنترل واقعی Wi-Fi، سیم‌کارت و بلوتوث در یک وب‌اپ معمولی
+          در اختیار صفحه نیست؛ این قسمت وضعیت مرورگر را نشان می‌دهد.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECURITY -->
+  <section class="panel" id="panel-security">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>🔐 امنیت</h1>
+
+      <div class="card">
+        <input id="pinInput" class="input"
+               inputmode="numeric"
+               maxlength="6"
+               placeholder="PIN جدید">
+        <br><br>
+        <button class="btn" id="pinSave">ذخیره PIN</button>
+        <button class="btn" id="pinRemove">حذف PIN</button>
+      </div>
+
+      <div class="card">
+        <b>وضعیت</b>
+        <p id="pinState" class="small"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOM -->
+  <section class="panel" id="panel-custom">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>🎨 شخصی‌سازی</h1>
+
+      <div class="card">
+        <h3>تصویر زمینه</h3>
+
+        <div class="wallpapers">
+          <button class="wall"
+                  data-wall="linear-gradient(135deg,#14284b,#30204a)"
+                  style="background:linear-gradient(135deg,#14284b,#30204a)"></button>
+
+          <button class="wall"
+                  data-wall="linear-gradient(135deg,#003b46,#07575b,#66a5ad)"
+                  style="background:linear-gradient(135deg,#003b46,#07575b,#66a5ad)"></button>
+
+          <button class="wall"
+                  data-wall="linear-gradient(135deg,#1d2671,#c33764)"
+                  style="background:linear-gradient(135deg,#1d2671,#c33764)"></button>
+
+          <button class="wall"
+                  data-wall="linear-gradient(135deg,#232526,#414345)"
+                  style="background:linear-gradient(135deg,#232526,#414345)"></button>
+
+          <button class="wall"
+                  data-wall="linear-gradient(135deg,#0f2027,#203a43,#2c5364)"
+                  style="background:linear-gradient(135deg,#0f2027,#203a43,#2c5364)"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="panel" id="panel-services">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>☁️ سرویس‌های Roham</h1>
+
+      <div class="grid">
+        <div class="card">
+          <h3>🔎 Search</h3>
+          <button class="btn web-link"
+                  data-url="https://www.google.com">باز کردن</button>
+        </div>
+
+        <div class="card">
+          <h3>▶️ Video</h3>
+          <button class="btn web-link"
+                  data-url="https://www.youtube.com">باز کردن</button>
+        </div>
+
+        <div class="card">
+          <h3>📚 Web</h3>
+          <button class="btn web-link"
+                  data-url="https://www.wikipedia.org">باز کردن</button>
+        </div>
+
+        <div class="card">
+          <h3>🛒 Store</h3>
+          <button class="btn" data-open="store">باز کردن</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTROL -->
+  <section class="panel" id="panel-control">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>🎛️ مرکز کنترل</h1>
+
+      <div class="grid">
+        <button class="card btn" data-action="wifi">📶 اینترنت</button>
+        <button class="card btn" data-action="bluetooth">🔵 بلوتوث</button>
+        <button class="card btn" data-action="silent">🔕 سکوت</button>
+        <button class="card btn" data-action="theme">🌙 حالت شب</button>
+        <button class="card btn" data-open="settings">⚙️ تنظیمات</button>
+        <button class="card btn" data-open="security">🔐 امنیت</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="panel" id="panel-about">
+    <button class="close" data-close>✕ بستن</button>
+    <div class="panel-content">
+      <h1>ℹ️ درباره Roham OS</h1>
+
+      <div class="card">
+        <h2>Roham OS</h2>
+        <p>نسخه پروتوتایپ وب</p>
+        <p class="small">
+          یک رابط کاربری مستقل برای آزمایش ایده‌های سیستم‌عامل Roham.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>امکانات این نسخه</h3>
+        <p>✓ برنامه‌های قابل کلیک</p>
+        <p>✓ تنظیمات</p>
+        <p>✓ مرورگر و جستجوی وب</p>
+        <p>✓ فروشگاه آزمایشی</p>
+        <p>✓ فایل‌ها</p>
+        <p>✓ دوربین</p>
+        <p>✓ گالری</p>
+        <p>✓ موسیقی</p>
+        <p>✓ مخاطبین</p>
+        <p>✓ پیام‌ها</p>
+        <p>✓ ماشین حساب</p>
+        <p>✓ یادداشت‌ها</p>
+        <p>✓ حساب Roham</p>
+        <p>✓ شخصی‌سازی</p>
+        <p>✓ امنیت</p>
+      </div>
+    </div>
+  </section>
 
 </div>
-</div>
-
-<div class="dock">
-<button onclick="openPanel('settings')">⚙️</button>
-<button onclick="openPanel('browser')">🌐</button>
-<button onclick="openPanel('store')">🛍️</button>
-<button onclick="openPanel('aiPanel')">🤖</button>
-</div>
-
-<!-- SEARCH -->
-<div class="panel" id="searchPanel">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>🔎 نتایج جستجو</h1>
-<div class="card" id="results"></div>
-</div>
-
-<!-- BROWSER -->
-<div class="panel" id="browser">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>🌐 مرورگر Roham</h1>
-<div class="browser card">
-<input id="url" placeholder="آدرس سایت یا عبارت جستجو">
-<br><br>
-<button class="btn" onclick="browse()">باز کردن</button>
-</div>
-</div>
-
-<!-- SETTINGS -->
-<div class="panel" id="settings">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>⚙️ تنظیمات Roham OS</h1>
-<div class="grid">
-<div class="card row">📶 Wi-Fi <b>فعال</b></div>
-<div class="card row">🟦 Bluetooth <b>فعال</b></div>
-<div class="card row">🔊 صدا <b>70%</b></div>
-<div class="card row">☀️ روشنایی <b>80%</b></div>
-<div class="card row">🔋 باتری <b>100%</b></div>
-<div class="card row">💾 حافظه <b>64 GB</b></div>
-<div class="card row">🔐 امنیت <b>فعال</b></div>
-<div class="card row">🌐 شبکه موبایل <b>فعال</b></div>
-<div class="card row">🌍 زبان <b>فارسی</b></div>
-<div class="card row">🕐 تاریخ و زمان <b>خودکار</b></div>
-<div class="card row">♿ دسترس‌پذیری <b>›</b></div>
-<div class="card row">📱 برنامه‌ها <b>مدیریت</b></div>
-</div>
-</div>
-
-<!-- STORE -->
-<div class="panel" id="store">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>🛍️ Roham Store</h1>
-<div class="card">
-<input id="storeSearch" class="searchbar input" style="width:100%;padding:13px;border-radius:15px;border:0;background:#ffffff12;color:white" placeholder="جستجوی برنامه...">
-</div>
-<div class="grid">
-<div class="storeItem">🌐 مرورگر Roham<button class="btn" onclick="install('مرورگر')">نصب</button></div>
-<div class="storeItem">🤖 Roham AI<button class="btn" onclick="install('Roham AI')">نصب</button></div>
-<div class="storeItem">🎵 پخش‌کننده موسیقی<button class="btn" onclick="install('موسیقی')">نصب</button></div>
-<div class="storeItem">📝 Notes Pro<button class="btn" onclick="install('Notes Pro')">نصب</button></div>
-<div class="storeItem">🖼️ Gallery Pro<button class="btn" onclick="install('Gallery Pro')">نصب</button></div>
-<div class="storeItem">🧮 Calculator Plus<button class="btn" onclick="install('Calculator Plus')">نصب</button></div>
-</div>
-</div>
-
-<!-- DOWNLOADER -->
-<div class="panel" id="downloader">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>⬇️ Downloader</h1>
-<div class="card">
-<input id="downloadUrl" style="width:100%;padding:13px;border-radius:15px;border:0;background:#ffffff12;color:white" placeholder="لینک فایل را وارد کنید">
-<br><br>
-<button class="btn" onclick="startDownload()">شروع دانلود</button>
-</div>
-<div class="card" id="downloadStatus">هیچ دانلودی انجام نشده.</div>
-</div>
-
-<!-- ACCOUNT -->
-<div class="panel" id="account">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>👤 حساب Roham</h1>
-<div class="card">
-<input id="name" placeholder="نام کاربری" style="width:100%;padding:13px;border-radius:14px;border:0;background:#ffffff12;color:white">
-<br><br>
-<input id="email" placeholder="ایمیل" style="width:100%;padding:13px;border-radius:14px;border:0;background:#ffffff12;color:white">
-<br><br>
-<input type="password" placeholder="رمز عبور" style="width:100%;padding:13px;border-radius:14px;border:0;background:#ffffff12;color:white">
-<br><br>
-<button class="btn" onclick="account()">ساخت حساب</button>
-</div>
-</div>
-
-<!-- AI -->
-<div class="panel" id="aiPanel">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>🤖 Roham AI</h1>
-<div class="ai card">
-<input id="aiInput" placeholder="چیزی از Roham AI بپرس...">
-<br><br>
-<button class="btn" onclick="askAI()">ارسال</button>
-<p id="aiAnswer"></p>
-</div>
-</div>
-
-<!-- FILES -->
-<div class="panel" id="files">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>📁 فایل‌ها</h1>
-<div class="card">📁 Documents</div>
-<div class="card">📁 Downloads</div>
-<div class="card">📁 Pictures</div>
-<div class="card">📁 Videos</div>
-<div class="card">📁 Music</div>
-</div>
-
-<!-- CAMERA -->
-<div class="panel" id="camera">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>📷 دوربین</h1>
-<div class="card">دوربین Roham OS در نسخه سخت‌افزاری به دوربین دستگاه متصل خواهد شد.</div>
-</div>
-
-<!-- GALLERY -->
-<div class="panel" id="gallery">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>🖼️ گالری</h1>
-<div class="card">گالری خالی است.</div>
-</div>
-
-<!-- MUSIC -->
-<div class="panel" id="music">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>🎵 موسیقی</h1>
-<div class="card">هنوز موسیقی‌ای اضافه نشده است.</div>
-</div>
-
-<!-- CONTACTS -->
-<div class="panel" id="contacts">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>👥 مخاطبین</h1>
-<div class="card">مخاطبی وجود ندارد.</div>
-</div>
-
-<!-- MESSAGES -->
-<div class="panel" id="messages">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>💬 پیام‌ها</h1>
-<div class="card">پیامی وجود ندارد.</div>
-</div>
-
-<!-- CALCULATOR -->
-<div class="panel" id="calculator">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>🧮 ماشین حساب</h1>
-<div class="calc">
-<input class="display" id="display" readonly>
-<div class="keys">
-<button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button><button onclick="press('/')">÷</button>
-<button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button><button onclick="press('*')">×</button>
-<button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button><button onclick="press('-')">−</button>
-<button onclick="press('0')">0</button><button onclick="press('.')">.</button><button onclick="result()">=</button><button onclick="press('+')">+</button>
-<button style="grid-column:span 4" onclick="clearCalc()">پاک کردن</button>
-</div>
-</div>
-</div>
-
-<!-- NOTES -->
-<div class="panel" id="notes">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>📝 یادداشت</h1>
-<textarea class="note" id="note" placeholder="یادداشت خود را بنویسید..." oninput="saveNote()"></textarea>
-</div>
-
-<!-- NOTIFICATIONS -->
-<div class="panel" id="notifications">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>🔔 اعلان‌ها</h1>
-<div class="card">🎉 به Roham OS Beta 1 خوش آمدید.</div>
-</div>
-
-<!-- BATTERY -->
-<div class="panel" id="battery">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>🔋 باتری</h1>
-<div class="card">شارژ: 100%</div>
-<div class="card">حالت مصرف: متعادل</div>
-</div>
-
-<!-- NETWORK -->
-<div class="panel" id="network">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>📶 شبکه</h1>
-<div class="card row">Wi-Fi <b>فعال</b></div>
-<div class="card row">Bluetooth <b>فعال</b></div>
-<div class="card row">داده موبایل <b>فعال</b></div>
-</div>
-
-<!-- SECURITY -->
-<div class="panel" id="security">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>🔐 امنیت</h1>
-<div class="card">قفل صفحه: فعال</div>
-<div class="card">مجوز برنامه‌ها: مدیریت‌شده</div>
-<div class="card">محافظت سیستم: فعال</div>
-</div>
-
-<!-- CUSTOM -->
-<div class="panel" id="custom">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>🎨 شخصی‌سازی</h1>
-<div class="card">
-<p>ساختار اصلی Roham OS ثابت است.</p>
-<div class="wallpapers">
-<button class="wall" style="background:linear-gradient(135deg,#173d70,#101522)" onclick="wall(1)"></button>
-<button class="wall" style="background:linear-gradient(135deg,#075548,#071b24)" onclick="wall(2)"></button>
-<button class="wall" style="background:linear-gradient(135deg,#641b3b,#170d25)" onclick="wall(3)"></button>
-<button class="wall" style="background:linear-gradient(135deg,#48206b,#10101d)" onclick="wall(4)"></button>
-</div>
-</div>
-</div>
-
-<!-- ABOUT -->
-<div class="panel" id="about">
-<button class="close" onclick="closePanels()">✕</button>
-<h1>ℹ️ Roham OS</h1>
-<div class="card">
-<b>Roham OS Beta 1</b>
-<p>یک سیستم‌عامل مستقل با طراحی و ساختار اختصاصی Roham.</p>
-<p>نسخه: Beta 1</p>
-<p>هدف: Multi-Device</p>
-</div>
-</div>
-
-<div id="toast"></div>
 
 <script>
-function openPanel(id){
- document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
- document.getElementById(id).classList.add("active");
+"use strict";
+
+/* =========================
+   ROHAM OS CORE
+========================= */
+
+const $ = id => document.getElementById(id);
+
+let cameraStream = null;
+let calcValue = "";
+let notifications = JSON.parse(
+  localStorage.getItem("roham_notifications") || "[]"
+);
+
+/* ---------- Toast ---------- */
+
+function toast(message){
+  const el = $("toast");
+  if(!el) return;
+
+  el.textContent = message;
+  el.style.display = "block";
+
+  clearTimeout(window.rohamToastTimer);
+
+  window.rohamToastTimer = setTimeout(()=>{
+    el.style.display = "none";
+  },2200);
 }
+
+/* ---------- Apps ---------- */
+
+function openApp(app){
+  const panel = $("panel-" + app);
+
+  if(!panel){
+    toast("این برنامه هنوز ساخته نشده است.");
+    return;
+  }
+
+  document.querySelectorAll(".panel").forEach(p=>{
+    p.classList.remove("active");
+  });
+
+  panel.classList.add("active");
+
+  if(app === "contacts") renderContacts();
+  if(app === "messages") renderMessages();
+  if(app === "notifications") renderNotifications();
+  if(app === "account") renderAccount();
+  if(app === "security") renderSecurity();
+  if(app === "battery") updateBattery();
+  if(app === "network") updateNetwork();
+  if(app === "store") renderStore();
+}
+
 function closePanels(){
- document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(p=>{
+    p.classList.remove("active");
+  });
 }
-function toast(t){
- let x=document.getElementById("toast");
- x.textContent=t;x.style.display="block";
- setTimeout(()=>x.style.display="none",1800);
-}
+
+/* ---------- Universal clicks ---------- */
+
+document.addEventListener("click", event => {
+
+  const openButton = event.target.closest("[data-open]");
+
+  if(openButton){
+    event.preventDefault();
+    event.stopPropagation();
+    openApp(openButton.dataset.open);
+    return;
+  }
+
+  const closeButton = event.target.closest("[data-close]");
+
+  if(closeButton){
+    closePanels();
+    return;
+  }
+
+  const webButton = event.target.closest(".web-link");
+
+  if(webButton){
+    const url = webButton.dataset.url;
+    window.open(url,"_blank","noopener,noreferrer");
+    return;
+  }
+
+});
+
+/* ---------- Clock ---------- */
+
 function updateClock(){
- document.getElementById("clock").textContent=
- new Date().toLocaleTimeString("fa-IR",{hour:"2-digit",minute:"2-digit"});
-}
-setInterval(updateClock,1000);updateClock();
+  const now = new Date();
 
-function doSearch(){
- let q=document.getElementById("search").value.trim();
- if(!q)return;
- openPanel("searchPanel");
- document.getElementById("results").innerHTML=
- "<h3>نتایج برای «"+q+"»</h3>"+
- "<p>🔎 در حال آماده‌سازی موتور جستجوی Roham...</p>"+
- "<p>🌐 برای جستجوی واقعی اینترنت، نسخه نهایی به موتور جستجوی آنلاین متصل می‌شود.</p>"+
- "<button class='btn' onclick=\"webSearch('"+encodeURIComponent(q)+"')\">جستجو در وب</button>";
-}
-function webSearch(q){
- window.open("https://www.google.com/search?q="+q,"_blank");
+  $("clock").textContent =
+    now.toLocaleTimeString("fa-IR",{
+      hour:"2-digit",
+      minute:"2-digit"
+    });
 }
 
-function browse(){
- let v=document.getElementById("url").value.trim();
- if(!v)return;
- if(!/^https?:\\/\\//.test(v)) v="https://www.google.com/search?q="+encodeURIComponent(v);
- window.open(v,"_blank");
+setInterval(updateClock,1000);
+updateClock();
+
+/* ---------- Network ---------- */
+
+function updateNetwork(){
+
+  const online = navigator.onLine;
+
+  $("networkStatus").textContent =
+    online ? "● آنلاین" : "● آفلاین";
+
+  $("networkBig").textContent =
+    online ? "آنلاین" : "آفلاین";
 }
 
-function install(name){
- toast(name+" به برنامه‌های Roham اضافه شد");
+window.addEventListener("online",updateNetwork);
+window.addEventListener("offline",updateNetwork);
+
+updateNetwork();
+
+/* ---------- Battery ---------- */
+
+async function updateBattery(){
+
+  if(!navigator.getBattery){
+
+    $("batteryBig").textContent = "--";
+    $("batteryInfo").textContent =
+      "مرورگر شما API باتری را ارائه نمی‌کند.";
+
+    return;
+  }
+
+  try{
+
+    const battery = await navigator.getBattery();
+
+    const percent = Math.round(battery.level * 100);
+
+    $("batteryBig").textContent = percent + "%";
+
+    $("batteryStatus").textContent =
+      "🔋 " + percent + "%";
+
+    $("batteryInfo").textContent =
+      battery.charging
+      ? "در حال شارژ"
+      : "در حال استفاده";
+
+  }catch(e){
+
+    $("batteryInfo").textContent =
+      "وضعیت باتری در دسترس نیست.";
+
+  }
 }
 
-function startDownload(){
- let u=document.getElementById("downloadUrl").value.trim();
- if(!u){toast("لینک را وارد کن");return}
- document.getElementById("downloadStatus").innerHTML=
- "⬇️ دانلود ثبت شد<br><small>"+u+"</small><br><br>وضعیت: آماده دانلود";
- toast("دانلود شروع شد");
+updateBattery();
+
+/* =========================
+   SEARCH
+========================= */
+
+function performSearch(){
+
+  const q = $("globalSearch").value.trim();
+
+  if(!q){
+    toast("عبارت جستجو را وارد کن.");
+    return;
+  }
+
+  const apps = [...document.querySelectorAll(".app")];
+
+  const found = apps.find(app =>
+    app.innerText.toLowerCase().includes(q.toLowerCase())
+  );
+
+  if(found){
+
+    openApp(found.dataset.open);
+    return;
+
+  }
+
+  const url =
+    "https://www.google.com/search?q=" +
+    encodeURIComponent(q);
+
+  window.open(url,"_blank","noopener,noreferrer");
 }
 
-function account(){
- let n=document.getElementById("name").value.trim();
- if(!n){toast("نام کاربری را وارد کن");return}
- localStorage.setItem("rohamUser",n);
- toast("حساب Roham ساخته شد");
+$("searchBtn").addEventListener("click",performSearch);
+
+$("globalSearch").addEventListener("keydown",event=>{
+  if(event.key === "Enter"){
+    performSearch();
+  }
+});
+
+/* =========================
+   BROWSER
+========================= */
+
+function goBrowser(){
+
+  let value = $("browserUrl").value.trim();
+
+  if(!value){
+    toast("آدرس یا عبارت جستجو را وارد کن.");
+    return;
+  }
+
+  let url;
+
+  if(/^https?:\/\//i.test(value)){
+    url = value;
+  }else if(
+    value.includes(".") &&
+    !value.includes(" ")
+  ){
+    url = "https://" + value;
+  }else{
+    url =
+      "https://www.google.com/search?q=" +
+      encodeURIComponent(value);
+  }
+
+  window.open(url,"_blank","noopener,noreferrer");
 }
 
-function askAI(){
- let q=document.getElementById("aiInput").value.trim();
- if(!q)return;
- document.getElementById("aiAnswer").textContent=
- "Roham AI: پیام «"+q+"» دریافت شد. موتور هوش مصنوعی اصلی در نسخه‌های بعدی متصل می‌شود.";
+$("browserGo").addEventListener("click",goBrowser);
+
+$("browserUrl").addEventListener("keydown",event=>{
+  if(event.key === "Enter") goBrowser();
+});
+
+/* =========================
+   STORE
+========================= */
+
+const storeApps = [
+  ["Roham Notes","📝","یادداشت‌برداری"],
+  ["Roham Music","🎵","پخش موسیقی"],
+  ["Roham Files","📁","مدیریت فایل"],
+  ["Roham Camera","📷","دوربین"],
+  ["Roham Gallery","🖼️","گالری"],
+  ["Roham AI","🤖","دستیار هوشمند"],
+  ["Roham Browser","🌐","مرورگر"],
+  ["Roham Calculator","🧮","ماشین حساب"]
+];
+
+function getInstalled(){
+
+  return JSON.parse(
+    localStorage.getItem("roham_installed") || "[]"
+  );
+
 }
 
-let expression="";
-function press(v){
- expression+=v;
- document.getElementById("display").value=expression;
-}
-function clearCalc(){
- expression="";
- document.getElementById("display").value="";
-}
-function result(){
- try{
-  expression=String(Function("return "+expression)());
-  document.getElementById("display").value=expression;
- }catch{
-  expression="";
-  document.getElementById("display").value="خطا";
- }
+function saveInstalled(list){
+
+  localStorage.setItem(
+    "roham_installed",
+    JSON.stringify(list)
+  );
+
 }
 
-function saveNote(){
- localStorage.setItem("rohamNote",document.getElementById("note").value);
-}
-let saved=localStorage.getItem("rohamNote");
-if(saved)document.getElementById("note").value=saved;
+function renderStore(){
 
-function wall(n){
- let b=[
- "linear-gradient(145deg,#173d70,#101522)",
- "linear-gradient(145deg,#075548,#071b24)",
- "linear-gradient(145deg,#641b3b,#170d25)",
- "linear-gradient(145deg,#48206b,#10101d)"
- ][n-1];
- document.getElementById("os").style.background=b;
- localStorage.setItem("wall",n);
- toast("تصویر زمینه تغییر کرد");
+  const query =
+    ($("storeSearch").value || "")
+      .trim()
+      .toLowerCase();
+
+  const installed = getInstalled();
+
+  const filtered = storeApps.filter(app =>
+    app[0].toLowerCase().includes(query) ||
+    app[2].toLowerCase().includes(query)
+  );
+
+  $("storeList").innerHTML = "";
+
+  filtered.forEach(app=>{
+
+    const card = document.createElement("div");
+    card.className = "storeItem";
+
+    const isInstalled =
+      installed.includes(app[0]);
+
+    card.innerHTML = `
+      <div style="font-size:30px">${app[1]}</div>
+      <h3>${app[0]}</h3>
+      <p class="small">${app[2]}</p>
+      <button class="btn store-install"
+              data-appname="${app[0]}">
+        ${isInstalled ? "✓ نصب شده" : "نصب"}
+      </button>
+    `;
+
+    $("storeList").appendChild(card);
+
+  });
 }
-let w=localStorage.getItem("wall");
-if(w)wall(w);
+
+$("storeSearch").addEventListener(
+  "input",
+  renderStore
+);
+
+$("storeList").addEventListener("click",event=>{
+
+  const button =
+    event.target.closest(".store-install");
+
+  if(!button) return;
+
+  const name = button.dataset.appname;
+
+  let installed = getInstalled();
+
+  if(installed.includes(name)){
+
+    toast("این برنامه قبلاً نصب شده.");
+
+  }else{
+
+    installed.push(name);
+    saveInstalled(installed);
+
+    toast(name + " نصب شد.");
+
+    renderStore();
+
+  }
+
+});
+
+/* =========================
+   DOWNLOADER
+========================= */
+
+$("downloadBtn").addEventListener("click",()=>{
+
+  const url = $("downloadUrl").value.trim();
+
+  if(!url){
+    toast("لینک دانلود را وارد کن.");
+    return;
+  }
+
+  let progress = 0;
+
+  $("downloadText").textContent =
+    "در حال آماده‌سازی...";
+
+  $("downloadProgress").style.width = "0%";
+
+  const timer = setInterval(()=>{
+
+    progress += 10;
+
+    $("downloadProgress").style.width =
+      progress + "%";
+
+    $("downloadText").textContent =
+      "پیشرفت: " + progress + "%";
+
+    if(progress >= 100){
+
+      clearInterval(timer);
+
+      $("downloadText").textContent =
+        "تلاش برای باز کردن لینک...";
+
+      window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+    }
+
+  },120);
+
+});
+
+/* =========================
+   FILES
+========================= */
+
+$("filePicker").addEventListener("change",event=>{
+
+  const files = [...event.target.files];
+
+  $("fileList").innerHTML = "";
+
+  if(!files.length){
+    $("fileList").innerHTML =
+      '<p class="small">فایلی انتخاب نشده.</p>';
+    return;
+  }
+
+  files.forEach(file=>{
+
+    const item = document.createElement("div");
+
+    item.className = "item";
+
+    item.innerHTML =
+      `<b>${escapeHTML(file.name)}</b>
+       <div class="small">
+       ${(file.size / 1024).toFixed(1)} KB
+       </div>`;
+
+    $("fileList").appendChild(item);
+
+  });
+
+});
+
+/* =========================
+   ACCOUNT
+========================= */
+
+function renderAccount(){
+
+  const name =
+    localStorage.getItem("roham_account");
+
+  if(name){
+
+    $("accountState").innerHTML =
+      `<div class="item">
+        وارد شده با نام <b>${escapeHTML(name)}</b>
+      </div><br>`;
+
+  }else{
+
+    $("accountState").innerHTML =
+      `<div class="item">هنوز حسابی ساخته نشده.</div><br>`;
+
+  }
+
+}
+
+$("accountCreate").addEventListener("click",()=>{
+
+  const name =
+    $("accountName").value.trim();
+
+  if(!name){
+    toast("نام کاربری را وارد کن.");
+    return;
+  }
+
+  localStorage.setItem(
+    "roham_account",
+    name
+  );
+
+  $("accountName").value = "";
+
+  renderAccount();
+
+  toast("حساب Roham ساخته شد.");
+
+});
+
+$("accountLogout").addEventListener("click",()=>{
+
+  localStorage.removeItem("roham_account");
+
+  renderAccount();
+
+  toast("از حساب خارج شدی.");
+
+});
+
+/* =========================
+   AI
+========================= */
+
+function sendAI(){
+
+  const input = $("aiInput");
+
+  const text = input.value.trim();
+
+  if(!text) return;
+
+  const user = document.createElement("div");
+
+  user.className = "item";
+
+  user.textContent = "شما: " + text;
+
+  $("aiMessages").appendChild(user);
+
+  input.value = "";
+
+  setTimeout(()=>{
+
+    const answer =
+      document.createElement("div");
+
+    answer.className = "item";
+
+    answer.textContent =
+      "Roham AI: پیام دریافت شد. این نسخه آزمایشی است و پاسخ هوشمند واقعی هنوز به سرویس AI متصل نشده.";
+
+    $("aiMessages").appendChild(answer);
+
+  },400);
+
+}
+
+$("aiSend").addEventListener(
+  "click",
+  sendAI
+);
+
+$("aiInput").addEventListener(
+  "keydown",
+  event=>{
+    if(event.key === "Enter"){
+      sendAI();
+    }
+  }
+);
+
+/* =========================
+   CAMERA
+========================= */
+
+$("cameraStart").addEventListener("click",
+async()=>{
+
+  try{
+
+    cameraStream =
+      await navigator.mediaDevices.getUserMedia({
+        video:true,
+        audio:false
+      });
+
+    $("cameraVideo").srcObject =
+      cameraStream;
+
+    toast("دوربین فعال شد.");
+
+  }catch(error){
+
+    toast("دسترسی دوربین داده نشد.");
+
+  }
+
+});
+
+$("cameraShot").addEventListener("click",()=>{
+
+  const video = $("cameraVideo");
+
+  if(!video.srcObject){
+
+    toast("اول دوربین را فعال کن.");
+    return;
+
+  }
+
+  const canvas = $("cameraCanvas");
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  const ctx = canvas.getContext("2d");
+
+  ctx.drawImage(
+    video,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  const link =
+    document.createElement("a");
+
+  link.download =
+    "roham-photo.png";
+
+  link.href =
+    canvas.toDataURL("image/png");
+
+  link.click();
+
+  toast("عکس گرفته شد.");
+
+});
+
+/* =========================
+   GALLERY
+========================= */
+
+$("galleryPicker").addEventListener(
+  "change",
+  event=>{
+
+    $("galleryList").innerHTML = "";
+
+    [...event.target.files].forEach(file=>{
+
+      if(!file.type.startsWith("image/"))
+        return;
+
+      const url =
+        URL.createObjectURL(file);
+
+      const img =
+        document.createElement("img");
+
+      img.src = url;
+      img.className = "preview";
+
+      $("galleryList").appendChild(img);
+
+    });
+
+  }
+);
+
+/* =========================
+   MUSIC
+========================= */
+
+$("musicPicker").addEventListener(
+  "change",
+  event=>{
+
+    $("musicList").innerHTML = "";
+
+    [...event.target.files].forEach(file=>{
+
+      const item =
+        document.createElement("div");
+
+      item.className = "item";
+
+      const title =
+        document.createElement("b");
+
+      title.textContent = file.name;
+
+      const audio =
+        document.createElement("audio");
+
+      audio.controls = true;
+      audio.style.width = "100%";
+      audio.src =
+        URL.createObjectURL(file);
+
+      item.appendChild(title);
+      item.appendChild(document.createElement("br"));
+      item.appendChild(audio);
+
+      $("musicList").appendChild(item);
+
+    });
+
+  }
+);
+
+/* =========================
+   CONTACTS
+========================= */
+
+function getContacts(){
+
+  return JSON.parse(
+    localStorage.getItem("roham_contacts") || "[]"
+  );
+
+}
+
+function saveContacts(list){
+
+  localStorage.setItem(
+    "roham_contacts",
+    JSON.stringify(list)
+  );
+
+}
+
+function renderContacts(){
+
+  const contacts = getContacts();
+
+  $("contactsList").innerHTML = "";
+
+  if(!contacts.length){
+
+    $("contactsList").innerHTML =
+      '<div class="item">مخاطبی وجود ندارد.</div>';
+
+    return;
+
+  }
+
+  contacts.forEach((contact,index)=>{
+
+    const item =
+      document.createElement("div");
+
+    item.className = "item";
+
+    item.innerHTML = `
+      <div class="row">
+        <div>
+          <b>${escapeHTML(contact.name)}</b>
+          <div class="small">${escapeHTML(contact.phone)}</div>
+        </div>
+        <button class="btn contact-delete"
+                data-index="${index}">
+          حذف
+        </button>
+      </div>
+    `;
+
+    $("contactsList").appendChild(item);
+
+  });
+
+}
+
+$("contactAdd").addEventListener("click",()=>{
+
+  const name =
+    $("contactName").value.trim();
+
+  const phone =
+    $("contactPhone").value.trim();
+
+  if(!name || !phone){
+
+    toast("نام و شماره را وارد کن.");
+    return;
+
+  }
+
+  const contacts = getContacts();
+
+  contacts.push({
+    name,
+    phone
+  });
+
+  saveContacts(contacts);
+
+  $("contactName").value = "";
+  $("contactPhone").value = "";
+
+  renderContacts();
+
+});
+
+$("contactsList").addEventListener("click",event=>{
+
+  const btn =
+    event.target.closest(".contact-delete");
+
+  if(!btn) return;
+
+  const contacts = getContacts();
+
+  contacts.splice(
+    Number(btn.dataset.index),
+    1
+  );
+
+  saveContacts(contacts);
+
+  renderContacts();
+
+});
+
+/* =========================
+   MESSAGES
+========================= */
+
+function getMessages(){
+
+  return JSON.parse(
+    localStorage.getItem("roham_messages") || "[]"
+  );
+
+}
+
+function saveMessages(list){
+
+  localStorage.setItem(
+    "roham_messages",
+    JSON.stringify(list)
+  );
+
+}
+
+function renderMessages(){
+
+  const messages = getMessages();
+
+  $("messagesList").innerHTML = "";
+
+  if(!messages.length){
+
+    $("messagesList").innerHTML =
+      '<div class="item">هنوز پیامی وجود ندارد.</div>';
+
+    return;
+
+  }
+
+  messages.forEach(message=>{
+
+    const item =
+      document.createElement("div");
+
+    item.className = "item";
+
+    item.textContent = message;
+
+    $("messagesList").appendChild(item);
+
+  });
+
+}
+
+$("messageSend").addEventListener("click",()=>{
+
+  const value =
+    $("messageInput").value.trim();
+
+  if(!value) return;
+
+  const messages = getMessages();
+
+  messages.push("شما: " + value);
+
+  saveMessages(messages);
+
+  $("messageInput").value = "";
+
+  renderMessages();
+
+});
+
+$("messageInput").addEventListener(
+  "keydown",
+  event=>{
+    if(event.key === "Enter"){
+      $("messageSend").click();
+    }
+  }
+);
+
+/* =========================
+   CALCULATOR
+========================= */
+
+document.querySelectorAll("[data-calc]").forEach(button=>{
+
+  button.addEventListener("click",()=>{
+
+    const value =
+      button.dataset.calc;
+
+    if(value === "C"){
+
+      calcValue = "";
+
+    }else if(value === "⌫"){
+
+      calcValue =
+        calcValue.slice(0,-1);
+
+    }else if(value === "="){
+
+      try{
+
+        if(!/^[0-9+\-*/%.() ]+$/.test(calcValue)){
+          throw new Error();
+        }
+
+        const result =
+          Function(
+            '"use strict";return (' +
+            calcValue +
+            ')'
+          )();
+
+        calcValue =
+          String(result);
+
+      }catch{
+
+        calcValue = "خطا";
+
+      }
+
+    }else{
+
+      if(calcValue === "خطا")
+        calcValue = "";
+
+      calcValue += value;
+
+    }
+
+    $("calcDisplay").value =
+      calcValue;
+
+  });
+
+});
+
+/* =========================
+   NOTES
+========================= */
+
+$("notesArea").value =
+  localStorage.getItem("roham_notes") || "";
+
+$("notesSave").addEventListener("click",()=>{
+
+  localStorage.setItem(
+    "roham_notes",
+    $("notesArea").value
+  );
+
+  toast("یادداشت ذخیره شد.");
+
+});
+
+$("notesClear").addEventListener("click",()=>{
+
+  $("notesArea").value = "";
+
+  localStorage.removeItem(
+    "roham_notes"
+  );
+
+});
+
+/* =========================
+   NOTIFICATIONS
+========================= */
+
+function saveNotifications(){
+
+  localStorage.setItem(
+    "roham_notifications",
+    JSON.stringify(notifications)
+  );
+
+}
+
+function renderNotifications(){
+
+  $("notificationsList").innerHTML = "";
+
+  if(!notifications.length){
+
+    $("notificationsList").innerHTML =
+      '<div class="item">اعلانی وجود ندارد.</div>';
+
+    return;
+
+  }
+
+  notifications.forEach((n,index)=>{
+
+    const item =
+      document.createElement("div");
+
+    item.className = "item";
+
+    item.innerHTML = `
+      <div class="row">
+        <span>🔔 ${escapeHTML(n)}</span>
+        <button class="btn notification-delete"
+                data-index="${index}">
+          حذف
+        </button>
+      </div>
+    `;
+
+    $("notificationsList").appendChild(item);
+
+  });
+
+}
+
+$("notificationAdd").addEventListener(
+  "click",
+  ()=>{
+
+    notifications.push(
+      "اعلان جدید Roham OS"
+    );
+
+    saveNotifications();
+    renderNotifications();
+
+    toast("اعلان اضافه شد.");
+
+  }
+);
+
+$("notificationsList").addEventListener(
+  "click",
+  event=>{
+
+    const btn =
+      event.target.closest(
+        ".notification-delete"
+      );
+
+    if(!btn) return;
+
+    notifications.splice(
+      Number(btn.dataset.index),
+      1
+    );
+
+    saveNotifications();
+    renderNotifications();
+
+  }
+);
+
+/* =========================
+   SECURITY
+========================= */
+
+function renderSecurity(){
+
+  const pin =
+    localStorage.getItem("roham_pin");
+
+  $("pinState").textContent =
+    pin
+    ? "PIN فعال است."
+    : "PIN تنظیم نشده است.";
+
+}
+
+$("pinSave").addEventListener("click",()=>{
+
+  const pin =
+    $("pinInput").value.trim();
+
+  if(!/^\d{4,6}$/.test(pin)){
+
+    toast("PIN باید ۴ تا ۶ رقم باشد.");
+    return;
+
+  }
+
+  localStorage.setItem(
+    "roham_pin",
+    pin
+  );
+
+  $("pinInput").value = "";
+
+  renderSecurity();
+
+  toast("PIN ذخیره شد.");
+
+});
+
+$("pinRemove").addEventListener("click",()=>{
+
+  localStorage.removeItem("roham_pin");
+
+  renderSecurity();
+
+  toast("PIN حذف شد.");
+
+});
+
+/* =========================
+   WALLPAPER
+========================= */
+
+document.querySelectorAll(".wall").forEach(button=>{
+
+  button.addEventListener("click",()=>{
+
+    const bg =
+      button.dataset.wall;
+
+    $("os").style.background =
+      bg;
+
+    localStorage.setItem(
+      "roham_wallpaper",
+      bg
+    );
+
+  });
+
+});
+
+const savedWallpaper =
+  localStorage.getItem("roham_wallpaper");
+
+if(savedWallpaper){
+
+  $("os").style.background =
+    savedWallpaper;
+
+}
+
+/* =========================
+   CONTROL CENTER
+========================= */
+
+document.querySelectorAll(
+  "[data-action]"
+).forEach(button=>{
+
+  button.addEventListener("click",()=>{
+
+    const action =
+      button.dataset.action;
+
+    if(action === "wifi"){
+
+      toast(
+        navigator.onLine
+        ? "اینترنت مرورگر فعال است."
+        : "مرورگر آفلاین است."
+      );
+
+    }
+
+    if(action === "bluetooth"){
+      toast("کنترل بلوتوث سخت‌افزاری در پروتوتایپ وب محدود است.");
+    }
+
+    if(action === "silent"){
+      toast("حالت سکوت آزمایشی فعال شد.");
+    }
+
+    if(action === "theme"){
+      toast("ظاهر Roham OS در حال حاضر در حالت تاریک است.");
+    }
+
+  });
+
+});
+
+/* =========================
+   HTML SAFETY
+========================= */
+
+function escapeHTML(value){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+/* =========================
+   STARTUP
+========================= */
+
+window.ROHAM_READY = true;
+
+renderStore();
+renderContacts();
+renderMessages();
+renderNotifications();
+renderAccount();
+renderSecurity();
+updateNetwork();
+updateBattery();
+
+console.log("Roham OS is ready.");
+
 </script>
 
-</div>
 </body>
 </html>
