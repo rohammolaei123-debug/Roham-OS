@@ -2,492 +2,674 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#08090d">
-<title>Roham OS Beta 4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<title>Roham OS</title>
 
 <style>
 *{
- box-sizing:border-box;
- -webkit-tap-highlight-color:transparent;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
- margin:0;
- width:100%;
- height:100%;
- overflow:hidden;
- font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
- background:#08090d;
- color:white;
+:root{
+  --bg:#0b0d12;
+  --panel:#151922;
+  --panel2:#1d2230;
+  --text:#f5f7fb;
+  --muted:#9da5b5;
+  --accent:#4f8cff;
+  --border:rgba(255,255,255,.09);
+  --danger:#ff5757;
+  --success:#43d17c;
 }
 
 body.light{
- background:#f2f3f7;
- color:#111;
+  --bg:#eef1f6;
+  --panel:#ffffff;
+  --panel2:#e4e8ef;
+  --text:#11151d;
+  --muted:#626b7a;
+  --border:rgba(0,0,0,.09);
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;
 }
 
 button,input{
- font:inherit;
+  font:inherit;
 }
 
 button{
- border:0;
- cursor:pointer;
+  border:0;
+  cursor:pointer;
 }
 
 #os{
- position:fixed;
- inset:0;
- overflow:hidden;
- background:
- radial-gradient(circle at 20% 10%,#27365d 0,#111525 35%,#07080b 80%);
- background-size:cover;
- background-position:center;
- transition:.25s;
+  width:100%;
+  height:100%;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(79,140,255,.12),transparent 30%),
+    radial-gradient(circle at 80% 90%,rgba(130,80,255,.10),transparent 30%),
+    var(--bg);
 }
 
-body.light #os{
- background:#eef1f7;
+#wallpaper{
+  position:absolute;
+  inset:0;
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  z-index:0;
+  pointer-events:none;
 }
 
-.statusbar{
- height:42px;
- display:flex;
- justify-content:space-between;
- align-items:center;
- padding:0 20px;
- position:relative;
- z-index:20;
+#shade{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.15);
+  z-index:1;
+  pointer-events:none;
+}
+
+#topbar{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:54px;
+  padding:10px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:20;
+  background:rgba(8,10,15,.48);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+}
+
+body.light #topbar{
+  background:rgba(255,255,255,.58);
+}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+  font-weight:600;
 }
 
 .status-right{
- display:flex;
- gap:12px;
- align-items:center;
- font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  direction:ltr;
 }
 
-.home{
- height:calc(100% - 42px);
- overflow:auto;
- padding:24px 20px 110px;
+.signal{
+  width:18px;
+  height:12px;
+  display:flex;
+  gap:2px;
+  align-items:end;
 }
 
-.clock{
- font-size:56px;
- font-weight:700;
- letter-spacing:-2px;
+.signal span{
+  width:3px;
+  background:var(--text);
+  border-radius:2px;
 }
 
-.date{
- opacity:.7;
- margin-bottom:24px;
+.signal span:nth-child(1){height:4px}
+.signal span:nth-child(2){height:7px}
+.signal span:nth-child(3){height:10px}
+.signal span:nth-child(4){height:12px}
+
+.battery{
+  width:25px;
+  height:12px;
+  border:1.5px solid var(--text);
+  border-radius:3px;
+  padding:2px;
+  position:relative;
 }
 
-.search{
- width:100%;
- height:52px;
- border:1px solid rgba(255,255,255,.12);
- background:rgba(255,255,255,.12);
- border-radius:17px;
- padding:0 17px;
- color:inherit;
- outline:none;
- margin-bottom:27px;
+.battery::after{
+  content:"";
+  position:absolute;
+  right:-4px;
+  top:3px;
+  width:2px;
+  height:5px;
+  border-radius:1px;
+  background:var(--text);
 }
 
-body.light .search{
- background:white;
- border-color:#ddd;
+.battery-level{
+  width:82%;
+  height:100%;
+  background:var(--success);
+  border-radius:1px;
 }
 
-.grid{
- display:grid;
- grid-template-columns:repeat(4,1fr);
- gap:20px 12px;
+#home{
+  position:absolute;
+  inset:54px 0 72px;
+  overflow:auto;
+  padding:20px 16px 35px;
+  z-index:5;
+}
+
+.home-title{
+  text-align:center;
+  margin:8px 0 25px;
+}
+
+.home-title h1{
+  font-size:30px;
+  margin:0;
+  font-weight:800;
+}
+
+.home-title p{
+  color:var(--muted);
+  margin:7px 0 0;
+  font-size:13px;
+}
+
+.app-grid{
+  width:100%;
+  max-width:850px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(84px,1fr));
+  gap:20px 13px;
 }
 
 .app{
- display:flex;
- flex-direction:column;
- align-items:center;
- gap:7px;
- background:none;
- color:inherit;
- user-select:none;
- touch-action:none;
+  min-height:100px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:9px;
+  user-select:none;
+  cursor:pointer;
+  position:relative;
 }
 
 .app.dragging{
- opacity:.35;
- transform:scale(.9);
+  opacity:.35;
+  transform:scale(.95);
 }
 
-.icon{
- width:62px;
- height:62px;
- border-radius:18px;
- display:flex;
- align-items:center;
- justify-content:center;
- background:rgba(255,255,255,.13);
- border:1px solid rgba(255,255,255,.12);
- box-shadow:0 8px 22px rgba(0,0,0,.2);
- transition:.2s;
+.app-icon{
+  width:65px;
+  height:65px;
+  border-radius:20px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:var(--panel);
+  border:1px solid var(--border);
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+  overflow:hidden;
+  transition:.18s;
 }
 
-.icon svg{
- width:31px;
- height:31px;
- stroke:currentColor;
- fill:none;
- stroke-width:1.8;
- stroke-linecap:round;
- stroke-linejoin:round;
+.app:hover .app-icon{
+  transform:translateY(-3px);
 }
 
-.app span{
- font-size:12px;
- white-space:nowrap;
+.app-icon svg{
+  width:35px;
+  height:35px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
 }
 
-body.large-icons .icon{
- width:72px;
- height:72px;
+.app-name{
+  font-size:12px;
+  color:var(--text);
+  text-align:center;
+  max-width:82px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
-body.small-icons .icon{
- width:52px;
- height:52px;
+#dock{
+  position:absolute;
+  left:14px;
+  right:14px;
+  bottom:10px;
+  height:59px;
+  border-radius:22px;
+  background:rgba(20,24,34,.72);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
 }
 
-.dock{
- position:fixed;
- bottom:15px;
- left:18px;
- right:18px;
- height:78px;
- border-radius:25px;
- background:rgba(18,20,28,.84);
- backdrop-filter:blur(25px);
- display:flex;
- justify-content:space-around;
- align-items:center;
- border:1px solid rgba(255,255,255,.1);
- z-index:30;
+body.light #dock{
+  background:rgba(255,255,255,.72);
+}
+
+.dock-btn{
+  width:44px;
+  height:44px;
+  border-radius:15px;
+  background:var(--panel2);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.dock-btn svg{
+  width:23px;
+  height:23px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+#panel{
+  position:absolute;
+  inset:0;
+  z-index:100;
+  background:var(--bg);
+  transform:translateY(100%);
+  transition:.28s ease;
+  display:flex;
+  flex-direction:column;
+}
+
+#panel.open{
+  transform:translateY(0);
+}
+
+.panel-head{
+  min-height:58px;
+  padding:8px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(20,24,34,.75);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+}
+
+body.light .panel-head{
+  background:rgba(255,255,255,.75);
+}
+
+.panel-title{
+  font-weight:800;
+  font-size:17px;
+}
+
+.back-btn{
+  width:40px;
+  height:40px;
+  border-radius:13px;
+  background:var(--panel2);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.back-btn svg{
+  width:20px;
+  height:20px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:2;
+}
+
+.panel-body{
+  flex:1;
+  overflow:auto;
+  padding:18px;
 }
 
 .screen{
- position:fixed;
- inset:0;
- z-index:100;
- display:none;
- flex-direction:column;
- background:#090a0e;
+  width:100%;
+  height:100%;
+  border:0;
+  background:white;
 }
 
-.screen.active{
- display:flex;
+.fullscreen-panel{
+  padding:0;
+  overflow:hidden;
 }
 
-.topbar{
- height:64px;
- flex-shrink:0;
- display:flex;
- align-items:center;
- padding:0 18px;
- border-bottom:1px solid rgba(255,255,255,.08);
- background:rgba(10,11,15,.96);
-}
-
-.back{
- width:44px;
- height:44px;
- border-radius:50%;
- background:rgba(255,255,255,.09);
- color:white;
- display:flex;
- align-items:center;
- justify-content:center;
- margin-left:12px;
-}
-
-.back svg{
- width:23px;
- height:23px;
- stroke:currentColor;
- fill:none;
- stroke-width:2;
-}
-
-.title{
- font-size:21px;
- font-weight:700;
-}
-
-.content{
- flex:1;
- overflow:auto;
- padding:20px;
-}
-
-.fullframe{
- flex:1;
- width:100%;
- border:0;
- background:white;
+iframe{
+  width:100%;
+  height:100%;
+  border:0;
 }
 
 .section{
- margin-bottom:23px;
-}
-
-.section-title{
- color:#9298a6;
- font-size:13px;
- margin:0 12px 9px;
+  max-width:800px;
+  margin:0 auto 18px;
 }
 
 .card{
- background:#15171d;
- border-radius:18px;
- overflow:hidden;
- border:1px solid rgba(255,255,255,.06);
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:15px;
+  margin-bottom:11px;
 }
 
-.row{
- min-height:64px;
- padding:12px 17px;
- display:flex;
- align-items:center;
- justify-content:space-between;
- border-bottom:1px solid rgba(255,255,255,.06);
+.setting-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  min-height:53px;
 }
 
-.row:last-child{
- border-bottom:0;
+.setting-info{
+  flex:1;
 }
 
-.row-left{
- display:flex;
- align-items:center;
- gap:14px;
+.setting-title{
+  font-size:14px;
+  font-weight:700;
 }
 
-.row-icon{
- width:37px;
- height:37px;
- display:flex;
- align-items:center;
- justify-content:center;
-}
-
-.row-icon svg{
- width:24px;
- height:24px;
- stroke:currentColor;
- fill:none;
- stroke-width:1.8;
- stroke-linecap:round;
- stroke-linejoin:round;
-}
-
-.sub{
- color:#8d94a2;
- font-size:12px;
- margin-top:3px;
+.setting-desc{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:4px;
 }
 
 .switch{
- width:48px;
- height:29px;
- border-radius:20px;
- background:#3a3d45;
- position:relative;
+  width:47px;
+  height:27px;
+  border-radius:20px;
+  background:#555b68;
+  padding:3px;
+  transition:.2s;
+  flex-shrink:0;
+}
+
+.switch i{
+  display:block;
+  width:21px;
+  height:21px;
+  background:white;
+  border-radius:50%;
+  transition:.2s;
 }
 
 .switch.on{
- background:#2f7df6;
+  background:var(--accent);
 }
 
-.switch:after{
- content:"";
- width:23px;
- height:23px;
- background:white;
- border-radius:50%;
- position:absolute;
- top:3px;
- right:3px;
- transition:.2s;
-}
-
-.switch.on:after{
- right:22px;
+.switch.on i{
+  transform:translateX(-20px);
 }
 
 .primary{
- width:100%;
- height:51px;
- border-radius:14px;
- background:#2f7df6;
- color:white;
- margin-top:12px;
+  width:100%;
+  padding:13px;
+  border-radius:13px;
+  background:var(--accent);
+  color:white;
+  font-weight:700;
 }
 
-.choice{
- display:flex;
- gap:8px;
- flex-wrap:wrap;
+.secondary{
+  width:100%;
+  padding:12px;
+  border-radius:13px;
+  background:var(--panel2);
+  color:var(--text);
+  margin-top:8px;
 }
 
-.choice button{
- padding:10px 15px;
- border-radius:12px;
- background:#242730;
- color:white;
+.danger{
+  color:white;
+  background:var(--danger);
 }
 
-.choice button.selected{
- background:#2f7df6;
+.range{
+  width:100%;
 }
 
 .wallpaper-preview{
- width:100%;
- height:150px;
- border-radius:17px;
- background:#15171d center/cover no-repeat;
- margin-bottom:12px;
- border:1px solid rgba(255,255,255,.08);
+  height:160px;
+  border-radius:15px;
+  background:var(--panel2);
+  background-size:cover;
+  background-position:center;
+  margin-bottom:10px;
+  border:1px solid var(--border);
 }
 
-.calc{
- max-width:480px;
- margin:auto;
+.storage-bar{
+  width:100%;
+  height:13px;
+  border-radius:20px;
+  overflow:hidden;
+  background:var(--panel2);
+  margin:12px 0;
+}
+
+.storage-fill{
+  height:100%;
+  width:0;
+  background:var(--accent);
+  transition:.4s;
+}
+
+.stat-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.stat{
+  background:var(--panel2);
+  border-radius:14px;
+  padding:14px;
+}
+
+.stat small{
+  color:var(--muted);
+  display:block;
+  margin-bottom:5px;
+}
+
+.stat strong{
+  font-size:16px;
+}
+
+.calculator{
+  max-width:430px;
+  margin:auto;
 }
 
 .calc-display{
- height:130px;
- display:flex;
- align-items:flex-end;
- justify-content:flex-end;
- padding:15px;
- font-size:48px;
- overflow:hidden;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:20px;
+  min-height:90px;
+  display:flex;
+  align-items:end;
+  justify-content:flex-end;
+  font-size:32px;
+  overflow:hidden;
+  direction:ltr;
+  margin-bottom:12px;
 }
 
 .calc-grid{
- display:grid;
- grid-template-columns:repeat(4,1fr);
- gap:10px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
 }
 
-.calc-key{
- aspect-ratio:1;
- border-radius:50%;
- background:#20232b;
- color:white;
- font-size:25px;
+.calc-grid button{
+  min-height:62px;
+  border-radius:17px;
+  background:var(--panel);
+  color:var(--text);
+  font-size:19px;
+  border:1px solid var(--border);
 }
 
-.calc-key.operator{
- background:#315fae;
+.calc-grid button.op{
+  background:var(--panel2);
 }
 
-.calc-key.equal{
- background:#2f7df6;
+.calc-grid button.equal{
+  background:var(--accent);
+  color:white;
 }
 
-.camera{
- flex:1;
- position:relative;
- background:#000;
- overflow:hidden;
+.camera-wrap{
+  width:100%;
+  max-width:700px;
+  margin:auto;
 }
 
-.camera video{
- width:100%;
- height:100%;
- object-fit:cover;
+#cameraVideo{
+  width:100%;
+  max-height:70vh;
+  object-fit:cover;
+  background:#000;
+  border-radius:20px;
 }
 
 .camera-controls{
- position:absolute;
- bottom:30px;
- left:0;
- right:0;
- display:flex;
- justify-content:center;
- align-items:center;
- gap:25px;
+  display:flex;
+  gap:10px;
+  margin-top:12px;
 }
 
-.camera-button{
- width:68px;
- height:68px;
- border-radius:50%;
- background:white;
- border:5px solid rgba(255,255,255,.35);
+.camera-controls button{
+  flex:1;
+  padding:13px;
+  border-radius:13px;
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid var(--border);
 }
 
-.camera-small{
- width:52px;
- height:52px;
- border-radius:50%;
- background:rgba(255,255,255,.2);
- color:white;
- display:flex;
- align-items:center;
- justify-content:center;
- font-size:22px;
+#toast{
+  position:absolute;
+  bottom:82px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#151922;
+  color:white;
+  padding:11px 17px;
+  border-radius:13px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:300;
+  font-size:12px;
+  border:1px solid rgba(255,255,255,.1);
 }
 
-.storage-number{
- font-size:40px;
- font-weight:700;
+#toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
 }
 
-.progress{
- height:10px;
- background:#292c34;
- border-radius:20px;
- overflow:hidden;
- margin:18px 0;
+.halo-card{
+  max-width:700px;
+  margin:auto;
+  text-align:center;
 }
 
-.progress-bar{
- height:100%;
- width:0;
- background:#2f7df6;
- transition:.4s;
+.halo-logo{
+  width:95px;
+  height:95px;
+  margin:10px auto 18px;
+  border-radius:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#3b82f6,#7c3aed);
+  color:white;
+  font-size:38px;
+  font-weight:900;
 }
 
-.textbox{
- width:100%;
- height:51px;
- background:#20232b;
- color:white;
- border:1px solid #343844;
- border-radius:13px;
- padding:0 14px;
- outline:none;
+.halo-state{
+  margin:18px auto;
+  padding:16px;
+  border-radius:15px;
+  background:var(--panel);
+  border:1px solid var(--border);
 }
 
-.note{
- color:#9097a5;
- font-size:12px;
- line-height:1.8;
+.halo-state strong{
+  display:block;
+  margin-bottom:6px;
 }
 
-@media(max-width:380px){
- .grid{
-  gap:16px 7px;
- }
- .icon{
-  width:55px;
-  height:55px;
- }
+.halo-note{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.8;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:35px 10px;
+}
+
+@media(max-width:500px){
+  .app-grid{
+    grid-template-columns:repeat(4,1fr);
+    gap:18px 5px;
+  }
+
+  .app-icon{
+    width:60px;
+    height:60px;
+  }
+
+  .app{
+    min-height:94px;
+  }
+
+  #home{
+    padding-left:9px;
+    padding-right:9px;
+  }
 }
 </style>
 </head>
@@ -496,1480 +678,2257 @@ body.small-icons .icon{
 
 <div id="os">
 
-<div class="statusbar">
- <span id="time">00:00</span>
- <div class="status-right">
-  <span>Wi-Fi</span>
-  <span>▮▮▮</span>
-  <span>100%</span>
- </div>
-</div>
-
-<main class="home">
-
-<div class="clock" id="bigClock">00:00</div>
-<div class="date" id="date">Roham OS</div>
-
-<input
- id="search"
- class="search"
- placeholder="جستجو در Roham OS"
- autocomplete="off">
-
-<div id="appGrid" class="grid"></div>
-
-</main>
-
-<div class="dock">
-
-<button class="app" onclick="openApp('camera')">
- <div class="icon">
-  <svg viewBox="0 0 24 24">
-   <path d="M4 8h4l2-3h4l2 3h4v11H4z"/>
-   <circle cx="12" cy="13" r="4"/>
-  </svg>
- </div>
-</button>
-
-<button class="app" onclick="openApp('calculator')">
- <div class="icon">
-  <svg viewBox="0 0 24 24">
-   <rect x="5" y="3" width="14" height="18" rx="2"/>
-   <path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/>
-  </svg>
- </div>
-</button>
-
-<button class="app" onclick="openApp('settings')">
- <div class="icon">
-  <svg viewBox="0 0 24 24">
-   <circle cx="12" cy="12" r="3"/>
-   <path d="M19 13v-2l2-1-2-3-2 1-2-1-1-2h-4l-1 2-2 1-2-1-2 3 2 1v2l-2 1 2 3 2-1 2 1 1 2h4l1-2 2-1 2 1 2-3z"/>
-  </svg>
- </div>
-</button>
-
-</div>
-</div>
-
-
-<!-- GOOGLE -->
-
-<div id="screen-google" class="screen">
-<div class="topbar">
-<button class="back" onclick="closeApp('google')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">Google</div>
-</div>
-<iframe class="fullframe" src="https://www.google.com/search?igu=1"></iframe>
-</div>
-
-
-<!-- YOUTUBE -->
-
-<div id="screen-youtube" class="screen">
-<div class="topbar">
-<button class="back" onclick="closeApp('youtube')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">YouTube</div>
-</div>
-<iframe class="fullframe" src="https://www.youtube.com/"></iframe>
-</div>
-
-
-<!-- GMAIL -->
-
-<div id="screen-gmail" class="screen">
-<div class="topbar">
-<button class="back" onclick="closeApp('gmail')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">Gmail</div>
-</div>
-<iframe class="fullframe" src="https://mail.google.com/"></iframe>
-</div>
-
-
-<!-- MUSIC -->
-
-<div id="screen-music" class="screen">
-<div class="topbar">
-<button class="back" onclick="closeApp('music')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">YouTube Music</div>
-</div>
-<iframe class="fullframe" src="https://music.youtube.com/"></iframe>
-</div>
-
-
-<!-- PHOTOS -->
-
-<div id="screen-photos" class="screen">
-<div class="topbar">
-<button class="back" onclick="closeApp('photos')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">Google Photos</div>
-</div>
-<iframe class="fullframe" src="https://photos.google.com/"></iframe>
-</div>
-
-
-<!-- ONEDRIVE -->
-
-<div id="screen-drive" class="screen">
-<div class="topbar">
-<button class="back" onclick="closeApp('drive')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">OneDrive</div>
-</div>
-<iframe class="fullframe" src="https://onedrive.live.com/"></iframe>
-</div>
-
-
-<!-- PLAY STORE -->
-
-<div id="screen-play" class="screen">
-<div class="topbar">
-<button class="back" onclick="closeApp('play')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">Google Play</div>
-</div>
-<iframe class="fullframe" src="https://play.google.com/store"></iframe>
-</div>
-
-
-<!-- HALOVPN -->
-
-<div id="screen-vpn" class="screen">
-<div class="topbar">
-<button class="back" onclick="closeApp('vpn')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">HaloVPN</div>
-</div>
-
-<div class="content">
-
-<div class="card" style="padding:22px">
-
-<h2 style="margin-top:0">HaloVPN</h2>
-
-<p class="note">
-HaloVPN در Roham OS قرار گرفته است.
-</p>
-
-<button class="primary"
-onclick="window.open('https://halovpn-fast-secure-vpn-proxy.updatestar.com/','_blank')">
-باز کردن HaloVPN
-</button>
-
-<p class="note">
-در نسخه وب، این صفحه نمی‌تواند VPN سیستم دستگاه را فعال کند.
-برای VPN واقعی باید نسخه native Roham OS داشته باشیم.
-</p>
-
-</div>
-
-</div>
-</div>
-
-
-<!-- CAMERA -->
-
-<div id="screen-camera" class="screen">
-
-<div class="topbar">
-<button class="back" onclick="closeCamera()">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">Camera</div>
-</div>
-
-<div class="camera">
-
-<video id="cameraVideo" autoplay playsinline></video>
-
-<div class="camera-controls">
-<button class="camera-small" onclick="flipCamera()">↻</button>
-<button class="camera-button" onclick="takePhoto()"></button>
-<button class="camera-small" onclick="stopCamera()">×</button>
-</div>
-
-</div>
-
-<canvas id="photoCanvas" style="display:none"></canvas>
-
-</div>
-
-
-<!-- CALCULATOR -->
-
-<div id="screen-calculator" class="screen">
-
-<div class="topbar">
-<button class="back" onclick="closeApp('calculator')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">Calculator</div>
-</div>
-
-<div class="content">
-
-<div class="calc">
-
-<div id="calcDisplay" class="calc-display">0</div>
-
-<div class="calc-grid">
-
-<button class="calc-key" onclick="calcClear()">AC</button>
-<button class="calc-key" onclick="calcInput('(')">(</button>
-<button class="calc-key" onclick="calcInput(')')">)</button>
-<button class="calc-key operator" onclick="calcInput('/')">÷</button>
-
-<button class="calc-key" onclick="calcInput('7')">7</button>
-<button class="calc-key" onclick="calcInput('8')">8</button>
-<button class="calc-key" onclick="calcInput('9')">9</button>
-<button class="calc-key operator" onclick="calcInput('*')">×</button>
-
-<button class="calc-key" onclick="calcInput('4')">4</button>
-<button class="calc-key" onclick="calcInput('5')">5</button>
-<button class="calc-key" onclick="calcInput('6')">6</button>
-<button class="calc-key operator" onclick="calcInput('-')">−</button>
-
-<button class="calc-key" onclick="calcInput('1')">1</button>
-<button class="calc-key" onclick="calcInput('2')">2</button>
-<button class="calc-key" onclick="calcInput('3')">3</button>
-<button class="calc-key operator" onclick="calcInput('+')">+</button>
-
-<button class="calc-key" onclick="calcInput('0')">0</button>
-<button class="calc-key" onclick="calcInput('.')">.</button>
-<button class="calc-key" onclick="calcBack()">⌫</button>
-<button class="calc-key equal" onclick="calcEqual()">=</button>
-
-</div>
-</div>
-</div>
-</div>
-
-
-<!-- STORAGE -->
-
-<div id="screen-storage" class="screen">
-
-<div class="topbar">
-<button class="back" onclick="closeApp('storage')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">Storage</div>
-</div>
-
-<div class="content">
-
-<div class="section">
-<div class="section-title">Roham Storage</div>
-
-<div class="card" style="padding:24px">
-
-<div class="storage-number" id="storageUsed">
-در حال بررسی…
-</div>
-
-<div id="storageText" class="sub"></div>
-
-<div class="progress">
-<div id="storageBar" class="progress-bar"></div>
-</div>
-
-<div id="storageFree" class="sub"></div>
-
-</div>
-</div>
-
-<div class="card">
-
-<div class="row">
-<div>فضای استفاده‌شده</div>
-<b id="storageUsed2">—</b>
-</div>
-
-<div class="row">
-<div>سهمیه قابل استفاده</div>
-<b id="storageQuota">—</b>
-</div>
-
-<div class="row">
-<div>فضای باقی‌مانده</div>
-<b id="storageFree2">—</b>
-</div>
-
-</div>
-
-<p class="note">
-این نسخه وب فضای قابل‌دسترسی Roham در مرورگر را نشان می‌دهد،
-نه کل حافظه فیزیکی دستگاه.
-</p>
-
-</div>
-</div>
-
-
-<!-- FILES -->
-
-<div id="screen-files" class="screen">
-
-<div class="topbar">
-<button class="back" onclick="closeApp('files')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">Files</div>
-</div>
-
-<div class="content">
-
-<div class="card">
-
-<div class="row">
-
-<div>
-<b>انتخاب فایل</b>
-<div class="sub">انتخاب فایل از دستگاه</div>
-</div>
-
-<input type="file" id="filePicker">
-
-</div>
-
-<div class="row">
-<div>
-<b id="fileName">فایلی انتخاب نشده</b>
-<div id="fileSize" class="sub"></div>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-
-<!-- SETTINGS -->
-
-<div id="screen-settings" class="screen">
-
-<div class="topbar">
-<button class="back" onclick="closeApp('settings')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-<div class="title">Settings</div>
-</div>
-
-<div class="content">
-
-
-<div class="section">
-
-<div class="section-title">ظاهر</div>
-
-<div class="card">
-
-<div class="row">
-
-<div>
-<b>Dark Mode</b>
-<div class="sub">ظاهر روشن یا تاریک</div>
-</div>
-
-<div id="darkSwitch"
-class="switch on"
-onclick="toggleDark()"></div>
-
-</div>
-
-
-<div class="row">
-
-<div>
-<b>اندازه آیکون</b>
-<div class="sub">اندازه برنامه‌های صفحه اصلی</div>
-</div>
-
-<div class="choice">
-
-<button onclick="setIconSize('small')">کوچک</button>
-<button onclick="setIconSize('normal')">متوسط</button>
-<button onclick="setIconSize('large')">بزرگ</button>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-
-<div class="section">
-
-<div class="section-title">والپیپر</div>
-
-<div class="card" style="padding:18px">
-
-<div id="wallpaperPreview"
-class="wallpaper-preview"></div>
-
-<input
-type="file"
-id="wallpaperInput"
-accept="image/*">
-
-<button class="primary"
-onclick="removeWallpaper()">
-حذف والپیپر
-</button>
-
-</div>
-</div>
-
-
-<div class="section">
-
-<div class="section-title">چیدمان صفحه اصلی</div>
-
-<div class="card">
-
-<div class="row">
-
-<div>
-<b>جابجایی برنامه‌ها</b>
-<div class="sub">
-روی آیکون نگه دار و آن را بکش
-</div>
-</div>
-
-</div>
-
-<div class="row">
-
-<div>
-<b>بازنشانی چیدمان</b>
-<div class="sub">
-برگرداندن ترتیب پیش‌فرض
-</div>
-</div>
-
-<button onclick="resetLayout()">
-بازنشانی
-</button>
-
-</div>
-
-</div>
-</div>
-
-
-<div class="section">
-
-<div class="section-title">اتصالات</div>
-
-<div class="card">
-
-<div class="row">
-<div class="row-left">
-<div class="row-icon">
-<svg viewBox="0 0 24 24">
-<path d="M2 8a15 15 0 0 1 20 0"/>
-<path d="M5 12a10 10 0 0 1 14 0"/>
-<path d="M8 16a5 5 0 0 1 8 0"/>
-<circle cx="12" cy="19" r="1"/>
-</svg>
-</div>
-
-<div>
-<b>Wi-Fi</b>
-<div class="sub">شبکه بی‌سیم</div>
-</div>
-</div>
-
-<div id="wifiSwitch"
-class="switch on"
-onclick="toggleSwitch('wifiSwitch')"></div>
-</div>
-
-
-<div class="row">
-
-<div class="row-left">
-
-<div class="row-icon">
-<svg viewBox="0 0 24 24">
-<path d="m8 7 8 10-8 4V3l8 4-8 10"/>
-</svg>
-</div>
-
-<div>
-<b>Bluetooth</b>
-<div class="sub">دستگاه‌های نزدیک</div>
-</div>
-
-</div>
-
-<div id="bluetoothSwitch"
-class="switch"
-onclick="toggleSwitch('bluetoothSwitch')"></div>
-
-</div>
-
-
-<div class="row">
-
-<div>
-<b>Airplane Mode</b>
-<div class="sub">حالت هواپیما</div>
-</div>
-
-<div id="airplaneSwitch"
-class="switch"
-onclick="toggleSwitch('airplaneSwitch')"></div>
-
-</div>
-
-</div>
-</div>
-
-
-<div class="section">
-
-<div class="section-title">دستگاه</div>
-
-<div class="card">
-
-<div class="row"
-onclick="openApp('storage')">
-
-<div>
-<b>Storage</b>
-<div class="sub">فضای ذخیره‌سازی</div>
-</div>
-
-<span>›</span>
-
-</div>
-
-
-<div class="row">
-
-<div>
-<b>Camera</b>
-<div class="sub">دوربین دستگاه</div>
-</div>
-
-<span>›</span>
-
-</div>
-
-
-<div class="row">
-
-<div>
-<b>Roham OS</b>
-<div class="sub">Beta 4</div>
-</div>
-
-<span>›</span>
-
-</div>
-
-</div>
-</div>
-
-</div>
-</div>
-
-
-<!-- ACCOUNT -->
-
-<div id="screen-account" class="screen">
-
-<div class="topbar">
-
-<button class="back" onclick="closeApp('account')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-
-<div class="title">Roham Account</div>
-
-</div>
-
-<div class="content">
-
-<div class="card" style="padding:20px">
-
-<input
-id="accountName"
-class="textbox"
-placeholder="نام کاربری">
-
-<input
-id="accountEmail"
-class="textbox"
-style="margin-top:10px"
-placeholder="ایمیل">
-
-<button
-class="primary"
-onclick="saveAccount()">
-ذخیره
-</button>
-
-<div id="accountStatus"
-class="note"
-style="margin-top:14px"></div>
-
-</div>
-
-</div>
-</div>
-
-
-<!-- AI -->
-
-<div id="screen-ai" class="screen">
-
-<div class="topbar">
-
-<button class="back" onclick="closeApp('ai')">
-<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-</button>
-
-<div class="title">Roham AI</div>
-
-</div>
-
-<iframe
-class="fullframe"
-src="https://rohammolaei123-debug.github.io/Roham-Ai/">
-</iframe>
+  <div id="wallpaper"></div>
+  <div id="shade"></div>
+
+  <header id="topbar">
+    <div class="status">
+      <span id="clock">00:00</span>
+      <span id="date"></span>
+    </div>
+
+    <div class="status-right">
+      <div class="signal">
+        <span></span><span></span><span></span><span></span>
+      </div>
+
+      <span id="wifiStatus">Wi-Fi</span>
+
+      <div class="battery">
+        <div class="battery-level"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="home">
+
+    <div class="home-title">
+      <h1>Roham OS</h1>
+      <p>سیستم‌عامل Roham</p>
+    </div>
+
+    <div id="appGrid" class="app-grid"></div>
+
+  </main>
+
+  <nav id="dock">
+    <button class="dock-btn" onclick="openApp('settings')" aria-label="Settings">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
+        <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 1.7-.06-.06A1.7 1.7 0 0 0 16.16 18a1.7 1.7 0 0 0-1 .62 1.7 1.7 0 0 0-.34 1.01v.09h-2.4v-.09A1.7 1.7 0 0 0 10.6 18a1.7 1.7 0 0 0-1.88.34l-.06.06-1.7-1.7.06-.06A1.7 1.7 0 0 0 7.36 15a1.7 1.7 0 0 0-.62-1 1.7 1.7 0 0 0-1.01-.34h-.09v-2.4h.09A1.7 1.7 0 0 0 7.36 10a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.7-1.7.06.06A1.7 1.7 0 0 0 10.6 6a1.7 1.7 0 0 0 1-.62 1.7 1.7 0 0 0 .34-1.01v-.09h2.4v.09A1.7 1.7 0 0 0 15.16 6a1.7 1.7 0 0 0 1.88-.34l.06-.06 1.7 1.7-.06.06A1.7 1.7 0 0 0 18.64 9a1.7 1.7 0 0 0 .62 1 1.7 1.7 0 0 0 1.01.34h.09v2.4h-.09A1.7 1.7 0 0 0 18.64 13a1.7 1.7 0 0 0 .76 2Z"/>
+      </svg>
+    </button>
+
+    <button class="dock-btn" onclick="openApp('camera')" aria-label="Camera">
+      <svg viewBox="0 0 24 24">
+        <path d="M4 7h3l1.5-2h7L17 7h3v12H4Z"/>
+        <circle cx="12" cy="13" r="3.5"/>
+      </svg>
+    </button>
+
+    <button class="dock-btn" onclick="openApp('calculator')" aria-label="Calculator">
+      <svg viewBox="0 0 24 24">
+        <rect x="5" y="3" width="14" height="18" rx="2"/>
+        <path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2M8 18h2M14 18h2"/>
+      </svg>
+    </button>
+  </nav>
+
+  <div id="panel">
+
+    <div class="panel-head">
+      <button class="back-btn" onclick="closePanel()">
+        <svg viewBox="0 0 24 24">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+
+      <div id="panelTitle" class="panel-title">Roham OS</div>
+
+      <div style="width:40px"></div>
+    </div>
+
+    <div id="panelBody" class="panel-body"></div>
+
+  </div>
+
+  <div id="toast"></div>
 
 </div>
 
 
 <script>
 
-/* ---------- APP DATA ---------- */
+/* =========================================================
+   ROHAM OS
+   Web Prototype
+   ========================================================= */
 
-const defaultApps=[
+const APP_KEY = "rohamLayoutV5";
+const SETTINGS_KEY = "rohamSettingsV5";
 
-{
- id:"google",
- name:"Google",
- icon:`<svg viewBox="0 0 24 24">
- <circle cx="12" cy="12" r="8"/>
- <path d="M12 4v8h8"/>
- </svg>`
-},
+const icons = {
 
-{
- id:"youtube",
- name:"YouTube",
- icon:`<svg viewBox="0 0 24 24">
- <rect x="3" y="6" width="18" height="12" rx="4"/>
- <path d="m10 9 5 3-5 3z"/>
- </svg>`
-},
+  google: `
+  <svg viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8"/>
+    <path d="M20 12h-8"/>
+  </svg>`,
 
-{
- id:"gmail",
- name:"Gmail",
- icon:`<svg viewBox="0 0 24 24">
- <path d="M4 6v12h16V6"/>
- <path d="m4 7 8 6 8-6"/>
- </svg>`
-},
+  chrome: `
+  <svg viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8"/>
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M12 9h8M9.5 14.5l-4 5M14.5 14.5l4 4"/>
+  </svg>`,
 
-{
- id:"music",
- name:"YouTube Music",
- icon:`<svg viewBox="0 0 24 24">
- <path d="M9 18V6l10-2v12"/>
- <circle cx="6" cy="18" r="3"/>
- <circle cx="16" cy="16" r="3"/>
- </svg>`
-},
+  youtube: `
+  <svg viewBox="0 0 24 24">
+    <rect x="3" y="6" width="18" height="12" rx="3"/>
+    <path d="M10 9l5 3-5 3Z"/>
+  </svg>`,
 
-{
- id:"photos",
- name:"Photos",
- icon:`<svg viewBox="0 0 24 24">
- <circle cx="12" cy="12" r="8"/>
- <path d="M12 4v16M4 12h16"/>
- </svg>`
-},
+  gmail: `
+  <svg viewBox="0 0 24 24">
+    <path d="M4 18V7l8 6 8-6v11"/>
+    <path d="M4 7l8 6 8-6"/>
+  </svg>`,
 
-{
- id:"drive",
- name:"OneDrive",
- icon:`<svg viewBox="0 0 24 24">
- <path d="m9 4 3-2 3 2 5 9-3 5H7l-3-5z"/>
- <path d="m9 4 6 10M4 13h16"/>
- </svg>`
-},
+  music: `
+  <svg viewBox="0 0 24 24">
+    <path d="M9 18V6l9-2v12"/>
+    <circle cx="6" cy="18" r="3"/>
+    <circle cx="15" cy="16" r="3"/>
+  </svg>`,
 
-{
- id:"play",
- name:"Play Store",
- icon:`<svg viewBox="0 0 24 24">
- <path d="m6 4 13 8-13 8z"/>
- </svg>`
-},
+  photos: `
+  <svg viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8"/>
+    <path d="M12 4v5M20 12h-5M12 20v-5M4 12h5"/>
+  </svg>`,
 
-{
- id:"vpn",
- name:"HaloVPN",
- icon:`<svg viewBox="0 0 24 24">
- <path d="M6 10V7a6 6 0 0 1 12 0v3"/>
- <rect x="4" y="10" width="16" height="10" rx="2"/>
- <circle cx="12" cy="15" r="1"/>
- </svg>`
-},
+  onedrive: `
+  <svg viewBox="0 0 24 24">
+    <path d="M7 17h11a3 3 0 0 0 0-6 5 5 0 0 0-9-2 4 4 0 0 0-2 8Z"/>
+  </svg>`,
 
-{
- id:"camera",
- name:"Camera",
- icon:`<svg viewBox="0 0 24 24">
- <path d="M4 8h4l2-3h4l2 3h4v11H4z"/>
- <circle cx="12" cy="13" r="4"/>
- </svg>`
-},
+  play: `
+  <svg viewBox="0 0 24 24">
+    <path d="M7 4l12 8-12 8Z"/>
+  </svg>`,
 
-{
- id:"calculator",
- name:"Calculator",
- icon:`<svg viewBox="0 0 24 24">
- <rect x="5" y="3" width="14" height="18" rx="2"/>
- <path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/>
- </svg>`
-},
+  settings: `
+  <svg viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19 13.5a7 7 0 0 0 0-3l2-1.2-2-3.3-2.2 1a7 7 0 0 0-2.6-1.5L14 3h-4l-.3 2.5A7 7 0 0 0 7.1 7L5 6 3 9.3 5 10.5a7 7 0 0 0 0 3L3 14.7 5 18l2.1-1a7 7 0 0 0 2.6 1.5L10 21h4l.3-2.5a7 7 0 0 0 2.6-1.5l2.2 1 2-3.3Z"/>
+  </svg>`,
 
-{
- id:"files",
- name:"Files",
- icon:`<svg viewBox="0 0 24 24">
- <path d="M3 6h7l2 2h9v10H3z"/>
- </svg>`
-},
+  camera: `
+  <svg viewBox="0 0 24 24">
+    <path d="M4 7h3l2-2h6l2 2h3v12H4Z"/>
+    <circle cx="12" cy="13" r="3.5"/>
+  </svg>`,
 
-{
- id:"storage",
- name:"Storage",
- icon:`<svg viewBox="0 0 24 24">
- <rect x="5" y="3" width="14" height="18" rx="2"/>
- <path d="M8 7h8M8 11h8M8 15h5"/>
- </svg>`
-},
+  calculator: `
+  <svg viewBox="0 0 24 24">
+    <rect x="5" y="3" width="14" height="18" rx="2"/>
+    <path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2M8 18h2M14 18h2"/>
+  </svg>`,
 
-{
- id:"settings",
- name:"Settings",
- icon:`<svg viewBox="0 0 24 24">
- <circle cx="12" cy="12" r="3"/>
- <path d="M19 13v-2l2-1-2-3-2 1-2-1-1-2h-4l-1 2-2 1-2-1-2 3 2 1v2l-2 1 2 3 2-1 2 1 1 2h4l1-2 2-1 2 1 2-3z"/>
- </svg>`
-},
+  files: `
+  <svg viewBox="0 0 24 24">
+    <path d="M4 5h6l2 2h8v12H4Z"/>
+    <path d="M4 9h16"/>
+  </svg>`,
 
-{
- id:"account",
- name:"Roham Account",
- icon:`<svg viewBox="0 0 24 24">
- <circle cx="12" cy="8" r="4"/>
- <path d="M4 21c1-5 4-7 8-7s7 2 8 7"/>
- </svg>`
-},
+  storage: `
+  <svg viewBox="0 0 24 24">
+    <ellipse cx="12" cy="6" rx="7" ry="3"/>
+    <path d="M5 6v6c0 2 14 2 14 0V6"/>
+    <path d="M5 12v6c0 2 14 2 14 0v-6"/>
+  </svg>`,
 
-{
- id:"ai",
- name:"Roham AI",
- icon:`<svg viewBox="0 0 24 24">
- <path d="M7 8a5 5 0 0 1 10 0v5a5 5 0 0 1-10 0z"/>
- <path d="M4 11v3M20 11v3M9 21h6"/>
- </svg>`
-}
+  recorder: `
+  <svg viewBox="0 0 24 24">
+    <rect x="8" y="3" width="8" height="12" rx="4"/>
+    <path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/>
+  </svg>`,
+
+  sim: `
+  <svg viewBox="0 0 24 24">
+    <path d="M7 3h7l4 4v14H6V3Z"/>
+    <path d="M9 13h6M9 17h6M9 9h2v2H9Z"/>
+  </svg>`,
+
+  wifi: `
+  <svg viewBox="0 0 24 24">
+    <path d="M4 9a12 12 0 0 1 16 0"/>
+    <path d="M7 12a7 7 0 0 1 10 0"/>
+    <path d="M10 15a3 3 0 0 1 4 0"/>
+    <circle cx="12" cy="19" r="1"/>
+  </svg>`,
+
+  bluetooth: `
+  <svg viewBox="0 0 24 24">
+    <path d="M12 3v18l6-6-12-9 12-9-6-6"/>
+  </svg>`,
+
+  airplane: `
+  <svg viewBox="0 0 24 24">
+    <path d="M3 13l8-2 4-7 2 1-2 7 6 4-1 2-7-3-5 4-2-1 3-5-6 1Z"/>
+  </svg>`,
+
+  halo: `
+  <svg viewBox="0 0 24 24">
+    <path d="M12 3c4.8 0 8.5 3.7 8.5 8.3 0 4.6-3.7 8.7-8.5 9.7"/>
+    <path d="M12 6c3 0 5.5 2.3 5.5 5.3S15 17 12 17"/>
+    <path d="M12 9c1.4 0 2.5 1 2.5 2.3S13.4 14 12 14"/>
+  </svg>`,
+
+  ai: `
+  <svg viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8"/>
+    <path d="M8 14c1.5 1 3 1.5 4 1.5s2.5-.5 4-1.5M9 9h.01M15 9h.01"/>
+  </svg>`
+};
+
+
+/* =========================================================
+   APP DEFINITIONS
+   ========================================================= */
+
+const defaultApps = [
+
+  {
+    id:"google",
+    name:"Google",
+    icon:icons.google,
+    type:"web",
+    url:"https://www.google.com/"
+  },
+
+  {
+    id:"chrome",
+    name:"Chrome",
+    icon:icons.chrome,
+    type:"web",
+    url:"https://www.google.com/chrome/"
+  },
+
+  {
+    id:"youtube",
+    name:"YouTube",
+    icon:icons.youtube,
+    type:"web",
+    url:"https://www.youtube.com/"
+  },
+
+  {
+    id:"gmail",
+    name:"Gmail",
+    icon:icons.gmail,
+    type:"web",
+    url:"https://mail.google.com/"
+  },
+
+  {
+    id:"music",
+    name:"YouTube Music",
+    icon:icons.music,
+    type:"web",
+    url:"https://music.youtube.com/"
+  },
+
+  {
+    id:"photos",
+    name:"Google Photos",
+    icon:icons.photos,
+    type:"web",
+    url:"https://photos.google.com/"
+  },
+
+  {
+    id:"onedrive",
+    name:"OneDrive",
+    icon:icons.onedrive,
+    type:"web",
+    url:"https://onedrive.live.com/"
+  },
+
+  {
+    id:"play",
+    name:"Play Store",
+    icon:icons.play,
+    type:"web",
+    url:"https://play.google.com/"
+  },
+
+  {
+    id:"halo",
+    name:"HaloVPN",
+    icon:icons.halo,
+    type:"halo"
+  },
+
+  {
+    id:"ai",
+    name:"Roham AI",
+    icon:icons.ai,
+    type:"web",
+    url:"https://rohammolaei123-debug.github.io/Roham-Ai/"
+  },
+
+  {
+    id:"camera",
+    name:"Camera",
+    icon:icons.camera,
+    type:"camera"
+  },
+
+  {
+    id:"calculator",
+    name:"Calculator",
+    icon:icons.calculator,
+    type:"calculator"
+  },
+
+  {
+    id:"files",
+    name:"Files",
+    icon:icons.files,
+    type:"files"
+  },
+
+  {
+    id:"storage",
+    name:"Storage",
+    icon:icons.storage,
+    type:"storage"
+  },
+
+  {
+    id:"recorder",
+    name:"Voice Recorder",
+    icon:icons.recorder,
+    type:"recorder"
+  },
+
+  {
+    id:"sim",
+    name:"SIM",
+    icon:icons.sim,
+    type:"sim"
+  },
+
+  {
+    id:"wifi",
+    name:"Wi-Fi",
+    icon:icons.wifi,
+    type:"wifi"
+  },
+
+  {
+    id:"bluetooth",
+    name:"Bluetooth",
+    icon:icons.bluetooth,
+    type:"bluetooth"
+  },
+
+  {
+    id:"airplane",
+    name:"Airplane Mode",
+    icon:icons.airplane,
+    type:"airplane"
+  },
+
+  {
+    id:"settings",
+    name:"Settings",
+    icon:icons.settings,
+    type:"settings"
+  }
 
 ];
 
 
-/* ---------- LAYOUT ---------- */
+/* =========================================================
+   STATE
+   ========================================================= */
 
-let savedLayout;
+let apps = loadApps();
+
+let settings = {
+  dark:true,
+  iconSize:65,
+  wallpaper:"",
+  wifi:false,
+  bluetooth:false,
+  airplane:false
+};
 
 try{
- savedLayout=JSON.parse(
-  localStorage.getItem("rohamLayout")||"null"
- );
-}catch{
- savedLayout=null;
-}
-
-let apps=defaultApps;
-
-if(Array.isArray(savedLayout)){
-
- const map=new Map(
-  defaultApps.map(a=>[a.id,a])
- );
-
- const restored=[];
-
- savedLayout.forEach(id=>{
-  if(map.has(id)){
-   restored.push(map.get(id));
-   map.delete(id);
+  const saved = localStorage.getItem(SETTINGS_KEY);
+  if(saved){
+    settings = {...settings,...JSON.parse(saved)};
   }
- });
+}catch(e){}
 
- map.forEach(a=>restored.push(a));
+applySettings();
 
- apps=restored;
+
+/* =========================================================
+   APP ORDER
+   ========================================================= */
+
+function loadApps(){
+
+  try{
+
+    const saved = localStorage.getItem(APP_KEY);
+
+    if(saved){
+
+      const ids = JSON.parse(saved);
+
+      const ordered = [];
+
+      ids.forEach(id=>{
+        const found = defaultApps.find(a=>a.id===id);
+        if(found) ordered.push(found);
+      });
+
+      defaultApps.forEach(app=>{
+        if(!ordered.some(a=>a.id===app.id)){
+          ordered.push(app);
+        }
+      });
+
+      return ordered;
+
+    }
+
+  }catch(e){}
+
+  return [...defaultApps];
 }
+
+
+function saveApps(){
+
+  localStorage.setItem(
+    APP_KEY,
+    JSON.stringify(apps.map(a=>a.id))
+  );
+
+}
+
+
+/* =========================================================
+   RENDER HOME
+   ========================================================= */
 
 function renderApps(){
 
- const grid=document.getElementById("appGrid");
+  const grid = document.getElementById("appGrid");
 
- grid.innerHTML="";
+  grid.innerHTML = "";
 
- apps.forEach((app,index)=>{
+  apps.forEach((app,index)=>{
 
-  const el=document.createElement("button");
+    const el = document.createElement("div");
 
-  el.className="app";
-  el.draggable=true;
-  el.dataset.id=app.id;
+    el.className = "app";
+    el.draggable = true;
+    el.dataset.index = index;
 
-  el.innerHTML=
-   `<div class="icon">${app.icon}</div>
-    <span>${app.name}</span>`;
+    el.innerHTML = `
+      <div class="app-icon" style="width:${settings.iconSize}px;height:${settings.iconSize}px">
+        ${app.icon}
+      </div>
+      <div class="app-name">${escapeHTML(app.name)}</div>
+    `;
 
-  el.onclick=()=>{
-   openApp(app.id);
-  };
+    el.addEventListener("click",()=>{
+      openApp(app.id);
+    });
 
-  el.addEventListener("dragstart",()=>{
-   el.classList.add("dragging");
+    el.addEventListener("dragstart",e=>{
+      e.dataTransfer.setData("text/plain",index);
+      el.classList.add("dragging");
+    });
+
+    el.addEventListener("dragend",()=>{
+      el.classList.remove("dragging");
+    });
+
+    el.addEventListener("dragover",e=>{
+      e.preventDefault();
+    });
+
+    el.addEventListener("drop",e=>{
+
+      e.preventDefault();
+
+      const from = Number(
+        e.dataTransfer.getData("text/plain")
+      );
+
+      const to = Number(index);
+
+      if(from === to) return;
+
+      const moved = apps.splice(from,1)[0];
+
+      apps.splice(to,0,moved);
+
+      saveApps();
+      renderApps();
+
+      toast("جای برنامه تغییر کرد");
+
+    });
+
+    grid.appendChild(el);
+
   });
-
-  el.addEventListener("dragend",()=>{
-   el.classList.remove("dragging");
-   saveLayout();
-  });
-
-  el.addEventListener("dragover",e=>{
-   e.preventDefault();
-
-   const dragging=
-    document.querySelector(".dragging");
-
-   if(!dragging||dragging===el)return;
-
-   const rect=el.getBoundingClientRect();
-
-   const after=
-    e.clientX-rect.left >
-    rect.width/2;
-
-   if(after){
-    el.after(dragging);
-   }else{
-    el.before(dragging);
-   }
-
-   apps=
-    [...grid.children].map(x=>
-     defaultApps.find(a=>a.id===x.dataset.id)
-    );
-  });
-
-  grid.appendChild(el);
-
- });
 
 }
 
-function saveLayout(){
 
- localStorage.setItem(
-  "rohamLayout",
-  JSON.stringify(
-   apps.map(a=>a.id)
-  )
- );
+function escapeHTML(text){
+
+  return String(text)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
 }
 
-function resetLayout(){
 
- apps=[...defaultApps];
+/* =========================================================
+   SETTINGS
+   ========================================================= */
 
- localStorage.removeItem("rohamLayout");
+function saveSettings(){
 
- renderApps();
+  localStorage.setItem(
+    SETTINGS_KEY,
+    JSON.stringify(settings)
+  );
+
 }
 
-renderApps();
+
+function applySettings(){
+
+  document.body.classList.toggle(
+    "light",
+    !settings.dark
+  );
+
+  const wp = document.getElementById("wallpaper");
+
+  if(wp){
+
+    wp.style.backgroundImage =
+      settings.wallpaper
+      ? `url("${settings.wallpaper}")`
+      : "none";
+
+  }
+
+}
 
 
-/* ---------- CLOCK ---------- */
+/* =========================================================
+   CLOCK
+   ========================================================= */
 
 function updateClock(){
 
- const now=new Date();
+  const now = new Date();
 
- const time=now.toLocaleTimeString("fa-IR",{
-  hour:"2-digit",
-  minute:"2-digit"
- });
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString("fa-IR",{
+      hour:"2-digit",
+      minute:"2-digit"
+    });
 
- const date=now.toLocaleDateString("fa-IR",{
-  weekday:"long",
-  year:"numeric",
-  month:"long",
-  day:"numeric"
- });
+  document.getElementById("date").textContent =
+    now.toLocaleDateString("fa-IR",{
+      month:"short",
+      day:"numeric"
+    });
 
- document.getElementById("time").textContent=time;
- document.getElementById("bigClock").textContent=time;
- document.getElementById("date").textContent=date;
 }
 
-updateClock();
 setInterval(updateClock,1000);
+updateClock();
 
 
-/* ---------- OPEN APPS ---------- */
+/* =========================================================
+   PANEL
+   ========================================================= */
 
-function openApp(name){
+function openPanel(title,html){
 
- const el=
-  document.getElementById("screen-"+name);
+  document.getElementById("panelTitle").textContent = title;
+  document.getElementById("panelBody").innerHTML = html;
 
- if(!el)return;
+  document.getElementById("panel").classList.add("open");
 
- el.classList.add("active");
+}
 
- if(name==="camera"){
+
+function closePanel(){
+
+  stopCamera();
+
+  document.getElementById("panel").classList.remove("open");
+
+}
+
+
+/* =========================================================
+   APP ROUTER
+   ========================================================= */
+
+function openApp(id){
+
+  const app = apps.find(a=>a.id===id);
+
+  if(!app) return;
+
+  switch(app.type){
+
+    case "web":
+      openWebApp(app);
+      break;
+
+    case "halo":
+      openHaloVPN();
+      break;
+
+    case "camera":
+      openCamera();
+      break;
+
+    case "calculator":
+      openCalculator();
+      break;
+
+    case "files":
+      openFiles();
+      break;
+
+    case "storage":
+      openStorage();
+      break;
+
+    case "recorder":
+      openRecorder();
+      break;
+
+    case "sim":
+      openSIM();
+      break;
+
+    case "wifi":
+      openWiFi();
+      break;
+
+    case "bluetooth":
+      openBluetooth();
+      break;
+
+    case "airplane":
+      openAirplane();
+      break;
+
+    case "settings":
+      openSettings();
+      break;
+
+  }
+
+}
+
+
+/* =========================================================
+   WEB APP
+   ========================================================= */
+
+function openWebApp(app){
+
+  openPanel(
+    app.name,
+    `
+      <div class="fullscreen-panel" style="height:100%;padding:0">
+        <iframe
+          class="screen"
+          src="${app.url}"
+          allow="camera; microphone; fullscreen; autoplay"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    `
+  );
+
+}
+
+
+/* =========================================================
+   HALOVPN
+   ========================================================= */
+
+function openHaloVPN(){
+
+  openPanel(
+    "HaloVPN",
+    `
+      <div class="halo-card">
+
+        <div class="halo-logo">
+          H
+        </div>
+
+        <h2>HaloVPN</h2>
+
+        <div class="halo-state">
+          <strong id="haloState">
+            آماده
+          </strong>
+
+          <span class="halo-note">
+            HaloVPN به‌عنوان برنامه داخل محیط Roham OS قرار گرفته است.
+          </span>
+        </div>
+
+        <button
+          class="primary"
+          onclick="toggleHalo()">
+          اتصال
+        </button>
+
+        <button
+          class="secondary"
+          onclick="showHaloInfo()">
+          اطلاعات
+        </button>
+
+        <p class="halo-note">
+          این نسخهٔ مرورگری نمی‌تواند VPN سیستمی واقعی ایجاد کند.
+          برای VPN واقعی باید Roham OS به‌صورت Android/native ساخته شود.
+        </p>
+
+      </div>
+    `
+  );
+
+}
+
+
+function toggleHalo(){
+
+  const state =
+    document.getElementById("haloState");
+
+  if(!state) return;
+
+  if(state.dataset.connected === "1"){
+
+    state.dataset.connected = "0";
+    state.textContent = "قطع شده";
+    toast("HaloVPN قطع شد");
+
+  }else{
+
+    state.dataset.connected = "1";
+    state.textContent = "در حال اتصال...";
+    
+    setTimeout(()=>{
+
+      if(state.dataset.connected === "1"){
+        state.textContent =
+          "اتصال آزمایشی فعال";
+      }
+
+    },900);
+
+    toast("حالت آزمایشی HaloVPN فعال شد");
+
+  }
+
+}
+
+
+function showHaloInfo(){
+
+  alert(
+`HaloVPN
+
+در این نسخه HaloVPN به‌صورت یک برنامهٔ داخلی Roham OS طراحی شده است.
+
+اما یک وب‌سایت نمی‌تواند خودش VPN سیستم‌عامل دستگاه را نصب یا کنترل کند.
+
+در نسخه Android واقعی Roham OS، این بخش باید به VPN Service سیستم‌عامل متصل شود.`
+  );
+
+}
+
+
+/* =========================================================
+   CAMERA
+   ========================================================= */
+
+let cameraStream = null;
+
+
+function openCamera(){
+
+  openPanel(
+    "Camera",
+    `
+      <div class="camera-wrap">
+
+        <video
+          id="cameraVideo"
+          autoplay
+          playsinline>
+        </video>
+
+        <div class="camera-controls">
+
+          <button onclick="startCamera()">
+            شروع دوربین
+          </button>
+
+          <button onclick="switchCamera()">
+            تعویض دوربین
+          </button>
+
+          <button onclick="takePhoto()">
+            عکس
+          </button>
+
+        </div>
+
+        <canvas
+          id="cameraCanvas"
+          style="display:none">
+        </canvas>
+
+      </div>
+    `
+  );
+
   startCamera();
- }
 
- if(name==="storage"){
-  updateStorage();
- }
-
- if(name==="account"){
-  loadAccount();
- }
-}
-
-function closeApp(name){
-
- const el=
-  document.getElementById("screen-"+name);
-
- if(el)el.classList.remove("active");
 }
 
 
-/* ---------- SEARCH ---------- */
+let facingMode = "environment";
 
-document
-.getElementById("search")
-.addEventListener("keydown",e=>{
-
- if(e.key!=="Enter")return;
-
- const q=e.target.value.trim();
-
- if(!q)return;
-
- openApp("google");
-
- const frame=
- document.querySelector("#screen-google iframe");
-
- frame.src=
- "https://www.google.com/search?igu=1&q="+
- encodeURIComponent(q);
-
-});
-
-
-/* ---------- CALCULATOR ---------- */
-
-let calcValue="";
-
-function updateCalc(){
- document.getElementById("calcDisplay")
- .textContent=calcValue||"0";
-}
-
-function calcInput(v){
-
- if(calcValue==="Error")calcValue="";
-
- calcValue+=v;
-
- updateCalc();
-}
-
-function calcClear(){
-
- calcValue="";
-
- updateCalc();
-}
-
-function calcBack(){
-
- calcValue=
- calcValue.slice(0,-1);
-
- updateCalc();
-}
-
-function calcEqual(){
-
- try{
-
-  if(!/^[0-9+\-*/().\s]+$/.test(calcValue)){
-   throw new Error();
-  }
-
-  const result=
-   Function(
-    '"use strict";return('+calcValue+')'
-   )();
-
-  if(!Number.isFinite(result)){
-   throw new Error();
-  }
-
-  calcValue=String(result);
-
- }catch{
-
-  calcValue="Error";
- }
-
- updateCalc();
-}
-
-
-/* ---------- CAMERA ---------- */
-
-let cameraStream=null;
-let facing="environment";
 
 async function startCamera(){
 
- if(!navigator.mediaDevices?.getUserMedia){
-  alert("دوربین در این مرورگر در دسترس نیست.");
-  return;
- }
+  try{
 
- try{
+    stopCamera();
 
-  if(cameraStream){
-   cameraStream.getTracks()
-   .forEach(t=>t.stop());
+    cameraStream =
+      await navigator.mediaDevices.getUserMedia({
+        video:{
+          facingMode:facingMode
+        },
+        audio:false
+      });
+
+    const video =
+      document.getElementById("cameraVideo");
+
+    if(video){
+
+      video.srcObject = cameraStream;
+
+    }
+
+  }catch(error){
+
+    alert(
+      "دسترسی دوربین داده نشد یا دوربین در این محیط قابل استفاده نیست."
+    );
+
   }
 
-  cameraStream=
-   await navigator.mediaDevices.getUserMedia({
-    video:{
-     facingMode:{
-      ideal:facing
-     }
-    },
-    audio:false
-   });
-
-  document.getElementById("cameraVideo")
-  .srcObject=cameraStream;
-
- }catch(err){
-
-  alert("اجازه دسترسی به دوربین داده نشد.");
-
-  console.error(err);
- }
 }
 
-function flipCamera(){
-
- facing=
-  facing==="environment"
-  ?"user"
-  :"environment";
-
- startCamera();
-}
-
-function takePhoto(){
-
- const video=
-  document.getElementById("cameraVideo");
-
- if(!video.videoWidth)return;
-
- const canvas=
-  document.getElementById("photoCanvas");
-
- canvas.width=video.videoWidth;
- canvas.height=video.videoHeight;
-
- const ctx=
-  canvas.getContext("2d");
-
- ctx.drawImage(
-  video,0,0,
-  canvas.width,
-  canvas.height
- );
-
- const image=
-  canvas.toDataURL("image/jpeg",.92);
-
- const a=
-  document.createElement("a");
-
- a.href=image;
- a.download=
-  "Roham-"+Date.now()+".jpg";
-
- a.click();
-}
 
 function stopCamera(){
 
- if(cameraStream){
+  if(cameraStream){
 
-  cameraStream
-  .getTracks()
-  .forEach(t=>t.stop());
+    cameraStream.getTracks().forEach(
+      track=>track.stop()
+    );
 
-  cameraStream=null;
- }
-}
+    cameraStream = null;
 
-function closeCamera(){
+  }
 
- stopCamera();
-
- closeApp("camera");
 }
 
 
-/* ---------- STORAGE ---------- */
+function switchCamera(){
 
-function formatBytes(bytes){
+  facingMode =
+    facingMode === "environment"
+    ? "user"
+    : "environment";
 
- if(!bytes)return"0 B";
+  startCamera();
 
- const units=[
-  "B","KB","MB","GB","TB"
- ];
+}
 
- const i=
-  Math.floor(
-   Math.log(bytes)/Math.log(1024)
+
+function takePhoto(){
+
+  const video =
+    document.getElementById("cameraVideo");
+
+  const canvas =
+    document.getElementById("cameraCanvas");
+
+  if(!video || !canvas || !cameraStream){
+
+    toast("دوربین فعال نیست");
+    return;
+
+  }
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  const ctx = canvas.getContext("2d");
+
+  ctx.drawImage(
+    video,
+    0,
+    0,
+    canvas.width,
+    canvas.height
   );
 
- return(
-  bytes/
-  Math.pow(1024,i)
- ).toFixed(i?2:0)
- +" "+units[i];
+  canvas.toBlob(blob=>{
+
+    const url =
+      URL.createObjectURL(blob);
+
+    const a =
+      document.createElement("a");
+
+    a.href = url;
+    a.download =
+      "Roham-Camera-" +
+      Date.now() +
+      ".jpg";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+  },"image/jpeg",.92);
+
 }
+
+
+/* =========================================================
+   CALCULATOR
+   ========================================================= */
+
+let calcValue = "";
+
+
+function openCalculator(){
+
+  calcValue = "";
+
+  openPanel(
+    "Calculator",
+    `
+      <div class="calculator">
+
+        <div
+          id="calcDisplay"
+          class="calc-display">
+          0
+        </div>
+
+        <div class="calc-grid">
+
+          <button onclick="calcClear()">C</button>
+          <button onclick="calcBack()">⌫</button>
+          <button class="op" onclick="calcInput('%')">%</button>
+          <button class="op" onclick="calcInput('/')">÷</button>
+
+          <button onclick="calcInput('7')">7</button>
+          <button onclick="calcInput('8')">8</button>
+          <button onclick="calcInput('9')">9</button>
+          <button class="op" onclick="calcInput('*')">×</button>
+
+          <button onclick="calcInput('4')">4</button>
+          <button onclick="calcInput('5')">5</button>
+          <button onclick="calcInput('6')">6</button>
+          <button class="op" onclick="calcInput('-')">−</button>
+
+          <button onclick="calcInput('1')">1</button>
+          <button onclick="calcInput('2')">2</button>
+          <button onclick="calcInput('3')">3</button>
+          <button class="op" onclick="calcInput('+')">+</button>
+
+          <button onclick="calcInput('0')">0</button>
+          <button onclick="calcInput('.')">.</button>
+          <button class="equal" onclick="calcResult()">=</button>
+
+        </div>
+
+      </div>
+    `
+  );
+
+}
+
+
+function calcInput(value){
+
+  calcValue += value;
+
+  updateCalc();
+
+}
+
+
+function calcClear(){
+
+  calcValue = "";
+
+  updateCalc();
+
+}
+
+
+function calcBack(){
+
+  calcValue =
+    calcValue.slice(0,-1);
+
+  updateCalc();
+
+}
+
+
+function updateCalc(){
+
+  document.getElementById(
+    "calcDisplay"
+  ).textContent =
+    calcValue || "0";
+
+}
+
+
+function calcResult(){
+
+  try{
+
+    if(!/^[0-9+\-*/%.() ]+$/.test(calcValue)){
+      throw new Error();
+    }
+
+    const result =
+      Function(
+        `"use strict"; return (${calcValue})`
+      )();
+
+    if(!Number.isFinite(result)){
+      throw new Error();
+    }
+
+    calcValue = String(result);
+
+    updateCalc();
+
+  }catch(e){
+
+    calcValue = "";
+
+    document.getElementById(
+      "calcDisplay"
+    ).textContent = "خطا";
+
+  }
+
+}
+
+
+/* =========================================================
+   FILES
+   ========================================================= */
+
+function openFiles(){
+
+  openPanel(
+    "Files",
+    `
+      <div class="section">
+
+        <div class="card">
+
+          <h3>مدیریت فایل</h3>
+
+          <p class="setting-desc">
+            انتخاب فایل از حافظه دستگاه
+          </p>
+
+          <input
+            id="filePicker"
+            type="file"
+            multiple
+            style="width:100%;margin-top:12px">
+
+        </div>
+
+        <div
+          id="fileInfo"
+          class="card empty">
+          هنوز فایلی انتخاب نشده است.
+        </div>
+
+      </div>
+    `
+  );
+
+  setTimeout(()=>{
+
+    const picker =
+      document.getElementById("filePicker");
+
+    if(!picker) return;
+
+    picker.addEventListener(
+      "change",
+      ()=>{
+
+        const files =
+          Array.from(picker.files);
+
+        const info =
+          document.getElementById("fileInfo");
+
+        if(!files.length){
+
+          info.textContent =
+            "هنوز فایلی انتخاب نشده است.";
+
+          return;
+
+        }
+
+        info.innerHTML =
+          files.map(file=>`
+            <div class="setting-row">
+              <span>${escapeHTML(file.name)}</span>
+              <small>
+                ${formatBytes(file.size)}
+              </small>
+            </div>
+          `).join("");
+
+      }
+    );
+
+  },50);
+
+}
+
+
+/* =========================================================
+   STORAGE
+   ========================================================= */
+
+async function openStorage(){
+
+  openPanel(
+    "Storage",
+    `
+      <div class="section">
+
+        <div class="card">
+
+          <h3>فضای ذخیره‌سازی Roham OS</h3>
+
+          <div class="storage-bar">
+            <div
+              id="storageFill"
+              class="storage-fill">
+            </div>
+          </div>
+
+          <div class="stat-grid">
+
+            <div class="stat">
+              <small>استفاده شده</small>
+              <strong id="storageUsed">...</strong>
+            </div>
+
+            <div class="stat">
+              <small>سقف تخمینی</small>
+              <strong id="storageQuota">...</strong>
+            </div>
+
+            <div class="stat">
+              <small>فضای تقریبی باقی‌مانده</small>
+              <strong id="storageFree">...</strong>
+            </div>
+
+            <div class="stat">
+              <small>درصد استفاده</small>
+              <strong id="storagePercent">...</strong>
+            </div>
+
+          </div>
+
+          <p class="setting-desc" style="line-height:1.8;margin-top:15px">
+            توجه: در نسخهٔ وب، این اعداد مربوط به فضای ذخیره‌سازی
+            قابل استفاده برای همین سایت/برنامه هستند و ظرفیت واقعی
+            کل حافظه دستگاه محسوب نمی‌شوند.
+          </p>
+
+        </div>
+
+      </div>
+    `
+  );
+
+  updateStorage();
+
+}
+
 
 async function updateStorage(){
 
- if(!navigator.storage?.estimate){
+  try{
 
-  document.getElementById("storageUsed")
-  .textContent="در دسترس نیست";
+    if(!navigator.storage ||
+       !navigator.storage.estimate){
 
-  return;
- }
+      throw new Error();
 
- try{
+    }
 
-  const e=
-   await navigator.storage.estimate();
+    const estimate =
+      await navigator.storage.estimate();
 
-  const usage=e.usage||0;
-  const quota=e.quota||0;
-  const free=
-   Math.max(quota-usage,0);
+    const usage =
+      estimate.usage || 0;
 
-  const percent=
-   quota
-   ? usage/quota*100
-   :0;
+    const quota =
+      estimate.quota || 0;
 
-  document.getElementById("storageUsed")
-  .textContent=
-   formatBytes(usage);
+    const free =
+      Math.max(quota-usage,0);
 
-  document.getElementById("storageUsed2")
-  .textContent=
-   formatBytes(usage);
+    const percent =
+      quota
+      ? (usage/quota)*100
+      : 0;
 
-  document.getElementById("storageQuota")
-  .textContent=
-   formatBytes(quota);
+    document.getElementById(
+      "storageUsed"
+    ).textContent =
+      formatBytes(usage);
 
-  document.getElementById("storageFree")
-  .textContent=
-   formatBytes(free)+" باقی مانده";
+    document.getElementById(
+      "storageQuota"
+    ).textContent =
+      formatBytes(quota);
 
-  document.getElementById("storageFree2")
-  .textContent=
-   formatBytes(free);
+    document.getElementById(
+      "storageFree"
+    ).textContent =
+      formatBytes(free);
 
-  document.getElementById("storageText")
-  .textContent=
-   percent.toFixed(1)+"٪ استفاده شده";
+    document.getElementById(
+      "storagePercent"
+    ).textContent =
+      percent.toFixed(1)+"%";
 
-  document.getElementById("storageBar")
-  .style.width=
-   Math.min(percent,100)+"%";
+    document.getElementById(
+      "storageFill"
+    ).style.width =
+      Math.min(percent,100)+"%";
 
- }catch(err){
+  }catch(e){
 
-  console.error(err);
- }
+    document.getElementById(
+      "storageUsed"
+    ).textContent = "نامشخص";
+
+    document.getElementById(
+      "storageQuota"
+    ).textContent = "نامشخص";
+
+    document.getElementById(
+      "storageFree"
+    ).textContent = "نامشخص";
+
+    document.getElementById(
+      "storagePercent"
+    ).textContent = "—";
+
+  }
+
 }
 
 
-/* ---------- FILES ---------- */
+function formatBytes(bytes){
 
-document
-.getElementById("filePicker")
-.addEventListener("change",e=>{
+  if(!bytes) return "0 B";
 
- const file=e.target.files[0];
+  const units =
+    ["B","KB","MB","GB","TB"];
 
- if(!file)return;
+  const i =
+    Math.floor(
+      Math.log(bytes)/Math.log(1024)
+    );
 
- document.getElementById("fileName")
- .textContent=file.name;
+  return (
+    bytes / Math.pow(1024,i)
+  ).toFixed(
+    i === 0 ? 0 : 2
+  ) +
+  " " +
+  units[i];
 
- document.getElementById("fileSize")
- .textContent=formatBytes(file.size);
-});
-
-
-/* ---------- SWITCHES ---------- */
-
-function toggleSwitch(id){
-
- const el=
-  document.getElementById(id);
-
- if(el)el.classList.toggle("on");
 }
 
 
-/* ---------- DARK MODE ---------- */
+/* =========================================================
+   VOICE RECORDER
+   ========================================================= */
+
+let recorder = null;
+let recordedChunks = [];
+
+
+function openRecorder(){
+
+  openPanel(
+    "Voice Recorder",
+    `
+      <div class="section">
+
+        <div class="card">
+
+          <h3>ضبط صدا</h3>
+
+          <div
+            id="recordState"
+            style="margin:15px 0;color:var(--muted)">
+            آماده
+          </div>
+
+          <div style="display:flex;gap:10px">
+
+            <button
+              class="primary"
+              onclick="startRecording()">
+              شروع
+            </button>
+
+            <button
+              class="secondary"
+              onclick="stopRecording()">
+              توقف
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    `
+  );
+
+}
+
+
+async function startRecording(){
+
+  try{
+
+    const stream =
+      await navigator.mediaDevices.getUserMedia({
+        audio:true
+      });
+
+    recordedChunks = [];
+
+    recorder =
+      new MediaRecorder(stream);
+
+    recorder.ondataavailable = e=>{
+
+      if(e.data.size){
+        recordedChunks.push(e.data);
+      }
+
+    };
+
+    recorder.onstop = ()=>{
+
+      const blob =
+        new Blob(
+          recordedChunks,
+          {type:"audio/webm"}
+        );
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const a =
+        document.createElement("a");
+
+      a.href = url;
+      a.download =
+        "Roham-Recording-" +
+        Date.now() +
+        ".webm";
+
+      a.click();
+
+      URL.revokeObjectURL(url);
+
+      stream.getTracks().forEach(
+        track=>track.stop()
+      );
+
+      const state =
+        document.getElementById(
+          "recordState"
+        );
+
+      if(state){
+        state.textContent =
+          "ضبط ذخیره شد";
+      }
+
+    };
+
+    recorder.start();
+
+    document.getElementById(
+      "recordState"
+    ).textContent =
+      "در حال ضبط...";
+
+  }catch(e){
+
+    alert(
+      "دسترسی میکروفون داده نشد."
+    );
+
+  }
+
+}
+
+
+function stopRecording(){
+
+  if(
+    recorder &&
+    recorder.state !== "inactive"
+  ){
+
+    recorder.stop();
+
+  }
+
+}
+
+
+/* =========================================================
+   SIM
+   ========================================================= */
+
+function openSIM(){
+
+  openPanel(
+    "SIM",
+    `
+      <div class="section">
+
+        <div class="card">
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+
+              <div class="setting-title">
+                وضعیت سیم‌کارت
+              </div>
+
+              <div class="setting-desc">
+                نسخهٔ وب نمی‌تواند سیم‌کارت واقعی دستگاه را کنترل کند.
+              </div>
+
+            </div>
+
+            <strong style="color:var(--muted)">
+              شبیه‌سازی
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+
+              <div class="setting-title">
+                شبکه موبایل
+              </div>
+
+              <div class="setting-desc">
+                در نسخه Android واقعی باید به سرویس‌های Telephony سیستم متصل شود.
+              </div>
+
+            </div>
+
+            <strong style="color:var(--muted)">
+              غیرفعال
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+    `
+  );
+
+}
+
+
+/* =========================================================
+   WIFI
+   ========================================================= */
+
+function openWiFi(){
+
+  openPanel(
+    "Wi-Fi",
+    `
+      <div class="section">
+
+        <div class="card">
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+
+              <div class="setting-title">
+                Wi-Fi
+              </div>
+
+              <div class="setting-desc">
+                وضعیت داخلی Roham OS
+              </div>
+
+            </div>
+
+            <button
+              id="wifiSwitch"
+              class="switch ${settings.wifi?"on":""}"
+              onclick="toggleWiFi()">
+              <i></i>
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="setting-title">
+            شبکه‌های اطراف
+          </div>
+
+          <div class="empty">
+            نسخهٔ وب اجازه کنترل مستقیم Wi-Fi دستگاه را نمی‌دهد.
+          </div>
+
+        </div>
+
+      </div>
+    `
+  );
+
+}
+
+
+function toggleWiFi(){
+
+  settings.wifi =
+    !settings.wifi;
+
+  saveSettings();
+
+  const sw =
+    document.getElementById(
+      "wifiSwitch"
+    );
+
+  if(sw){
+    sw.classList.toggle(
+      "on",
+      settings.wifi
+    );
+  }
+
+  document.getElementById(
+    "wifiStatus"
+  ).textContent =
+    settings.wifi
+    ? "Wi-Fi"
+    : "—";
+
+  toast(
+    settings.wifi
+    ? "Wi-Fi روشن شد"
+    : "Wi-Fi خاموش شد"
+  );
+
+}
+
+
+/* =========================================================
+   BLUETOOTH
+   ========================================================= */
+
+function openBluetooth(){
+
+  openPanel(
+    "Bluetooth",
+    `
+      <div class="section">
+
+        <div class="card">
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+
+              <div class="setting-title">
+                Bluetooth
+              </div>
+
+              <div class="setting-desc">
+                وضعیت داخلی Roham OS
+              </div>
+
+            </div>
+
+            <button
+              id="bluetoothSwitch"
+              class="switch ${settings.bluetooth?"on":""}"
+              onclick="toggleBluetooth()">
+              <i></i>
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="empty">
+            اتصال مستقیم به Bluetooth دستگاه در نسخهٔ وب محدود است.
+          </div>
+
+        </div>
+
+      </div>
+    `
+  );
+
+}
+
+
+function toggleBluetooth(){
+
+  settings.bluetooth =
+    !settings.bluetooth;
+
+  saveSettings();
+
+  const sw =
+    document.getElementById(
+      "bluetoothSwitch"
+    );
+
+  if(sw){
+    sw.classList.toggle(
+      "on",
+      settings.bluetooth
+    );
+  }
+
+  toast(
+    settings.bluetooth
+    ? "Bluetooth روشن شد"
+    : "Bluetooth خاموش شد"
+  );
+
+}
+
+
+/* =========================================================
+   AIRPLANE MODE
+   ========================================================= */
+
+function openAirplane(){
+
+  openPanel(
+    "Airplane Mode",
+    `
+      <div class="section">
+
+        <div class="card">
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+
+              <div class="setting-title">
+                حالت هواپیما
+              </div>
+
+              <div class="setting-desc">
+                این کلید فقط وضعیت رابط Roham OS را تغییر می‌دهد.
+              </div>
+
+            </div>
+
+            <button
+              id="airplaneSwitch"
+              class="switch ${settings.airplane?"on":""}"
+              onclick="toggleAirplane()">
+              <i></i>
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    `
+  );
+
+}
+
+
+function toggleAirplane(){
+
+  settings.airplane =
+    !settings.airplane;
+
+  if(settings.airplane){
+
+    settings.wifi = false;
+    settings.bluetooth = false;
+
+  }
+
+  saveSettings();
+
+  const sw =
+    document.getElementById(
+      "airplaneSwitch"
+    );
+
+  if(sw){
+    sw.classList.toggle(
+      "on",
+      settings.airplane
+    );
+  }
+
+  toast(
+    settings.airplane
+    ? "حالت هواپیما روشن شد"
+    : "حالت هواپیما خاموش شد"
+  );
+
+}
+
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+function openSettings(){
+
+  openPanel(
+    "Settings",
+    `
+      <div class="section">
+
+        <div class="card">
+
+          <h3>ظاهر</h3>
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+              <div class="setting-title">
+                حالت تاریک
+              </div>
+              <div class="setting-desc">
+                تغییر حالت روشن و تاریک Roham OS
+              </div>
+            </div>
+
+            <button
+              id="darkSwitch"
+              class="switch ${settings.dark?"on":""}"
+              onclick="toggleDark()">
+              <i></i>
+            </button>
+
+          </div>
+
+          <div style="margin-top:18px">
+
+            <div class="setting-title">
+              اندازه آیکون‌ها
+            </div>
+
+            <input
+              class="range"
+              type="range"
+              min="50"
+              max="85"
+              value="${settings.iconSize}"
+              oninput="changeIconSize(this.value)">
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <h3>Wallpaper</h3>
+
+          <div
+            id="wallPreview"
+            class="wallpaper-preview">
+          </div>
+
+          <input
+            id="wallpaperInput"
+            type="file"
+            accept="image/*"
+            style="width:100%">
+
+          <button
+            class="secondary"
+            onclick="removeWallpaper()">
+            حذف Wallpaper
+          </button>
+
+        </div>
+
+
+        <div class="card">
+
+          <h3>اتصالات</h3>
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+              <div class="setting-title">Wi-Fi</div>
+            </div>
+
+            <button
+              class="switch ${settings.wifi?"on":""}"
+              onclick="toggleSettingFromSettings('wifi')">
+              <i></i>
+            </button>
+
+          </div>
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+              <div class="setting-title">Bluetooth</div>
+            </div>
+
+            <button
+              class="switch ${settings.bluetooth?"on":""}"
+              onclick="toggleSettingFromSettings('bluetooth')">
+              <i></i>
+            </button>
+
+          </div>
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+              <div class="setting-title">Airplane Mode</div>
+            </div>
+
+            <button
+              class="switch ${settings.airplane?"on":""}"
+              onclick="toggleSettingFromSettings('airplane')">
+              <i></i>
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <h3>مدیریت برنامه‌ها</h3>
+
+          <p class="setting-desc">
+            برای جابه‌جایی برنامه‌ها، روی آیکون برنامه نگه دارید
+            و آن را بکشید.
+          </p>
+
+          <button
+            class="secondary"
+            onclick="resetLayout()">
+            بازنشانی ترتیب برنامه‌ها
+          </button>
+
+        </div>
+
+
+        <div class="card">
+
+          <h3>دستگاه</h3>
+
+          <div class="stat-grid">
+
+            <div class="stat">
+              <small>سیستم</small>
+              <strong>Roham OS</strong>
+            </div>
+
+            <div class="stat">
+              <small>نسخه</small>
+              <strong>Beta 5</strong>
+            </div>
+
+            <div class="stat">
+              <small>معماری</small>
+              <strong>Web Prototype</strong>
+            </div>
+
+            <div class="stat">
+              <small>Roham Account</small>
+              <strong>حذف شده</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <button
+            class="primary"
+            onclick="resetAll()">
+            بازنشانی کامل Roham OS
+          </button>
+
+        </div>
+
+      </div>
+    `
+  );
+
+  setTimeout(()=>{
+
+    const input =
+      document.getElementById(
+        "wallpaperInput"
+      );
+
+    if(input){
+
+      input.addEventListener(
+        "change",
+        handleWallpaper
+      );
+
+    }
+
+    const preview =
+      document.getElementById(
+        "wallPreview"
+      );
+
+    if(preview && settings.wallpaper){
+
+      preview.style.backgroundImage =
+        `url("${settings.wallpaper}")`;
+
+    }
+
+  },50);
+
+}
+
 
 function toggleDark(){
 
- const isLight=
-  document.body.classList.toggle("light");
+  settings.dark =
+    !settings.dark;
 
- const dark=
-  !isLight;
+  saveSettings();
+  applySettings();
 
- document.getElementById("darkSwitch")
- .classList.toggle("on",dark);
+  const sw =
+    document.getElementById(
+      "darkSwitch"
+    );
 
- localStorage.setItem(
-  "rohamDark",
-  dark?"1":"0"
- );
-}
+  if(sw){
+    sw.classList.toggle(
+      "on",
+      settings.dark
+    );
+  }
 
-function loadTheme(){
-
- const dark=
-  localStorage.getItem("rohamDark");
-
- if(dark==="0"){
-  document.body.classList.add("light");
-  document.getElementById("darkSwitch")
-  ?.classList.remove("on");
- }
 }
 
 
-/* ---------- ICON SIZE ---------- */
+function changeIconSize(value){
 
-function setIconSize(size){
+  settings.iconSize =
+    Number(value);
 
- document.body.classList.remove(
-  "small-icons",
-  "large-icons"
- );
+  saveSettings();
+  renderApps();
 
- if(size==="small"){
-  document.body.classList.add("small-icons");
- }
-
- if(size==="large"){
-  document.body.classList.add("large-icons");
- }
-
- localStorage.setItem(
-  "rohamIconSize",
-  size
- );
-}
-
-function loadIconSize(){
-
- const size=
-  localStorage.getItem("rohamIconSize");
-
- if(size)setIconSize(size);
 }
 
 
-/* ---------- WALLPAPER ---------- */
+function handleWallpaper(event){
 
-const wallpaperInput=
- document.getElementById("wallpaperInput");
+  const file =
+    event.target.files[0];
 
-wallpaperInput
-.addEventListener("change",e=>{
+  if(!file) return;
 
- const file=e.target.files[0];
+  const reader =
+    new FileReader();
 
- if(!file)return;
+  reader.onload = e=>{
 
- if(!file.type.startsWith("image/"))return;
+    settings.wallpaper =
+      e.target.result;
 
- const reader=
-  new FileReader();
+    saveSettings();
+    applySettings();
 
- reader.onload=()=>{
+    const preview =
+      document.getElementById(
+        "wallPreview"
+      );
 
-  const data=reader.result;
+    if(preview){
 
-  localStorage.setItem(
-   "rohamWallpaper",
-   data
-  );
+      preview.style.backgroundImage =
+        `url("${settings.wallpaper}")`;
 
-  applyWallpaper(data);
- };
+    }
 
- reader.readAsDataURL(file);
-});
+    toast("Wallpaper تغییر کرد");
 
-function applyWallpaper(data){
+  };
 
- const os=
-  document.getElementById("os");
+  reader.readAsDataURL(file);
 
- const preview=
-  document.getElementById("wallpaperPreview");
-
- if(data){
-
-  os.style.backgroundImage=
-   `url("${data}")`;
-
-  preview.style.backgroundImage=
-   `url("${data}")`;
-
- }else{
-
-  os.style.backgroundImage="";
-
-  preview.style.backgroundImage="";
- }
 }
+
 
 function removeWallpaper(){
 
- localStorage.removeItem(
-  "rohamWallpaper"
- );
+  settings.wallpaper = "";
 
- applyWallpaper(null);
-}
+  saveSettings();
+  applySettings();
 
-function loadWallpaper(){
+  const preview =
+    document.getElementById(
+      "wallPreview"
+    );
 
- const data=
-  localStorage.getItem("rohamWallpaper");
+  if(preview){
 
- if(data){
-  applyWallpaper(data);
- }
-}
+    preview.style.backgroundImage =
+      "none";
 
+  }
 
-/* ---------- ACCOUNT ---------- */
+  toast("Wallpaper حذف شد");
 
-function saveAccount(){
-
- const data={
-  name:
-   document.getElementById("accountName").value.trim(),
-
-  email:
-   document.getElementById("accountEmail").value.trim()
- };
-
- localStorage.setItem(
-  "rohamAccount",
-  JSON.stringify(data)
- );
-
- document.getElementById("accountStatus")
- .textContent=
- "حساب Roham ذخیره شد.";
-}
-
-function loadAccount(){
-
- try{
-
-  const data=
-   JSON.parse(
-    localStorage.getItem(
-     "rohamAccount"
-    )||"{}"
-   );
-
-  document.getElementById("accountName")
-  .value=data.name||"";
-
-  document.getElementById("accountEmail")
-  .value=data.email||"";
-
- }catch{}
 }
 
 
-/* ---------- LOAD SETTINGS ---------- */
+function toggleSettingFromSettings(name){
 
-loadTheme();
-loadIconSize();
-loadWallpaper();
+  settings[name] =
+    !settings[name];
+
+  if(
+    name === "airplane" &&
+    settings.airplane
+  ){
+
+    settings.wifi = false;
+    settings.bluetooth = false;
+
+  }
+
+  saveSettings();
+
+  openSettings();
+
+}
+
+
+function resetLayout(){
+
+  apps = [...defaultApps];
+
+  saveApps();
+
+  renderApps();
+
+  toast("ترتیب برنامه‌ها بازنشانی شد");
+
+}
+
+
+function resetAll(){
+
+  if(
+    !confirm(
+      "همه تنظیمات Roham OS بازنشانی شود؟"
+    )
+  ) return;
+
+  localStorage.removeItem(APP_KEY);
+  localStorage.removeItem(SETTINGS_KEY);
+
+  location.reload();
+
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+let toastTimer = null;
+
+
+function toast(message){
+
+  const el =
+    document.getElementById("toast");
+
+  el.textContent = message;
+
+  el.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer =
+    setTimeout(()=>{
+      el.classList.remove("show");
+    },1800);
+
+}
+
+
+/* =========================================================
+   KEYBOARD CALCULATOR SUPPORT
+   ========================================================= */
+
+document.addEventListener(
+  "keydown",
+  event=>{
+
+    const panel =
+      document.getElementById("panel");
+
+    if(!panel.classList.contains("open"))
+      return;
+
+    const title =
+      document.getElementById(
+        "panelTitle"
+      ).textContent;
+
+    if(title !== "Calculator")
+      return;
+
+    const key = event.key;
+
+    if(
+      /[0-9+\-*/%.]/.test(key)
+    ){
+
+      calcInput(key);
+
+    }else if(key === "Enter"){
+
+      calcResult();
+
+    }else if(key === "Backspace"){
+
+      calcBack();
+
+    }else if(key === "Escape"){
+
+      calcClear();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+renderApps();
 
 </script>
 
