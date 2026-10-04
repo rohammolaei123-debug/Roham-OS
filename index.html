@@ -1,177 +1,280 @@
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-<meta name="theme-color" content="#070a12">
-<title>Roham OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#090d18">
+<title>Roham OS Beta 2</title>
 
 <style>
 *{box-sizing:border-box}
 html,body{
- margin:0;width:100%;height:100%;overflow:hidden;
- font-family:Tahoma,Arial,sans-serif;color:#fff;
- background:#070a12
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:#080b14;
+  color:#fff;
 }
 button,input,textarea{font:inherit}
-button{cursor:pointer;color:#fff;border:0}
+button{cursor:pointer}
+
 #os{
- width:100%;height:100%;
- background:
- radial-gradient(circle at 15% 10%,#294b87 0,transparent 32%),
- radial-gradient(circle at 90% 80%,#55256e 0,transparent 35%),
- #070a12;
+  width:100%;
+  height:100%;
+  background:
+    radial-gradient(circle at 50% -10%,#30446f 0,#151d36 38%,#080b14 100%);
+  display:flex;
+  flex-direction:column;
 }
+
 .status{
- height:36px;padding:8px 14px;
- display:flex;justify-content:space-between;
- background:#0003;font-size:13px
+  height:34px;
+  padding:7px 15px;
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
 }
+
 .home{
- height:calc(100% - 36px);
- overflow:auto;padding:18px 15px 100px
+  flex:1;
+  overflow:auto;
+  padding:22px 16px 105px;
 }
-.clock{text-align:center;font-size:48px;font-weight:bold;margin-top:8px}
-.date{text-align:center;opacity:.65;margin:5px 0 20px}
+
+.clock{
+  font-size:54px;
+  font-weight:700;
+  letter-spacing:-2px;
+}
+
+.date{
+  opacity:.7;
+  margin-bottom:20px;
+}
+
 .search{
- max-width:900px;margin:auto auto 20px;
- display:flex;gap:8px
+  height:48px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 15px;
+  margin-bottom:23px;
+  border-radius:18px;
+  background:#ffffff15;
+  border:1px solid #ffffff20;
+  backdrop-filter:blur(20px);
 }
+
 .search input{
- flex:1;padding:14px 16px;border-radius:17px;
- border:1px solid #ffffff18;background:#ffffff12;
- color:#fff;outline:none
+  flex:1;
+  color:#fff;
+  background:transparent;
+  border:0;
+  outline:0;
 }
-.btn{
- padding:12px 15px;border-radius:14px;
- background:#3565ff
+
+.search button{
+  background:none;
+  color:#fff;
+  font-size:20px;
 }
-.btn.gray{background:#ffffff12}
-.btn.red{background:#d33c55}
-.apps{
- max-width:900px;margin:auto;
- display:grid;grid-template-columns:repeat(5,1fr);gap:14px
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px 10px;
 }
+
 .app{
- background:#ffffff0d;border:1px solid #ffffff0a;
- border-radius:20px;padding:12px 5px;
- text-align:center;min-height:90px;
- transition:.15s
+  background:none;
+  border:0;
+  color:#fff;
+  text-align:center;
+  font-size:12px;
+  padding:0;
 }
-.app:active{transform:scale(.93)}
-.icon{font-size:30px;margin-bottom:7px}
-.app small{font-size:11px}
+
+.icon{
+  width:58px;
+  height:58px;
+  margin:auto auto 7px;
+  display:grid;
+  place-items:center;
+  border-radius:17px;
+  font-size:28px;
+  background:#ffffff16;
+  border:1px solid #ffffff22;
+  box-shadow:0 7px 25px #0004;
+  transition:.12s;
+}
+
+.app:active .icon{
+  transform:scale(.91);
+}
+
 .dock{
- position:fixed;bottom:12px;left:50%;
- transform:translateX(-50%);
- display:flex;gap:8px;padding:8px 10px;
- background:#101522dd;backdrop-filter:blur(25px);
- border:1px solid #ffffff12;border-radius:25px;
- z-index:30
+  position:fixed;
+  bottom:12px;
+  left:12px;
+  right:12px;
+  height:68px;
+  border-radius:25px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  background:#ffffff18;
+  border:1px solid #ffffff22;
+  backdrop-filter:blur(25px);
+  z-index:5;
 }
-.dock button{
- width:48px;height:48px;border-radius:15px;
- background:#ffffff0d;font-size:22px
+
+.page{
+  position:fixed;
+  inset:0;
+  display:none;
+  flex-direction:column;
+  background:#090d18;
+  z-index:20;
 }
-.panel{
- display:none;position:fixed;inset:0;z-index:20;
- background:#080b14f8;backdrop-filter:blur(25px)
+
+.page.show{
+  display:flex;
 }
-.panel.show{display:flex;flex-direction:column}
-.top{
- height:62px;padding:10px 14px;
- display:flex;align-items:center;gap:12px;
- border-bottom:1px solid #ffffff12
+
+.bar{
+  min-height:58px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px;
+  border-bottom:1px solid #ffffff15;
 }
-.top h2{font-size:18px;margin:0;flex:1}
-.back{
- width:42px;height:42px;border-radius:14px;
- background:#ffffff10
+
+.bar button{
+  border:0;
+  border-radius:12px;
+  padding:8px 13px;
+  color:#fff;
+  background:#ffffff12;
 }
+
+.bar h2{
+  margin:0;
+  font-size:18px;
+}
+
 .content{
- flex:1;overflow:auto;padding:18px
+  flex:1;
+  overflow:auto;
+  padding:18px;
 }
+
 .card{
- max-width:900px;margin:0 auto 12px;
- padding:16px;border-radius:19px;
- background:#ffffff09;border:1px solid #ffffff0c
+  padding:17px;
+  margin-bottom:12px;
+  border-radius:18px;
+  background:#ffffff0d;
+  border:1px solid #ffffff15;
 }
-input,textarea{
- width:100%;padding:13px;margin:6px 0 10px;
- border-radius:13px;border:1px solid #ffffff16;
- background:#111725;color:#fff;outline:none
+
+.big{
+  font-size:29px;
+  font-weight:700;
 }
-textarea{min-height:130px;resize:vertical}
+
+.muted{
+  opacity:.65;
+}
+
+.primary{
+  background:#607cff;
+  color:#fff;
+  border:0;
+  border-radius:12px;
+  padding:11px 16px;
+}
+
+.input{
+  width:100%;
+  padding:12px;
+  margin:6px 0 10px;
+  color:#fff;
+  background:#ffffff0d;
+  border:1px solid #ffffff20;
+  border-radius:12px;
+  outline:0;
+}
+
 .row{
- display:flex;align-items:center;
- justify-content:space-between;gap:10px;
- padding:10px 0
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:13px 0;
+  border-bottom:1px solid #ffffff12;
 }
-.row>div:first-child{flex:1}
-.item{
- padding:14px;border-radius:16px;
- background:#ffffff08;margin:8px 0
+
+.row:last-child{
+  border-bottom:0;
 }
-.empty{text-align:center;opacity:.5;padding:30px}
-iframe{
- width:100%;height:100%;border:0;border-radius:16px;
- background:white
+
+.webwrap{
+  flex:1;
+  display:flex;
+  flex-direction:column;
 }
-.webbar{display:flex;gap:8px}
-.webbar input{margin:0}
-.webbar button{width:55px}
-.switch{
- width:48px;height:28px;background:#333;
- border-radius:20px;position:relative
+
+.urlbar{
+  display:flex;
+  gap:7px;
+  padding:8px;
+  background:#11172a;
 }
-.switch i{
- width:22px;height:22px;border-radius:50%;
- background:white;position:absolute;
- top:3px;left:3px;transition:.2s
+
+.urlbar input{
+  flex:1;
+  min-width:0;
+  padding:9px;
+  border:0;
+  border-radius:10px;
+  color:#111;
 }
-.switch.on{background:#3565ff}
-.switch.on i{left:23px}
-#toast{
- display:none;position:fixed;z-index:100;
- bottom:90px;left:50%;
- transform:translateX(-50%);
- padding:12px 18px;background:#202638;
- border-radius:15px
+
+.urlbar button{
+  border:0;
+  border-radius:10px;
+  padding:9px 13px;
+  background:#607cff;
+  color:#fff;
 }
-#toast.show{display:block}
-#cameraVideo{
- width:100%;border-radius:18px;background:#000
+
+.webframe{
+  width:100%;
+  height:100%;
+  border:0;
+  background:#fff;
 }
-.calc{
- max-width:400px;margin:auto
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:95px;
+  transform:translateX(-50%);
+  z-index:100;
+  display:none;
+  padding:11px 17px;
+  border-radius:13px;
+  background:#242d47;
 }
-.calcDisplay{
- width:100%;height:65px;
- font-size:25px;text-align:left;
- direction:ltr
-}
-.calcKeys{
- display:grid;grid-template-columns:repeat(4,1fr);gap:8px
-}
-.calcKeys button{
- height:58px;border-radius:15px;
- background:#ffffff10;font-size:19px
-}
-.gallery{
- display:grid;grid-template-columns:repeat(3,1fr);gap:8px
-}
-.gallery img{
- width:100%;aspect-ratio:1;
- object-fit:cover;border-radius:15px
-}
-.storeGrid{
- display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
- gap:10px
-}
-@media(max-width:650px){
- .apps{grid-template-columns:repeat(4,1fr);gap:9px}
- .icon{font-size:27px}
- .clock{font-size:42px}
+
+.preview{
+  display:block;
+  max-width:100%;
+  max-height:300px;
+  margin-top:12px;
+  border-radius:15px;
 }
 </style>
 </head>
@@ -180,1031 +283,896 @@ iframe{
 
 <div id="os">
 
-<div class="status">
- <span>Roham OS</span>
- <span id="clock">--:--</span>
-</div>
-
-<div class="home">
-
-<div class="clock" id="bigClock">00:00</div>
-<div class="date" id="date"></div>
-
-<div class="search">
- <input id="globalSearch" placeholder="جستجو در Roham OS یا Google">
- <button class="btn" id="searchBtn">🔎</button>
-</div>
-
-<div class="apps">
-
-<button class="app" data-open="google">
- <div class="icon">🔎</div><small>Google</small>
-</button>
-
-<button class="app" data-open="chrome">
- <div class="icon">🌐</div><small>Chrome</small>
-</button>
-
-<button class="app" data-open="ai">
- <div class="icon">🤖</div><small>Roham AI</small>
-</button>
-
-<button class="app" data-open="account">
- <div class="icon">👤</div><small>Roham Account</small>
-</button>
-
-<button class="app" data-open="whatsapp">
- <div class="icon">💬</div><small>WhatsApp</small>
-</button>
-
-<button class="app" data-open="telegram">
- <div class="icon">✈️</div><small>Telegram</small>
-</button>
-
-<button class="app" data-open="instagram">
- <div class="icon">📸</div><small>Instagram</small>
-</button>
-
-<button class="app" data-open="vpn">
- <div class="icon">🛡️</div><small>Hallow VPN</small>
-</button>
-
-<button class="app" data-open="youtube">
- <div class="icon">▶️</div><small>YouTube</small>
-</button>
-
-<button class="app" data-open="gmail">
- <div class="icon">✉️</div><small>Gmail</small>
-</button>
-
-<button class="app" data-open="drive">
- <div class="icon">☁️</div><small>Drive</small>
-</button>
-
-<button class="app" data-open="maps">
- <div class="icon">🗺️</div><small>Maps</small>
-</button>
-
-<button class="app" data-open="photos">
- <div class="icon">🌄</div><small>Photos</small>
-</button>
-
-<button class="app" data-open="calendar">
- <div class="icon">📅</div><small>Calendar</small>
-</button>
-
-<button class="app" data-open="store">
- <div class="icon">🛍️</div><small>Roham Store</small>
-</button>
-
-<button class="app" data-open="files">
- <div class="icon">📁</div><small>فایل‌ها</small>
-</button>
-
-<button class="app" data-open="gallery">
- <div class="icon">🖼️</div><small>گالری</small>
-</button>
-
-<button class="app" data-open="camera">
- <div class="icon">📷</div><small>دوربین</small>
-</button>
-
-<button class="app" data-open="music">
- <div class="icon">🎵</div><small>موسیقی</small>
-</button>
-
-<button class="app" data-open="contacts">
- <div class="icon">👥</div><small>مخاطبین</small>
-</button>
-
-<button class="app" data-open="notes">
- <div class="icon">📝</div><small>یادداشت</small>
-</button>
-
-<button class="app" data-open="calculator">
- <div class="icon">🧮</div><small>ماشین‌حساب</small>
-</button>
-
-<button class="app" data-open="downloads">
- <div class="icon">⬇️</div><small>دانلودر</small>
-</button>
-
-<button class="app" data-open="notifications">
- <div class="icon">🔔</div><small>اعلان‌ها</small>
-</button>
-
-<button class="app" data-open="settings">
- <div class="icon">⚙️</div><small>تنظیمات</small>
-</button>
-
-</div>
-</div>
-
-<div class="dock">
-<button data-open="google">🔎</button>
-<button data-open="ai">🤖</button>
-<button data-open="home">⌂</button>
-<button data-open="whatsapp">💬</button>
-<button data-open="settings">⚙️</button>
-</div>
-
-</div>
-
-<div id="toast"></div>
-
-<!-- GOOGLE -->
-
-<section class="panel" id="panel-google">
-<div class="top">
-<button class="back">←</button>
-<h2>Google</h2>
-</div>
-<div class="content">
-<div class="card">
-<div class="webbar">
-<input id="googleInput" placeholder="جستجو در Google">
-<button id="googleGo">🔎</button>
-</div>
-</div>
-<iframe id="googleFrame"></iframe>
-</div>
-</section>
-
-<!-- CHROME -->
-
-<section class="panel" id="panel-chrome">
-<div class="top">
-<button class="back">←</button>
-<h2>Google Chrome</h2>
-</div>
-<div class="content">
-<div class="webbar">
-<input id="chromeInput" placeholder="آدرس سایت یا جستجو">
-<button id="chromeGo">↗</button>
-</div>
-<div class="card" style="height:calc(100% - 75px);padding:4px">
-<iframe id="chromeFrame"
-sandbox="allow-forms allow-modals allow-popups allow-scripts allow-same-origin">
-</iframe>
-</div>
-</div>
-</section>
-
-<!-- AI -->
-
-<section class="panel" id="panel-ai">
-<div class="top">
-<button class="back">←</button>
-<h2>Roham AI</h2>
-</div>
-<div class="content">
-<div class="card" style="height:100%;padding:4px">
-<iframe src="https://rohammolaei123-debug.github.io/Roham-Ai/"></iframe>
-</div>
-</div>
-</section>
-
-<!-- ACCOUNT -->
-
-<section class="panel" id="panel-account">
-<div class="top">
-<button class="back">←</button>
-<h2>Roham Account</h2>
-</div>
-<div class="content">
-
-<div class="card">
-<h3 id="accountStatus">حسابی ساخته نشده</h3>
-<input id="accountName" placeholder="نام">
-<input id="accountEmail" placeholder="ایمیل">
-<input id="accountPassword" type="password" placeholder="رمز عبور">
-<button class="btn" id="createAccount">ساخت حساب</button>
-<button class="btn red" id="deleteAccount">حذف حساب</button>
-</div>
-
-</div>
-</section>
-
-<!-- SOCIAL / GOOGLE WEB APPS -->
-
-<section class="panel" id="panel-whatsapp">
-<div class="top"><button class="back">←</button><h2>WhatsApp</h2></div>
-<div class="content">
-<div class="card">
-<p>WhatsApp Web</p>
-<button class="btn" data-url="https://web.whatsapp.com/">باز کردن WhatsApp</button>
-</div>
-</div>
-</section>
-
-<section class="panel" id="panel-telegram">
-<div class="top"><button class="back">←</button><h2>Telegram</h2></div>
-<div class="content">
-<div class="card">
-<p>Telegram Web</p>
-<button class="btn" data-url="https://web.telegram.org/">باز کردن Telegram</button>
-</div>
-</div>
-</section>
-
-<section class="panel" id="panel-instagram">
-<div class="top"><button class="back">←</button><h2>Instagram</h2></div>
-<div class="content">
-<div class="card">
-<p>Instagram</p>
-<button class="btn" data-url="https://www.instagram.com/">باز کردن Instagram</button>
-</div>
-</div>
-</section>
-
-<section class="panel" id="panel-vpn">
-<div class="top"><button class="back">←</button><h2>Hallow VPN</h2></div>
-<div class="content">
-<div class="card">
-<p>صفحه Hallow VPN</p>
-<button class="btn" data-url="https://hallowvpn.com/">باز کردن</button>
-</div>
-</div>
-</section>
-
-<section class="panel" id="panel-youtube">
-<div class="top"><button class="back">←</button><h2>YouTube</h2></div>
-<div class="content">
-<button class="btn" data-url="https://www.youtube.com/">باز کردن YouTube</button>
-</div>
-</section>
-
-<section class="panel" id="panel-gmail">
-<div class="top"><button class="back">←</button><h2>Gmail</h2></div>
-<div class="content">
-<button class="btn" data-url="https://mail.google.com/">باز کردن Gmail</button>
-</div>
-</section>
-
-<section class="panel" id="panel-drive">
-<div class="top"><button class="back">←</button><h2>Google Drive</h2></div>
-<div class="content">
-<button class="btn" data-url="https://drive.google.com/">باز کردن Drive</button>
-</div>
-</section>
-
-<section class="panel" id="panel-maps">
-<div class="top"><button class="back">←</button><h2>Google Maps</h2></div>
-<div class="content">
-<button class="btn" data-url="https://maps.google.com/">باز کردن Maps</button>
-</div>
-</section>
-
-<section class="panel" id="panel-photos">
-<div class="top"><button class="back">←</button><h2>Google Photos</h2></div>
-<div class="content">
-<button class="btn" data-url="https://photos.google.com/">باز کردن Photos</button>
-</div>
-</section>
-
-<section class="panel" id="panel-calendar">
-<div class="top"><button class="back">←</button><h2>Google Calendar</h2></div>
-<div class="content">
-<button class="btn" data-url="https://calendar.google.com/">باز کردن Calendar</button>
-</div>
-</section>
-
-<!-- STORE -->
-
-<section class="panel" id="panel-store">
-<div class="top">
-<button class="back">←</button>
-<h2>Roham Store</h2>
-</div>
-<div class="content">
-<div class="storeGrid" id="storeList"></div>
-</div>
-</section>
-
-<!-- FILES -->
-
-<section class="panel" id="panel-files">
-<div class="top">
-<button class="back">←</button>
-<h2>فایل‌ها</h2>
-</div>
-<div class="content">
-<div class="card">
-<input type="file" id="filePicker" multiple>
-</div>
-<div id="fileList"></div>
-</div>
-</section>
-
-<!-- GALLERY -->
+<header class="status">
+  <span id="statusTime"></span>
+  <span>▮▮▮ 📶 🔋</span>
+</header>
 
-<section class="panel" id="panel-gallery">
-<div class="top">
-<button class="back">←</button>
-<h2>گالری</h2>
-</div>
-<div class="content">
-<div class="card">
-<input type="file" id="galleryPicker" accept="image/*" multiple>
-</div>
-<div class="gallery" id="galleryList"></div>
-</div>
-</section>
-
-<!-- CAMERA -->
-
-<section class="panel" id="panel-camera">
-<div class="top">
-<button class="back">←</button>
-<h2>دوربین</h2>
-</div>
-<div class="content">
-<video id="cameraVideo" autoplay playsinline></video>
-<br><br>
-<button class="btn" id="startCamera">فعال کردن دوربین</button>
-<button class="btn" id="takePhoto">عکس گرفتن</button>
-<canvas id="canvas" hidden></canvas>
-</div>
-</section>
-
-<!-- MUSIC -->
+<main class="home">
 
-<section class="panel" id="panel-music">
-<div class="top">
-<button class="back">←</button>
-<h2>موسیقی</h2>
-</div>
-<div class="content">
-<div class="card">
-<input type="file" id="musicPicker" accept="audio/*" multiple>
-</div>
-<div id="musicList"></div>
-<audio id="audio" controls style="width:100%"></audio>
-</div>
-</section>
-
-<!-- CONTACTS -->
-
-<section class="panel" id="panel-contacts">
-<div class="top">
-<button class="back">←</button>
-<h2>مخاطبین</h2>
-</div>
-<div class="content">
-<div class="card">
-<input id="contactName" placeholder="نام">
-<input id="contactPhone" placeholder="شماره">
-<button class="btn" id="addContact">افزودن</button>
-</div>
-<div id="contactsList"></div>
-</div>
-</section>
+  <div class="clock" id="clock"></div>
+  <div class="date" id="date"></div>
 
-<!-- NOTES -->
+  <div class="search">
+    <span>🔎</span>
+    <input id="searchBox" placeholder="جستجو در Roham">
+    <button onclick="searchGoogle()">↵</button>
+  </div>
 
-<section class="panel" id="panel-notes">
-<div class="top">
-<button class="back">←</button>
-<h2>یادداشت‌ها</h2>
-</div>
-<div class="content">
-<div class="card">
-<input id="noteTitle" placeholder="عنوان">
-<textarea id="noteBody" placeholder="متن یادداشت"></textarea>
-<button class="btn" id="saveNote">ذخیره</button>
-</div>
-<div id="notesList"></div>
-</div>
-</section>
+  <div class="grid" id="appGrid"></div>
 
-<!-- CALCULATOR -->
+</main>
 
-<section class="panel" id="panel-calculator">
-<div class="top">
-<button class="back">←</button>
-<h2>ماشین‌حساب</h2>
-</div>
-<div class="content">
-<div class="calc">
-<input class="calcDisplay" id="calcDisplay" readonly>
-<div class="calcKeys">
-<button data-calc="7">7</button>
-<button data-calc="8">8</button>
-<button data-calc="9">9</button>
-<button data-calc="/">÷</button>
-<button data-calc="4">4</button>
-<button data-calc="5">5</button>
-<button data-calc="6">6</button>
-<button data-calc="*">×</button>
-<button data-calc="1">1</button>
-<button data-calc="2">2</button>
-<button data-calc="3">3</button>
-<button data-calc="-">−</button>
-<button data-calc="0">0</button>
-<button data-calc=".">.</button>
-<button id="calcClear">C</button>
-<button data-calc="+">+</button>
-<button id="calcEqual" style="grid-column:span 4">=</button>
-</div>
-</div>
-</div>
-</section>
+<nav class="dock">
+  <button class="app" onclick="openApp('google')">
+    <div class="icon">G</div>
+  </button>
 
-<!-- DOWNLOAD -->
+  <button class="app" onclick="goHome()">
+    <div class="icon">⌂</div>
+  </button>
 
-<section class="panel" id="panel-downloads">
-<div class="top">
-<button class="back">←</button>
-<h2>دانلودر</h2>
-</div>
-<div class="content">
-<div class="card">
-<input id="downloadUrl" placeholder="آدرس فایل">
-<button class="btn" id="downloadOpen">باز کردن لینک</button>
-</div>
-</div>
-</section>
+  <button class="app" onclick="openApp('ai')">
+    <div class="icon">🤖</div>
+  </button>
 
-<!-- NOTIFICATIONS -->
+  <button class="app" onclick="openApp('settings')">
+    <div class="icon">⚙️</div>
+  </button>
+</nav>
 
-<section class="panel" id="panel-notifications">
-<div class="top">
-<button class="back">←</button>
-<h2>اعلان‌ها</h2>
-</div>
-<div class="content">
-<div class="card">
-<input id="notificationText" placeholder="متن اعلان">
-<button class="btn" id="addNotification">ایجاد</button>
-</div>
-<div id="notificationList"></div>
 </div>
-</section>
 
-<!-- SETTINGS -->
+<div id="toast" class="toast"></div>
 
-<section class="panel" id="panel-settings">
-<div class="top">
-<button class="back">←</button>
-<h2>تنظیمات</h2>
-</div>
-<div class="content">
+<div id="page" class="page">
 
-<div class="card">
-<div class="row">
-<div>اعلان‌ها</div>
-<div class="switch on" data-setting="notifications"><i></i></div>
-</div>
-<div class="row">
-<div>ذخیره داده‌ها</div>
-<div>فعال</div>
-</div>
-</div>
+  <div class="bar">
+    <button onclick="goHome()">←</button>
+    <h2 id="pageTitle"></h2>
+  </div>
 
-<div class="card">
-<button class="btn" data-open="account">Roham Account</button>
-<br><br>
-<button class="btn" data-open="store">Roham Store</button>
-</div>
+  <div id="pageContent" class="content"></div>
 
 </div>
-</section>
 
 <script>
-const $=s=>document.querySelector(s);
-const $$=s=>document.querySelectorAll(s);
 
-function toast(text){
- const t=$("#toast");
- t.textContent=text;
- t.classList.add("show");
- clearTimeout(window.toastTimer);
- window.toastTimer=setTimeout(()=>t.classList.remove("show"),2200);
-}
+const apps = [
 
-function openApp(id){
- if(id==="home"){
-  $$(".panel").forEach(x=>x.classList.remove("show"));
-  return;
- }
+  ["google","Google","G","web","https://www.google.com/search?igu=1&q="],
+  ["youtube","YouTube","▶️","web","https://www.youtube.com"],
+  ["gmail","Gmail","✉️","web","https://mail.google.com"],
+  ["ytmusic","YouTube Music","🎵","web","https://music.youtube.com"],
+  ["chrome","Chrome","🌐","web","https://www.google.com/chrome/"],
+  ["onedrive","OneDrive","☁️","web","https://onedrive.live.com"],
+  ["photos","Google Photos","🖼️","web","https://photos.google.com"],
+  ["play","Google Play","▶️","web","https://play.google.com"],
 
- const p=$("#panel-"+id);
+  ["ai","Roham AI","🤖","web","https://rohammolaei123-debug.github.io/Roham-Ai/"],
+  ["account","Roham Account","👤","account"],
+  ["browser","Roham Browser","🧭","browser"],
 
- if(!p){
-  toast("این برنامه هنوز وجود ندارد");
-  return;
- }
+  ["whatsapp","WhatsApp","💬","web","https://web.whatsapp.com"],
+  ["telegram","Telegram","✈️","web","https://web.telegram.org"],
+  ["instagram","Instagram","📷","web","https://www.instagram.com"],
+  ["vpn","Hallow VPN","🛡️","web","https://hallow.com"],
 
- $$(".panel").forEach(x=>x.classList.remove("show"));
- p.classList.add("show");
+  ["camera","Camera","📸","camera"],
+  ["gallery","Gallery","🌄","gallery"],
+  ["files","Files","📁","files"],
+  ["recorder","Voice Recorder","🎙️","recorder"],
 
- if(id==="account")renderAccount();
- if(id==="store")renderStore();
- if(id==="contacts")renderContacts();
- if(id==="notes")renderNotes();
-}
+  ["notes","Notes","📝","notes"],
+  ["contacts","Contacts","👥","contacts"],
+  ["calculator","Calculator","🧮","calculator"],
 
-document.addEventListener("click",e=>{
- const open=e.target.closest("[data-open]");
- if(open){
-  openApp(open.dataset.open);
-  return;
- }
+  ["storage","Storage","💾","storage"],
+  ["settings","Settings","⚙️","settings"],
+  ["wifi","Wi-Fi","📶","settings"],
+  ["bluetooth","Bluetooth","🟦","settings"],
+  ["airplane","Airplane Mode","✈️","settings"]
 
- const url=e.target.closest("[data-url]");
- if(url){
-  window.open(url.dataset.url,"_blank");
- }
-});
-
-$$(".back").forEach(b=>{
- b.addEventListener("click",()=>{
-  $$(".panel").forEach(x=>x.classList.remove("show"));
- });
-});
-
-function updateClock(){
- const d=new Date();
-
- $("#clock").textContent=
- d.toLocaleTimeString("fa-IR",{hour:"2-digit",minute:"2-digit"});
-
- $("#bigClock").textContent=
- d.toLocaleTimeString("fa-IR",{hour:"2-digit",minute:"2-digit"});
-
- $("#date").textContent=
- d.toLocaleDateString("fa-IR",{
-  weekday:"long",
-  year:"numeric",
-  month:"long",
-  day:"numeric"
- });
-}
-
-updateClock();
-setInterval(updateClock,1000);
-
-/* SEARCH */
-
-function searchGoogle(q){
- if(!q)return;
- window.open(
-  "https://www.google.com/search?q="+encodeURIComponent(q),
-  "_blank"
- );
-}
-
-$("#searchBtn").addEventListener("click",()=>{
- searchGoogle($("#globalSearch").value.trim());
-});
-
-$("#globalSearch").addEventListener("keydown",e=>{
- if(e.key==="Enter")
-  searchGoogle(e.target.value.trim());
-});
-
-$("#googleGo").addEventListener("click",()=>{
- const q=$("#googleInput").value.trim();
- if(!q)return;
-
- $("#googleFrame").src=
- "https://www.google.com/search?q="+encodeURIComponent(q);
-});
-
-/* CHROME */
-
-$("#chromeGo").addEventListener("click",()=>{
- let q=$("#chromeInput").value.trim();
- if(!q)return;
-
- if(!/^https?:\/\//i.test(q)){
-  if(q.includes(".")&&!q.includes(" "))
-   q="https://"+q;
-  else
-   q="https://www.google.com/search?q="+encodeURIComponent(q);
- }
-
- $("#chromeFrame").src=q;
-});
-
-$("#chromeInput").addEventListener("keydown",e=>{
- if(e.key==="Enter")$("#chromeGo").click();
-});
-
-/* ACCOUNT */
-
-function getJSON(key,def){
- try{
-  const v=localStorage.getItem(key);
-  return v===null?def:JSON.parse(v);
- }catch{
-  return def;
- }
-}
-
-function setJSON(key,value){
- localStorage.setItem(key,JSON.stringify(value));
-}
-
-function renderAccount(){
- const a=getJSON("rohamAccount",null);
-
- if(!a){
-  $("#accountStatus").textContent="حسابی ساخته نشده";
-  return;
- }
-
- $("#accountStatus").textContent=
- "حساب Roham فعال است — "+a.name;
-}
-
-$("#createAccount").addEventListener("click",()=>{
- const name=$("#accountName").value.trim();
- const email=$("#accountEmail").value.trim();
- const password=$("#accountPassword").value;
-
- if(!name||!email||!password){
-  toast("همه اطلاعات را وارد کن");
-  return;
- }
-
- setJSON("rohamAccount",{
-  name,
-  email,
-  password
- });
-
- renderAccount();
- toast("حساب Roham ساخته شد");
-});
-
-$("#deleteAccount").addEventListener("click",()=>{
- if(confirm("حساب Roham حذف شود؟")){
-  localStorage.removeItem("rohamAccount");
-  renderAccount();
-  toast("حساب حذف شد");
- }
-});
-
-/* STORE */
-
-const storeApps=[
- ["🤖","Roham AI","ai"],
- ["🔎","Google","google"],
- ["🌐","Chrome","chrome"],
- ["💬","WhatsApp","whatsapp"],
- ["✈️","Telegram","telegram"],
- ["📸","Instagram","instagram"],
- ["▶️","YouTube","youtube"],
- ["✉️","Gmail","gmail"],
- ["☁️","Google Drive","drive"],
- ["🗺️","Google Maps","maps"],
- ["🌄","Google Photos","photos"],
- ["📅","Google Calendar","calendar"],
- ["📁","Roham Files","files"],
- ["📷","Camera","camera"],
- ["🎵","Music","music"],
- ["📝","Notes","notes"],
- ["🧮","Calculator","calculator"]
 ];
 
-function renderStore(){
- const box=$("#storeList");
- box.innerHTML="";
+const grid=document.getElementById("appGrid");
 
- storeApps.forEach(a=>{
-  const d=document.createElement("div");
-  d.className="item";
+apps.forEach(app=>{
 
-  d.innerHTML=
-  "<div style='font-size:30px'>"+a[0]+"</div>"+
-  "<b>"+a[1]+"</b><br><br>";
+  const button=document.createElement("button");
 
-  const b=document.createElement("button");
-  b.className="btn";
-  b.textContent="باز کردن";
+  button.className="app";
 
-  b.addEventListener("click",()=>openApp(a[2]));
+  button.innerHTML=
+    `<div class="icon">${app[2]}</div>${app[1]}`;
 
-  d.appendChild(b);
-  box.appendChild(d);
- });
+  button.onclick=()=>openApp(app[0]);
+
+  grid.appendChild(button);
+
+});
+
+
+function updateClock(){
+
+  const now=new Date();
+
+  document.getElementById("clock").textContent=
+    now.toLocaleTimeString("fa-IR",{
+      hour:"2-digit",
+      minute:"2-digit"
+    });
+
+  document.getElementById("statusTime").textContent=
+    now.toLocaleTimeString("fa-IR",{
+      hour:"2-digit",
+      minute:"2-digit"
+    });
+
+  document.getElementById("date").textContent=
+    now.toLocaleDateString("fa-IR",{
+      weekday:"long",
+      year:"numeric",
+      month:"long",
+      day:"numeric"
+    });
+
 }
 
-/* FILES */
+setInterval(updateClock,1000);
+updateClock();
 
-$("#filePicker").addEventListener("change",e=>{
- const box=$("#fileList");
- box.innerHTML="";
 
- [...e.target.files].forEach(file=>{
-  const d=document.createElement("div");
-  d.className="item";
+function goHome(){
 
-  d.innerHTML=
-  "📄 <b>"+escapeHTML(file.name)+"</b><br>"+
-  Math.round(file.size/1024)+" KB";
+  document.getElementById("page").classList.remove("show");
 
-  box.appendChild(d);
- });
-});
+}
 
-/* GALLERY */
 
-$("#galleryPicker").addEventListener("change",e=>{
- const box=$("#galleryList");
- box.innerHTML="";
+function showPage(title,html){
 
- [...e.target.files].forEach(file=>{
-  const img=document.createElement("img");
-  img.src=URL.createObjectURL(file);
-  box.appendChild(img);
- });
-});
+  document.getElementById("pageTitle").textContent=title;
 
-/* CAMERA */
+  document.getElementById("pageContent").innerHTML=html;
+
+  document.getElementById("page").classList.add("show");
+
+}
+
+
+function toast(message){
+
+  const t=document.getElementById("toast");
+
+  t.textContent=message;
+
+  t.style.display="block";
+
+  setTimeout(()=>{
+    t.style.display="none";
+  },1800);
+
+}
+
+
+function searchGoogle(){
+
+  const q=document.getElementById("searchBox").value.trim();
+
+  if(!q)return;
+
+  openWeb(
+    "Google",
+    "https://www.google.com/search?igu=1&q="+encodeURIComponent(q)
+  );
+
+}
+
+
+function openApp(id){
+
+  const app=apps.find(x=>x[0]===id);
+
+  if(!app)return;
+
+  if(app[3]==="web"){
+
+    openWeb(app[1],app[4]);
+
+    return;
+
+  }
+
+  if(id==="browser"){
+
+    showPage(
+      "Roham Browser",
+      `
+      <div class="webwrap">
+
+        <div class="urlbar">
+          <input id="browserURL" placeholder="https://example.com">
+          <button onclick="navigateBrowser()">برو</button>
+        </div>
+
+        <iframe id="browserFrame" class="webframe"></iframe>
+
+      </div>
+      `
+    );
+
+    return;
+
+  }
+
+
+  if(id==="account"){
+
+    const saved=
+      JSON.parse(localStorage.getItem("rohamAccount")||"null");
+
+    showPage(
+      "Roham Account",
+      `
+      <div class="card">
+
+        <div class="big">👤 حساب Roham</div>
+
+        <p class="muted">
+          حساب آزمایشی Roham روی همین دستگاه ذخیره می‌شود.
+        </p>
+
+        <input
+          id="accountName"
+          class="input"
+          placeholder="نام"
+          value="${saved?.name||""}"
+        >
+
+        <input
+          id="accountEmail"
+          class="input"
+          placeholder="ایمیل"
+          value="${saved?.email||""}"
+        >
+
+        <input
+          id="accountPassword"
+          class="input"
+          type="password"
+          placeholder="رمز عبور"
+          value="${saved?.password||""}"
+        >
+
+        <button class="primary" onclick="saveAccount()">
+          ذخیره حساب
+        </button>
+
+        <button class="primary"
+          style="background:#9b3340;margin-right:6px"
+          onclick="deleteAccount()">
+          حذف حساب
+        </button>
+
+      </div>
+      `
+    );
+
+    return;
+
+  }
+
+
+  if(id==="camera"){
+
+    showPage(
+      "Camera",
+      `
+      <div class="card">
+
+        <video
+          id="cameraVideo"
+          autoplay
+          playsinline
+          style="
+            width:100%;
+            border-radius:16px;
+            background:#000;
+          ">
+        </video>
+
+        <br><br>
+
+        <button class="primary" onclick="startCamera('environment')">
+          📷 دوربین پشت
+        </button>
+
+        <button class="primary"
+          style="margin-right:6px"
+          onclick="startCamera('user')">
+          🤳 سلفی
+        </button>
+
+        <p class="muted">
+          Safari برای استفاده از دوربین اجازه دسترسی می‌خواهد.
+        </p>
+
+      </div>
+      `
+    );
+
+    return;
+
+  }
+
+
+  if(id==="gallery"){
+
+    showPage(
+      "Gallery",
+      `
+      <div class="card">
+
+        <input
+          type="file"
+          id="galleryPicker"
+          accept="image/*"
+          multiple
+        >
+
+        <div id="galleryOutput"></div>
+
+      </div>
+      `
+    );
+
+    setTimeout(()=>{
+
+      document
+      .getElementById("galleryPicker")
+      .addEventListener("change",e=>{
+
+        const out=document.getElementById("galleryOutput");
+
+        out.innerHTML="";
+
+        [...e.target.files].forEach(file=>{
+
+          const img=document.createElement("img");
+
+          img.className="preview";
+
+          img.src=URL.createObjectURL(file);
+
+          out.appendChild(img);
+
+        });
+
+      });
+
+    },50);
+
+    return;
+
+  }
+
+
+  if(id==="files"){
+
+    showPage(
+      "Files",
+      `
+      <div class="card">
+
+        <input type="file" id="filePicker" multiple>
+
+        <div id="fileList" class="muted"></div>
+
+      </div>
+      `
+    );
+
+    setTimeout(()=>{
+
+      document
+      .getElementById("filePicker")
+      .addEventListener("change",e=>{
+
+        document.getElementById("fileList").innerHTML=
+          [...e.target.files]
+          .map(f=>"📄 "+f.name)
+          .join("<br>");
+
+      });
+
+    },50);
+
+    return;
+
+  }
+
+
+  if(id==="recorder"){
+
+    showPage(
+      "Voice Recorder",
+      `
+      <div class="card">
+
+        <button class="primary" onclick="startRecorder()">
+          🎙️ شروع ضبط
+        </button>
+
+        <button
+          class="primary"
+          style="margin-right:6px;background:#9b3340"
+          onclick="stopRecorder()">
+          توقف
+        </button>
+
+        <p id="recordStatus" class="muted">
+          آماده ضبط
+        </p>
+
+        <div id="recordings"></div>
+
+      </div>
+      `
+    );
+
+    return;
+
+  }
+
+
+  if(id==="notes"){
+
+    const note=
+      localStorage.getItem("rohamNote")||"";
+
+    showPage(
+      "Notes",
+      `
+      <textarea
+        id="noteText"
+        class="input"
+        style="height:55vh"
+        placeholder="یادداشت خود را بنویسید..."
+      >${note}</textarea>
+
+      <button class="primary" onclick="saveNote()">
+        ذخیره
+      </button>
+      `
+    );
+
+    return;
+
+  }
+
+
+  if(id==="contacts"){
+
+    showPage(
+      "Contacts",
+      `
+      <div class="card">
+
+        <input id="contactName"
+          class="input"
+          placeholder="نام">
+
+        <input id="contactNumber"
+          class="input"
+          placeholder="شماره">
+
+        <button class="primary" onclick="addContact()">
+          افزودن مخاطب
+        </button>
+
+      </div>
+
+      <div id="contactsList"></div>
+      `
+    );
+
+    renderContacts();
+
+    return;
+
+  }
+
+
+  if(id==="calculator"){
+
+    showPage(
+      "Calculator",
+      `
+      <input
+        id="calculatorInput"
+        class="input"
+        placeholder="مثلاً 12*8+4"
+      >
+
+      <button class="primary" onclick="calculate()">
+        محاسبه
+      </button>
+
+      <div id="calculatorResult" class="card"></div>
+      `
+    );
+
+    return;
+
+  }
+
+
+  if(id==="storage"){
+
+    showPage(
+      "Storage",
+      `
+      <div class="card">
+
+        <div class="big">💾 Roham Storage</div>
+
+        <p class="muted">
+          وضعیت حافظه در نسخه آزمایشی
+        </p>
+
+        <div class="row">
+          <span>سیستم</span>
+          <b>6.2 GB</b>
+        </div>
+
+        <div class="row">
+          <span>برنامه‌ها</span>
+          <b>2.8 GB</b>
+        </div>
+
+        <div class="row">
+          <span>خالی</span>
+          <b>18.4 GB</b>
+        </div>
+
+      </div>
+      `
+    );
+
+    return;
+
+  }
+
+
+  if(id==="settings"){
+
+    showPage(
+      "Settings",
+      `
+      <div class="card">
+
+        <div class="row">
+          <span>📶 Wi-Fi</span>
+          <b>آزمایشی</b>
+        </div>
+
+        <div class="row">
+          <span>🟦 Bluetooth</span>
+          <b>آزمایشی</b>
+        </div>
+
+        <div class="row">
+          <span>✈️ Airplane Mode</span>
+          <b>خاموش</b>
+        </div>
+
+        <div class="row">
+          <span>📱 SIM</span>
+          <b>نسخه Android</b>
+        </div>
+
+        <div class="row">
+          <span>🤖 Roham AI</span>
+          <b>فعال</b>
+        </div>
+
+        <div class="row">
+          <span>Roham OS</span>
+          <b>Beta 2</b>
+        </div>
+
+      </div>
+      `
+    );
+
+  }
+
+}
+
+
+function openWeb(title,url){
+
+  showPage(
+    title,
+    `
+    <div class="webwrap">
+
+      <div class="urlbar">
+
+        <input
+          id="webURL"
+          value="${url}"
+        >
+
+        <button onclick="navigateWeb()">
+          برو
+        </button>
+
+      </div>
+
+      <iframe
+        id="webFrame"
+        class="webframe"
+        src="${url}"
+        allow="camera; microphone; geolocation; fullscreen">
+      </iframe>
+
+    </div>
+    `
+  );
+
+}
+
+
+function navigateWeb(){
+
+  let url=document.getElementById("webURL").value.trim();
+
+  if(!/^https?:\/\//i.test(url))
+    url="https://"+url;
+
+  document.getElementById("webFrame").src=url;
+
+}
+
+
+function navigateBrowser(){
+
+  let url=document.getElementById("browserURL").value.trim();
+
+  if(!url)return;
+
+  if(!/^https?:\/\//i.test(url))
+    url="https://"+url;
+
+  document.getElementById("browserFrame").src=url;
+
+}
+
+
+function saveAccount(){
+
+  const account={
+
+    name:document.getElementById("accountName").value,
+
+    email:document.getElementById("accountEmail").value,
+
+    password:document.getElementById("accountPassword").value
+
+  };
+
+  localStorage.setItem(
+    "rohamAccount",
+    JSON.stringify(account)
+  );
+
+  toast("حساب Roham ذخیره شد");
+
+}
+
+
+function deleteAccount(){
+
+  localStorage.removeItem("rohamAccount");
+
+  toast("حساب Roham حذف شد");
+
+}
+
 
 let cameraStream=null;
 
-$("#startCamera").addEventListener("click",async()=>{
- try{
-  cameraStream=
-   await navigator.mediaDevices.getUserMedia({video:true});
 
-  $("#cameraVideo").srcObject=cameraStream;
-  toast("دوربین فعال شد");
- }catch{
-  toast("دسترسی دوربین داده نشد");
- }
-});
+async function startCamera(mode){
 
-$("#takePhoto").addEventListener("click",()=>{
- if(!cameraStream){
-  toast("اول دوربین را فعال کن");
-  return;
- }
+  try{
 
- const video=$("#cameraVideo");
- const canvas=$("#canvas");
+    if(cameraStream)
+      cameraStream.getTracks().forEach(t=>t.stop());
 
- canvas.width=video.videoWidth;
- canvas.height=video.videoHeight;
+    cameraStream=
+      await navigator.mediaDevices.getUserMedia({
 
- canvas.getContext("2d").drawImage(video,0,0);
+        video:{
+          facingMode:mode
+        },
 
- canvas.toBlob(blob=>{
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="roham-photo.png";
-  a.click();
-  toast("عکس گرفته شد");
- });
-});
+        audio:false
 
-/* MUSIC */
+      });
 
-$("#musicPicker").addEventListener("change",e=>{
- const box=$("#musicList");
- box.innerHTML="";
+    document.getElementById("cameraVideo").srcObject=
+      cameraStream;
 
- [...e.target.files].forEach(file=>{
-  const d=document.createElement("div");
-  d.className="item";
-  d.textContent="🎵 "+file.name;
+  }catch(e){
 
-  d.onclick=()=>{
-   $("#audio").src=URL.createObjectURL(file);
-   $("#audio").play();
-  };
+    toast("دسترسی دوربین داده نشد");
 
-  box.appendChild(d);
- });
-});
+  }
 
-/* CONTACTS */
+}
+
+
+let recorder=null;
+let chunks=[];
+
+
+async function startRecorder(){
+
+  try{
+
+    const stream=
+      await navigator.mediaDevices.getUserMedia({
+        audio:true
+      });
+
+    chunks=[];
+
+    recorder=new MediaRecorder(stream);
+
+    recorder.ondataavailable=e=>{
+      if(e.data.size)
+        chunks.push(e.data);
+    };
+
+    recorder.onstop=()=>{
+
+      const blob=
+        new Blob(chunks,{type:"audio/webm"});
+
+      const url=
+        URL.createObjectURL(blob);
+
+      document.getElementById("recordings").innerHTML+=
+        `
+        <div class="card">
+          <audio controls src="${url}"></audio>
+        </div>
+        `;
+
+      stream.getTracks().forEach(t=>t.stop());
+
+    };
+
+    recorder.start();
+
+    document.getElementById("recordStatus").textContent=
+      "در حال ضبط...";
+
+  }catch(e){
+
+    toast("دسترسی میکروفون داده نشد");
+
+  }
+
+}
+
+
+function stopRecorder(){
+
+  if(recorder && recorder.state!=="inactive"){
+
+    recorder.stop();
+
+    document.getElementById("recordStatus").textContent=
+      "ضبط متوقف شد";
+
+  }
+
+}
+
+
+function saveNote(){
+
+  localStorage.setItem(
+    "rohamNote",
+    document.getElementById("noteText").value
+  );
+
+  toast("یادداشت ذخیره شد");
+
+}
+
+
+function addContact(){
+
+  const contacts=
+    JSON.parse(
+      localStorage.getItem("rohamContacts")||"[]"
+    );
+
+  contacts.push({
+
+    name:
+      document.getElementById("contactName").value,
+
+    number:
+      document.getElementById("contactNumber").value
+
+  });
+
+  localStorage.setItem(
+    "rohamContacts",
+    JSON.stringify(contacts)
+  );
+
+  renderContacts();
+
+}
+
 
 function renderContacts(){
- const list=getJSON("contacts",[]);
- const box=$("#contactsList");
- box.innerHTML="";
 
- if(!list.length){
-  box.innerHTML='<div class="empty">مخاطبی نیست</div>';
-  return;
- }
+  const list=document.getElementById("contactsList");
 
- list.forEach((c,i)=>{
-  const d=document.createElement("div");
-  d.className="item";
+  if(!list)return;
 
-  d.innerHTML=
-  "👤 <b>"+escapeHTML(c.name)+"</b><br>"+
-  escapeHTML(c.phone)+"<br><br>";
+  const contacts=
+    JSON.parse(
+      localStorage.getItem("rohamContacts")||"[]"
+    );
 
-  const b=document.createElement("button");
-  b.className="btn red";
-  b.textContent="حذف";
+  list.innerHTML=
+    contacts.map(c=>
+      `
+      <div class="card">
+        👤 ${c.name}<br>
+        📞 ${c.number}
+      </div>
+      `
+    ).join("");
 
-  b.onclick=()=>{
-   list.splice(i,1);
-   setJSON("contacts",list);
-   renderContacts();
-  };
-
-  d.appendChild(b);
-  box.appendChild(d);
- });
 }
 
-$("#addContact").addEventListener("click",()=>{
- const name=$("#contactName").value.trim();
- const phone=$("#contactPhone").value.trim();
 
- if(!name||!phone){
-  toast("نام و شماره را وارد کن");
-  return;
- }
+function calculate(){
 
- const list=getJSON("contacts",[]);
- list.push({name,phone});
- setJSON("contacts",list);
+  const expression=
+    document.getElementById("calculatorInput").value;
 
- $("#contactName").value="";
- $("#contactPhone").value="";
+  try{
 
- renderContacts();
- toast("مخاطب ذخیره شد");
-});
+    const result=
+      Function(
+        '"use strict";return ('+expression+')'
+      )();
 
-/* NOTES */
+    document.getElementById("calculatorResult")
+      .textContent=result;
 
-function renderNotes(){
- const list=getJSON("notes",[]);
- const box=$("#notesList");
- box.innerHTML="";
+  }catch{
 
- if(!list.length){
-  box.innerHTML='<div class="empty">یادداشتی نیست</div>';
-  return;
- }
+    document.getElementById("calculatorResult")
+      .textContent="عبارت نامعتبر است";
 
- list.forEach((n,i)=>{
-  const d=document.createElement("div");
-  d.className="item";
+  }
 
-  d.innerHTML=
-  "<b>"+escapeHTML(n.title)+"</b>"+
-  "<p>"+escapeHTML(n.body)+"</p>";
-
-  const b=document.createElement("button");
-  b.className="btn red";
-  b.textContent="حذف";
-
-  b.onclick=()=>{
-   list.splice(i,1);
-   setJSON("notes",list);
-   renderNotes();
-  };
-
-  d.appendChild(b);
-  box.appendChild(d);
- });
 }
-
-$("#saveNote").addEventListener("click",()=>{
- const title=$("#noteTitle").value.trim()||"بدون عنوان";
- const body=$("#noteBody").value.trim();
-
- if(!body){
-  toast("یادداشت خالی است");
-  return;
- }
-
- const list=getJSON("notes",[]);
- list.unshift({title,body});
- setJSON("notes",list);
-
- $("#noteTitle").value="";
- $("#noteBody").value="";
-
- renderNotes();
- toast("یادداشت ذخیره شد");
-});
-
-/* CALCULATOR */
-
-let calc="";
-
-$$("[data-calc]").forEach(b=>{
- b.addEventListener("click",()=>{
-  calc+=b.dataset.calc;
-  $("#calcDisplay").value=calc;
- });
-});
-
-$("#calcClear").addEventListener("click",()=>{
- calc="";
- $("#calcDisplay").value="";
-});
-
-$("#calcEqual").addEventListener("click",()=>{
- try{
-  if(!/^[0-9+\-*/().\s]+$/.test(calc))
-   throw Error();
-
-  calc=String(Function(
-   '"use strict";return ('+calc+')'
-  )());
-
-  $("#calcDisplay").value=calc;
- }catch{
-  calc="";
-  $("#calcDisplay").value="خطا";
- }
-});
-
-/* DOWNLOAD */
-
-$("#downloadOpen").addEventListener("click",()=>{
- let url=$("#downloadUrl").value.trim();
-
- if(!url){
-  toast("لینک را وارد کن");
-  return;
- }
-
- if(!/^https?:\/\//i.test(url))
-  url="https://"+url;
-
- window.open(url,"_blank");
-});
-
-/* NOTIFICATIONS */
-
-function renderNotifications(){
- const list=getJSON("notifications",[]);
- const box=$("#notificationList");
- box.innerHTML="";
-
- list.forEach((n,i)=>{
-  const d=document.createElement("div");
-  d.className="item";
-
-  d.innerHTML="🔔 "+escapeHTML(n);
-
-  d.onclick=()=>{
-   list.splice(i,1);
-   setJSON("notifications",list);
-   renderNotifications();
-  };
-
-  box.appendChild(d);
- });
-}
-
-$("#addNotification").addEventListener("click",()=>{
- const text=$("#notificationText").value.trim();
-
- if(!text)return;
-
- const list=getJSON("notifications",[]);
- list.unshift(text);
-
- setJSON("notifications",list);
-
- $("#notificationText").value="";
- renderNotifications();
-
- toast("اعلان ایجاد شد");
-});
-
-/* SETTINGS */
-
-$$(".switch").forEach(sw=>{
- sw.addEventListener("click",()=>{
-  sw.classList.toggle("on");
- });
-});
-
-/* ESCAPE */
-
-function escapeHTML(value){
- return String(value)
- .replaceAll("&","&amp;")
- .replaceAll("<","&lt;")
- .replaceAll(">","&gt;")
- .replaceAll('"',"&quot;")
- .replaceAll("'","&#039;");
-}
-
-/* START */
-
-renderAccount();
-renderStore();
-renderContacts();
-renderNotes();
-renderNotifications();
 
 </script>
+
 </body>
 </html>
+```
