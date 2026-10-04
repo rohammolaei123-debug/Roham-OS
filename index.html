@@ -2,427 +2,492 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0b0b0f">
-<title>Roham OS Beta 3</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#08090d">
+<title>Roham OS Beta 4</title>
 
 <style>
 *{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
+ box-sizing:border-box;
+ -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
-               "Segoe UI",sans-serif;
-  background:#08090d;
-  color:#fff;
+ margin:0;
+ width:100%;
+ height:100%;
+ overflow:hidden;
+ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+ background:#08090d;
+ color:white;
+}
+
+body.light{
+ background:#f2f3f7;
+ color:#111;
+}
+
+button,input{
+ font:inherit;
 }
 
 button{
-  font:inherit;
-  border:0;
-  cursor:pointer;
+ border:0;
+ cursor:pointer;
 }
 
 #os{
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at 20% 10%,#263052 0,#10121d 32%,#07080b 75%);
+ position:fixed;
+ inset:0;
+ overflow:hidden;
+ background:
+ radial-gradient(circle at 20% 10%,#27365d 0,#111525 35%,#07080b 80%);
+ background-size:cover;
+ background-position:center;
+ transition:.25s;
+}
+
+body.light #os{
+ background:#eef1f7;
 }
 
 .statusbar{
-  height:42px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 20px;
-  font-size:14px;
-  position:relative;
-  z-index:10;
+ height:42px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:0 20px;
+ position:relative;
+ z-index:20;
 }
 
 .status-right{
-  display:flex;
-  gap:10px;
-  align-items:center;
+ display:flex;
+ gap:12px;
+ align-items:center;
+ font-size:13px;
 }
 
 .home{
-  height:calc(100% - 42px);
-  overflow:auto;
-  padding:25px 22px 100px;
+ height:calc(100% - 42px);
+ overflow:auto;
+ padding:24px 20px 110px;
 }
 
 .clock{
-  font-size:58px;
-  font-weight:700;
-  letter-spacing:-2px;
+ font-size:56px;
+ font-weight:700;
+ letter-spacing:-2px;
 }
 
 .date{
-  opacity:.72;
-  margin-bottom:28px;
+ opacity:.7;
+ margin-bottom:24px;
 }
 
 .search{
-  height:52px;
-  width:100%;
-  background:rgba(255,255,255,.12);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:17px;
-  color:#fff;
-  padding:0 18px;
-  outline:none;
-  margin-bottom:28px;
+ width:100%;
+ height:52px;
+ border:1px solid rgba(255,255,255,.12);
+ background:rgba(255,255,255,.12);
+ border-radius:17px;
+ padding:0 17px;
+ color:inherit;
+ outline:none;
+ margin-bottom:27px;
+}
+
+body.light .search{
+ background:white;
+ border-color:#ddd;
 }
 
 .grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:20px 13px;
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:20px 12px;
 }
 
 .app{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:7px;
-  color:#fff;
-  background:none;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ gap:7px;
+ background:none;
+ color:inherit;
+ user-select:none;
+ touch-action:none;
+}
+
+.app.dragging{
+ opacity:.35;
+ transform:scale(.9);
 }
 
 .icon{
-  width:62px;
-  height:62px;
-  border-radius:18px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(255,255,255,.12);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 8px 22px rgba(0,0,0,.18);
+ width:62px;
+ height:62px;
+ border-radius:18px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:rgba(255,255,255,.13);
+ border:1px solid rgba(255,255,255,.12);
+ box-shadow:0 8px 22px rgba(0,0,0,.2);
+ transition:.2s;
 }
 
 .icon svg{
-  width:31px;
-  height:31px;
-  stroke:currentColor;
-  fill:none;
-  stroke-width:1.8;
-  stroke-linecap:round;
-  stroke-linejoin:round;
+ width:31px;
+ height:31px;
+ stroke:currentColor;
+ fill:none;
+ stroke-width:1.8;
+ stroke-linecap:round;
+ stroke-linejoin:round;
 }
 
 .app span{
-  font-size:12px;
-  white-space:nowrap;
+ font-size:12px;
+ white-space:nowrap;
+}
+
+body.large-icons .icon{
+ width:72px;
+ height:72px;
+}
+
+body.small-icons .icon{
+ width:52px;
+ height:52px;
 }
 
 .dock{
-  position:fixed;
-  bottom:16px;
-  left:18px;
-  right:18px;
-  height:78px;
-  border-radius:25px;
-  background:rgba(20,22,29,.82);
-  backdrop-filter:blur(25px);
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  border:1px solid rgba(255,255,255,.1);
-  z-index:20;
+ position:fixed;
+ bottom:15px;
+ left:18px;
+ right:18px;
+ height:78px;
+ border-radius:25px;
+ background:rgba(18,20,28,.84);
+ backdrop-filter:blur(25px);
+ display:flex;
+ justify-content:space-around;
+ align-items:center;
+ border:1px solid rgba(255,255,255,.1);
+ z-index:30;
 }
 
 .screen{
-  position:fixed;
-  inset:0;
-  background:#0a0b0f;
-  z-index:100;
-  display:none;
-  flex-direction:column;
+ position:fixed;
+ inset:0;
+ z-index:100;
+ display:none;
+ flex-direction:column;
+ background:#090a0e;
 }
 
 .screen.active{
-  display:flex;
+ display:flex;
 }
 
 .topbar{
-  height:64px;
-  flex-shrink:0;
-  display:flex;
-  align-items:center;
-  padding:0 18px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  background:rgba(10,11,15,.94);
+ height:64px;
+ flex-shrink:0;
+ display:flex;
+ align-items:center;
+ padding:0 18px;
+ border-bottom:1px solid rgba(255,255,255,.08);
+ background:rgba(10,11,15,.96);
 }
 
 .back{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  background:rgba(255,255,255,.08);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-left:12px;
+ width:44px;
+ height:44px;
+ border-radius:50%;
+ background:rgba(255,255,255,.09);
+ color:white;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ margin-left:12px;
 }
 
 .back svg{
-  width:23px;
-  height:23px;
-  stroke:currentColor;
-  fill:none;
-  stroke-width:2;
+ width:23px;
+ height:23px;
+ stroke:currentColor;
+ fill:none;
+ stroke-width:2;
 }
 
 .title{
-  font-size:21px;
-  font-weight:700;
+ font-size:21px;
+ font-weight:700;
 }
 
 .content{
-  flex:1;
-  overflow:auto;
-  padding:20px;
+ flex:1;
+ overflow:auto;
+ padding:20px;
 }
 
 .fullframe{
-  flex:1;
-  width:100%;
-  border:0;
-  background:white;
+ flex:1;
+ width:100%;
+ border:0;
+ background:white;
 }
 
 .section{
-  margin-bottom:24px;
+ margin-bottom:23px;
 }
 
 .section-title{
-  color:#8f96a5;
-  font-size:13px;
-  margin:0 12px 9px;
+ color:#9298a6;
+ font-size:13px;
+ margin:0 12px 9px;
 }
 
 .card{
-  background:#15171d;
-  border-radius:18px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.06);
+ background:#15171d;
+ border-radius:18px;
+ overflow:hidden;
+ border:1px solid rgba(255,255,255,.06);
 }
 
 .row{
-  min-height:62px;
-  padding:12px 17px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid rgba(255,255,255,.06);
+ min-height:64px;
+ padding:12px 17px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ border-bottom:1px solid rgba(255,255,255,.06);
 }
 
 .row:last-child{
-  border-bottom:0;
+ border-bottom:0;
 }
 
 .row-left{
-  display:flex;
-  align-items:center;
-  gap:14px;
+ display:flex;
+ align-items:center;
+ gap:14px;
 }
 
 .row-icon{
-  width:36px;
-  height:36px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+ width:37px;
+ height:37px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
 }
 
 .row-icon svg{
-  width:24px;
-  height:24px;
-  stroke:currentColor;
-  fill:none;
-  stroke-width:1.8;
+ width:24px;
+ height:24px;
+ stroke:currentColor;
+ fill:none;
+ stroke-width:1.8;
+ stroke-linecap:round;
+ stroke-linejoin:round;
 }
 
 .sub{
-  color:#8f96a5;
-  font-size:12px;
-  margin-top:3px;
+ color:#8d94a2;
+ font-size:12px;
+ margin-top:3px;
 }
 
 .switch{
-  width:48px;
-  height:29px;
-  border-radius:20px;
-  background:#3a3d45;
-  position:relative;
+ width:48px;
+ height:29px;
+ border-radius:20px;
+ background:#3a3d45;
+ position:relative;
 }
 
 .switch.on{
-  background:#2f7df6;
+ background:#2f7df6;
 }
 
 .switch:after{
-  content:"";
-  width:23px;
-  height:23px;
-  background:white;
-  border-radius:50%;
-  position:absolute;
-  top:3px;
-  right:3px;
-  transition:.2s;
+ content:"";
+ width:23px;
+ height:23px;
+ background:white;
+ border-radius:50%;
+ position:absolute;
+ top:3px;
+ right:3px;
+ transition:.2s;
 }
 
 .switch.on:after{
-  right:22px;
-}
-
-.calc{
-  max-width:480px;
-  margin:auto;
-}
-
-.calc-display{
-  height:130px;
-  display:flex;
-  align-items:flex-end;
-  justify-content:flex-end;
-  font-size:48px;
-  padding:15px;
-  overflow:hidden;
-}
-
-.calc-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-}
-
-.calc-key{
-  aspect-ratio:1;
-  border-radius:50%;
-  background:#20232b;
-  color:white;
-  font-size:25px;
-}
-
-.calc-key.operator{
-  background:#315fae;
-}
-
-.calc-key.equal{
-  background:#2f7df6;
-}
-
-.camera{
-  position:relative;
-  flex:1;
-  background:#000;
-  overflow:hidden;
-}
-
-.camera video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.camera-controls{
-  position:absolute;
-  bottom:30px;
-  left:0;
-  right:0;
-  display:flex;
-  justify-content:center;
-  gap:25px;
-}
-
-.camera-button{
-  width:68px;
-  height:68px;
-  border-radius:50%;
-  background:white;
-  border:5px solid rgba(255,255,255,.45);
-  background-clip:padding-box;
-}
-
-.camera-small{
-  width:52px;
-  height:52px;
-  border-radius:50%;
-  background:rgba(255,255,255,.2);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.storage-number{
-  font-size:42px;
-  font-weight:700;
-}
-
-.progress{
-  height:10px;
-  background:#292c34;
-  border-radius:20px;
-  overflow:hidden;
-  margin:18px 0;
-}
-
-.progress-bar{
-  height:100%;
-  width:0;
-  background:#2f7df6;
-  transition:.4s;
-}
-
-.note{
-  color:#9299a8;
-  font-size:12px;
-  line-height:1.8;
-}
-
-input.textbox{
-  width:100%;
-  height:52px;
-  background:#20232b;
-  border:1px solid #333744;
-  border-radius:13px;
-  color:white;
-  padding:0 14px;
-  outline:none;
+ right:22px;
 }
 
 .primary{
-  width:100%;
-  height:52px;
-  border-radius:14px;
-  background:#2f7df6;
-  color:white;
-  margin-top:12px;
+ width:100%;
+ height:51px;
+ border-radius:14px;
+ background:#2f7df6;
+ color:white;
+ margin-top:12px;
+}
+
+.choice{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+}
+
+.choice button{
+ padding:10px 15px;
+ border-radius:12px;
+ background:#242730;
+ color:white;
+}
+
+.choice button.selected{
+ background:#2f7df6;
+}
+
+.wallpaper-preview{
+ width:100%;
+ height:150px;
+ border-radius:17px;
+ background:#15171d center/cover no-repeat;
+ margin-bottom:12px;
+ border:1px solid rgba(255,255,255,.08);
+}
+
+.calc{
+ max-width:480px;
+ margin:auto;
+}
+
+.calc-display{
+ height:130px;
+ display:flex;
+ align-items:flex-end;
+ justify-content:flex-end;
+ padding:15px;
+ font-size:48px;
+ overflow:hidden;
+}
+
+.calc-grid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:10px;
+}
+
+.calc-key{
+ aspect-ratio:1;
+ border-radius:50%;
+ background:#20232b;
+ color:white;
+ font-size:25px;
+}
+
+.calc-key.operator{
+ background:#315fae;
+}
+
+.calc-key.equal{
+ background:#2f7df6;
+}
+
+.camera{
+ flex:1;
+ position:relative;
+ background:#000;
+ overflow:hidden;
+}
+
+.camera video{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+}
+
+.camera-controls{
+ position:absolute;
+ bottom:30px;
+ left:0;
+ right:0;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ gap:25px;
+}
+
+.camera-button{
+ width:68px;
+ height:68px;
+ border-radius:50%;
+ background:white;
+ border:5px solid rgba(255,255,255,.35);
+}
+
+.camera-small{
+ width:52px;
+ height:52px;
+ border-radius:50%;
+ background:rgba(255,255,255,.2);
+ color:white;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:22px;
+}
+
+.storage-number{
+ font-size:40px;
+ font-weight:700;
+}
+
+.progress{
+ height:10px;
+ background:#292c34;
+ border-radius:20px;
+ overflow:hidden;
+ margin:18px 0;
+}
+
+.progress-bar{
+ height:100%;
+ width:0;
+ background:#2f7df6;
+ transition:.4s;
+}
+
+.textbox{
+ width:100%;
+ height:51px;
+ background:#20232b;
+ color:white;
+ border:1px solid #343844;
+ border-radius:13px;
+ padding:0 14px;
+ outline:none;
+}
+
+.note{
+ color:#9097a5;
+ font-size:12px;
+ line-height:1.8;
 }
 
 @media(max-width:380px){
-  .grid{
-    grid-template-columns:repeat(4,1fr);
-    gap:16px 8px;
-  }
-  .icon{
-    width:55px;
-    height:55px;
-  }
+ .grid{
+  gap:16px 7px;
+ }
+ .icon{
+  width:55px;
+  height:55px;
+ }
 }
 </style>
 </head>
@@ -431,1142 +496,1480 @@ input.textbox{
 
 <div id="os">
 
-  <div class="statusbar">
-    <span id="time">00:00</span>
-    <div class="status-right">
-      <span>Wi-Fi</span>
-      <span>▮▮▮</span>
-      <span>100%</span>
-    </div>
-  </div>
-
-  <main class="home">
-
-    <div class="clock" id="bigClock">00:00</div>
-    <div class="date" id="date">Roham OS</div>
-
-    <input
-      class="search"
-      id="search"
-      placeholder="جستجو در Roham OS"
-      autocomplete="off"
-    >
-
-    <div class="grid">
-
-      <button class="app" onclick="openApp('google')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="8"/>
-            <path d="M12 4v8h8"/>
-          </svg>
-        </div>
-        <span>Google</span>
-      </button>
-
-      <button class="app" onclick="openApp('chrome')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="9"/>
-            <circle cx="12" cy="12" r="4"/>
-            <path d="M12 3v5M3 8h9M15 12l5 6"/>
-          </svg>
-        </div>
-        <span>Chrome</span>
-      </button>
-
-      <button class="app" onclick="openApp('youtube')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <rect x="3" y="6" width="18" height="12" rx="4"/>
-            <path d="m10 9 5 3-5 3z"/>
-          </svg>
-        </div>
-        <span>YouTube</span>
-      </button>
-
-      <button class="app" onclick="openApp('gmail')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <path d="M4 6v12h16V6"/>
-            <path d="m4 7 8 6 8-6"/>
-          </svg>
-        </div>
-        <span>Gmail</span>
-      </button>
-
-      <button class="app" onclick="openApp('music')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <path d="M9 18V6l10-2v12"/>
-            <circle cx="6" cy="18" r="3"/>
-            <circle cx="16" cy="16" r="3"/>
-          </svg>
-        </div>
-        <span>YouTube Music</span>
-      </button>
-
-      <button class="app" onclick="openApp('photos')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="8"/>
-            <path d="M12 4v16M4 12h16"/>
-          </svg>
-        </div>
-        <span>Photos</span>
-      </button>
-
-      <button class="app" onclick="openApp('drive')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <path d="m9 4 3-2 3 2 5 9-3 5H7l-3-5z"/>
-            <path d="m9 4 6 10M4 13h16"/>
-          </svg>
-        </div>
-        <span>OneDrive</span>
-      </button>
-
-      <button class="app" onclick="openApp('play')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <path d="m6 4 13 8-13 8z"/>
-          </svg>
-        </div>
-        <span>Play Store</span>
-      </button>
-
-      <button class="app" onclick="openApp('camera')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <path d="M4 8h4l2-3h4l2 3h4v11H4z"/>
-            <circle cx="12" cy="13" r="4"/>
-          </svg>
-        </div>
-        <span>Camera</span>
-      </button>
-
-      <button class="app" onclick="openApp('calculator')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <rect x="5" y="3" width="14" height="18" rx="2"/>
-            <path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/>
-          </svg>
-        </div>
-        <span>Calculator</span>
-      </button>
-
-      <button class="app" onclick="openApp('files')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <path d="M3 6h7l2 2h9v10H3z"/>
-          </svg>
-        </div>
-        <span>Files</span>
-      </button>
-
-      <button class="app" onclick="openApp('storage')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <rect x="5" y="3" width="14" height="18" rx="2"/>
-            <path d="M8 7h8M8 11h8M8 15h5"/>
-          </svg>
-        </div>
-        <span>Storage</span>
-      </button>
-
-      <button class="app" onclick="openApp('settings')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19 13v-2l2-1-2-3-2 1-2-1-1-2h-4l-1 2-2 1-2-1-2 3 2 1v2l-2 1 2 3 2-1 2 1 1 2h4l1-2 2-1 2 1 2-3z"/>
-          </svg>
-        </div>
-        <span>Settings</span>
-      </button>
-
-      <button class="app" onclick="openApp('account')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 21c1-5 4-7 8-7s7 2 8 7"/>
-          </svg>
-        </div>
-        <span>Roham Account</span>
-      </button>
-
-      <button class="app" onclick="openApp('ai')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <path d="M7 8a5 5 0 0 1 10 0v5a5 5 0 0 1-10 0z"/>
-            <path d="M4 11v3M20 11v3M9 21h6"/>
-          </svg>
-        </div>
-        <span>Roham AI</span>
-      </button>
-
-      <button class="app" onclick="openApp('browser')">
-        <div class="icon">
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M3 12h18M12 3c3 3 4 6 4 9s-1 6-4 9M12 3c-3 3-4 6-4 9s1 6 4 9"/>
-          </svg>
-        </div>
-        <span>Roham Browser</span>
-      </button>
-
-    </div>
-  </main>
-
-  <div class="dock">
-    <button class="app" onclick="openApp('camera')">
-      <div class="icon">
-        <svg viewBox="0 0 24 24">
-          <path d="M4 8h4l2-3h4l2 3h4v11H4z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
-      </div>
-    </button>
-
-    <button class="app" onclick="openApp('calculator')">
-      <div class="icon">
-        <svg viewBox="0 0 24 24">
-          <rect x="5" y="3" width="14" height="18" rx="2"/>
-          <path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/>
-        </svg>
-      </div>
-    </button>
-
-    <button class="app" onclick="openApp('settings')">
-      <div class="icon">
-        <svg viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19 13v-2l2-1-2-3-2 1-2-1-1-2h-4l-1 2-2 1-2-1-2 3 2 1v2l-2 1 2 3 2-1 2 1 1 2h4l1-2 2-1 2 1 2-3z"/>
-        </svg>
-      </div>
-    </button>
-  </div>
-
+<div class="statusbar">
+ <span id="time">00:00</span>
+ <div class="status-right">
+  <span>Wi-Fi</span>
+  <span>▮▮▮</span>
+  <span>100%</span>
+ </div>
 </div>
 
-<!-- APP SCREENS -->
+<main class="home">
+
+<div class="clock" id="bigClock">00:00</div>
+<div class="date" id="date">Roham OS</div>
+
+<input
+ id="search"
+ class="search"
+ placeholder="جستجو در Roham OS"
+ autocomplete="off">
+
+<div id="appGrid" class="grid"></div>
+
+</main>
+
+<div class="dock">
+
+<button class="app" onclick="openApp('camera')">
+ <div class="icon">
+  <svg viewBox="0 0 24 24">
+   <path d="M4 8h4l2-3h4l2 3h4v11H4z"/>
+   <circle cx="12" cy="13" r="4"/>
+  </svg>
+ </div>
+</button>
+
+<button class="app" onclick="openApp('calculator')">
+ <div class="icon">
+  <svg viewBox="0 0 24 24">
+   <rect x="5" y="3" width="14" height="18" rx="2"/>
+   <path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/>
+  </svg>
+ </div>
+</button>
+
+<button class="app" onclick="openApp('settings')">
+ <div class="icon">
+  <svg viewBox="0 0 24 24">
+   <circle cx="12" cy="12" r="3"/>
+   <path d="M19 13v-2l2-1-2-3-2 1-2-1-1-2h-4l-1 2-2 1-2-1-2 3 2 1v2l-2 1 2 3 2-1 2 1 1 2h4l1-2 2-1 2 1 2-3z"/>
+  </svg>
+ </div>
+</button>
+
+</div>
+</div>
+
+
+<!-- GOOGLE -->
 
 <div id="screen-google" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('google')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Google</div>
-  </div>
-  <iframe class="fullframe" src="https://www.google.com/search?igu=1"></iframe>
+<div class="topbar">
+<button class="back" onclick="closeApp('google')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">Google</div>
+</div>
+<iframe class="fullframe" src="https://www.google.com/search?igu=1"></iframe>
 </div>
 
-<div id="screen-chrome" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('chrome')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Chrome</div>
-  </div>
-  <iframe class="fullframe" src="https://www.google.com/chrome/"></iframe>
-</div>
+
+<!-- YOUTUBE -->
 
 <div id="screen-youtube" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('youtube')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">YouTube</div>
-  </div>
-  <iframe class="fullframe" src="https://www.youtube.com/"></iframe>
+<div class="topbar">
+<button class="back" onclick="closeApp('youtube')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">YouTube</div>
 </div>
+<iframe class="fullframe" src="https://www.youtube.com/"></iframe>
+</div>
+
+
+<!-- GMAIL -->
 
 <div id="screen-gmail" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('gmail')">
-      <svg viewBox="0 0 24 24"><path d="m4 7 8 6 8-6"/></svg>
-    </button>
-    <div class="title">Gmail</div>
-  </div>
-  <iframe class="fullframe" src="https://mail.google.com/"></iframe>
+<div class="topbar">
+<button class="back" onclick="closeApp('gmail')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">Gmail</div>
 </div>
+<iframe class="fullframe" src="https://mail.google.com/"></iframe>
+</div>
+
+
+<!-- MUSIC -->
 
 <div id="screen-music" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('music')">
-      <svg viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>
-    </button>
-    <div class="title">YouTube Music</div>
-  </div>
-  <iframe class="fullframe" src="https://music.youtube.com/"></iframe>
+<div class="topbar">
+<button class="back" onclick="closeApp('music')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">YouTube Music</div>
 </div>
+<iframe class="fullframe" src="https://music.youtube.com/"></iframe>
+</div>
+
+
+<!-- PHOTOS -->
 
 <div id="screen-photos" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('photos')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Google Photos</div>
-  </div>
-  <iframe class="fullframe" src="https://photos.google.com/"></iframe>
+<div class="topbar">
+<button class="back" onclick="closeApp('photos')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">Google Photos</div>
 </div>
+<iframe class="fullframe" src="https://photos.google.com/"></iframe>
+</div>
+
+
+<!-- ONEDRIVE -->
 
 <div id="screen-drive" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('drive')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">OneDrive</div>
-  </div>
-  <iframe class="fullframe" src="https://onedrive.live.com/"></iframe>
+<div class="topbar">
+<button class="back" onclick="closeApp('drive')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">OneDrive</div>
+</div>
+<iframe class="fullframe" src="https://onedrive.live.com/"></iframe>
 </div>
 
+
+<!-- PLAY STORE -->
+
 <div id="screen-play" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('play')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Google Play</div>
-  </div>
-  <iframe class="fullframe" src="https://play.google.com/store"></iframe>
+<div class="topbar">
+<button class="back" onclick="closeApp('play')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">Google Play</div>
 </div>
+<iframe class="fullframe" src="https://play.google.com/store"></iframe>
+</div>
+
+
+<!-- HALOVPN -->
+
+<div id="screen-vpn" class="screen">
+<div class="topbar">
+<button class="back" onclick="closeApp('vpn')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">HaloVPN</div>
+</div>
+
+<div class="content">
+
+<div class="card" style="padding:22px">
+
+<h2 style="margin-top:0">HaloVPN</h2>
+
+<p class="note">
+HaloVPN در Roham OS قرار گرفته است.
+</p>
+
+<button class="primary"
+onclick="window.open('https://halovpn-fast-secure-vpn-proxy.updatestar.com/','_blank')">
+باز کردن HaloVPN
+</button>
+
+<p class="note">
+در نسخه وب، این صفحه نمی‌تواند VPN سیستم دستگاه را فعال کند.
+برای VPN واقعی باید نسخه native Roham OS داشته باشیم.
+</p>
+
+</div>
+
+</div>
+</div>
+
 
 <!-- CAMERA -->
 
 <div id="screen-camera" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeCamera()">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Camera</div>
-  </div>
 
-  <div class="camera">
-    <video id="cameraVideo" autoplay playsinline></video>
-
-    <div class="camera-controls">
-      <button class="camera-small" onclick="flipCamera()">↻</button>
-      <button class="camera-button" onclick="takePhoto()"></button>
-      <button class="camera-small" onclick="stopCamera()">×</button>
-    </div>
-  </div>
-
-  <canvas id="photoCanvas" style="display:none"></canvas>
+<div class="topbar">
+<button class="back" onclick="closeCamera()">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">Camera</div>
 </div>
+
+<div class="camera">
+
+<video id="cameraVideo" autoplay playsinline></video>
+
+<div class="camera-controls">
+<button class="camera-small" onclick="flipCamera()">↻</button>
+<button class="camera-button" onclick="takePhoto()"></button>
+<button class="camera-small" onclick="stopCamera()">×</button>
+</div>
+
+</div>
+
+<canvas id="photoCanvas" style="display:none"></canvas>
+
+</div>
+
 
 <!-- CALCULATOR -->
 
 <div id="screen-calculator" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('calculator')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Calculator</div>
-  </div>
 
-  <div class="content">
-    <div class="calc">
-      <div id="calcDisplay" class="calc-display">0</div>
-
-      <div class="calc-grid">
-        <button class="calc-key" onclick="calcClear()">AC</button>
-        <button class="calc-key" onclick="calcInput('(')">(</button>
-        <button class="calc-key" onclick="calcInput(')')">)</button>
-        <button class="calc-key operator" onclick="calcInput('/')">÷</button>
-
-        <button class="calc-key" onclick="calcInput('7')">7</button>
-        <button class="calc-key" onclick="calcInput('8')">8</button>
-        <button class="calc-key" onclick="calcInput('9')">9</button>
-        <button class="calc-key operator" onclick="calcInput('*')">×</button>
-
-        <button class="calc-key" onclick="calcInput('4')">4</button>
-        <button class="calc-key" onclick="calcInput('5')">5</button>
-        <button class="calc-key" onclick="calcInput('6')">6</button>
-        <button class="calc-key operator" onclick="calcInput('-')">−</button>
-
-        <button class="calc-key" onclick="calcInput('1')">1</button>
-        <button class="calc-key" onclick="calcInput('2')">2</button>
-        <button class="calc-key" onclick="calcInput('3')">3</button>
-        <button class="calc-key operator" onclick="calcInput('+')">+</button>
-
-        <button class="calc-key" onclick="calcInput('0')">0</button>
-        <button class="calc-key" onclick="calcInput('.')">.</button>
-        <button class="calc-key" onclick="calcBack()">⌫</button>
-        <button class="calc-key equal" onclick="calcEqual()">=</button>
-      </div>
-    </div>
-  </div>
+<div class="topbar">
+<button class="back" onclick="closeApp('calculator')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">Calculator</div>
 </div>
+
+<div class="content">
+
+<div class="calc">
+
+<div id="calcDisplay" class="calc-display">0</div>
+
+<div class="calc-grid">
+
+<button class="calc-key" onclick="calcClear()">AC</button>
+<button class="calc-key" onclick="calcInput('(')">(</button>
+<button class="calc-key" onclick="calcInput(')')">)</button>
+<button class="calc-key operator" onclick="calcInput('/')">÷</button>
+
+<button class="calc-key" onclick="calcInput('7')">7</button>
+<button class="calc-key" onclick="calcInput('8')">8</button>
+<button class="calc-key" onclick="calcInput('9')">9</button>
+<button class="calc-key operator" onclick="calcInput('*')">×</button>
+
+<button class="calc-key" onclick="calcInput('4')">4</button>
+<button class="calc-key" onclick="calcInput('5')">5</button>
+<button class="calc-key" onclick="calcInput('6')">6</button>
+<button class="calc-key operator" onclick="calcInput('-')">−</button>
+
+<button class="calc-key" onclick="calcInput('1')">1</button>
+<button class="calc-key" onclick="calcInput('2')">2</button>
+<button class="calc-key" onclick="calcInput('3')">3</button>
+<button class="calc-key operator" onclick="calcInput('+')">+</button>
+
+<button class="calc-key" onclick="calcInput('0')">0</button>
+<button class="calc-key" onclick="calcInput('.')">.</button>
+<button class="calc-key" onclick="calcBack()">⌫</button>
+<button class="calc-key equal" onclick="calcEqual()">=</button>
+
+</div>
+</div>
+</div>
+</div>
+
 
 <!-- STORAGE -->
 
 <div id="screen-storage" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('storage')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Storage</div>
-  </div>
 
-  <div class="content">
-
-    <div class="section">
-      <div class="section-title">Roham OS Storage</div>
-
-      <div class="card">
-        <div style="padding:25px">
-          <div class="storage-number" id="storageUsed">در حال بررسی…</div>
-          <div class="sub" id="storageText">در حال محاسبه فضای قابل استفاده</div>
-
-          <div class="progress">
-            <div id="storageBar" class="progress-bar"></div>
-          </div>
-
-          <div id="storageFree" class="sub"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="card">
-        <div class="row">
-          <div>
-            <b>فضای استفاده‌شده</b>
-            <div class="sub">داده‌های Roham OS در مرورگر</div>
-          </div>
-          <b id="storageUsed2">—</b>
-        </div>
-
-        <div class="row">
-          <div>
-            <b>فضای قابل استفاده</b>
-            <div class="sub">سهمیه قابل دسترسی برای این برنامه</div>
-          </div>
-          <b id="storageQuota">—</b>
-        </div>
-
-        <div class="row">
-          <div>
-            <b>فضای باقی‌مانده</b>
-          </div>
-          <b id="storageFree2">—</b>
-        </div>
-      </div>
-    </div>
-
-    <div class="note">
-      توجه: در نسخه وب، این اعداد مربوط به فضای ذخیره‌سازی قابل دسترسی
-      برای Roham OS در مرورگر هستند و لزوماً ظرفیت کامل فیزیکی دستگاه نیستند.
-    </div>
-
-  </div>
+<div class="topbar">
+<button class="back" onclick="closeApp('storage')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">Storage</div>
 </div>
+
+<div class="content">
+
+<div class="section">
+<div class="section-title">Roham Storage</div>
+
+<div class="card" style="padding:24px">
+
+<div class="storage-number" id="storageUsed">
+در حال بررسی…
+</div>
+
+<div id="storageText" class="sub"></div>
+
+<div class="progress">
+<div id="storageBar" class="progress-bar"></div>
+</div>
+
+<div id="storageFree" class="sub"></div>
+
+</div>
+</div>
+
+<div class="card">
+
+<div class="row">
+<div>فضای استفاده‌شده</div>
+<b id="storageUsed2">—</b>
+</div>
+
+<div class="row">
+<div>سهمیه قابل استفاده</div>
+<b id="storageQuota">—</b>
+</div>
+
+<div class="row">
+<div>فضای باقی‌مانده</div>
+<b id="storageFree2">—</b>
+</div>
+
+</div>
+
+<p class="note">
+این نسخه وب فضای قابل‌دسترسی Roham در مرورگر را نشان می‌دهد،
+نه کل حافظه فیزیکی دستگاه.
+</p>
+
+</div>
+</div>
+
 
 <!-- FILES -->
 
 <div id="screen-files" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('files')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Files</div>
-  </div>
 
-  <div class="content">
-
-    <div class="section">
-      <div class="section-title">فایل‌های دستگاه</div>
-
-      <div class="card">
-        <div class="row">
-          <div>
-            <b>انتخاب فایل</b>
-            <div class="sub">فایل را از دستگاه انتخاب کن</div>
-          </div>
-
-          <input type="file" id="filePicker">
-        </div>
-
-        <div class="row">
-          <div>
-            <b id="fileName">فایلی انتخاب نشده</b>
-            <div class="sub" id="fileSize"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
+<div class="topbar">
+<button class="back" onclick="closeApp('files')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">Files</div>
 </div>
+
+<div class="content">
+
+<div class="card">
+
+<div class="row">
+
+<div>
+<b>انتخاب فایل</b>
+<div class="sub">انتخاب فایل از دستگاه</div>
+</div>
+
+<input type="file" id="filePicker">
+
+</div>
+
+<div class="row">
+<div>
+<b id="fileName">فایلی انتخاب نشده</b>
+<div id="fileSize" class="sub"></div>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
 
 <!-- SETTINGS -->
 
 <div id="screen-settings" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('settings')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Settings</div>
-  </div>
 
-  <div class="content">
-
-    <div class="section">
-      <div class="section-title">اتصالات</div>
-
-      <div class="card">
-
-        <div class="row">
-          <div class="row-left">
-            <div class="row-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M2 8a15 15 0 0 1 20 0"/>
-                <path d="M5 12a10 10 0 0 1 14 0"/>
-                <path d="M8 16a5 5 0 0 1 8 0"/>
-                <circle cx="12" cy="19" r="1"/>
-              </svg>
-            </div>
-            <div>
-              <b>Wi-Fi</b>
-              <div class="sub">شبکه‌های بی‌سیم</div>
-            </div>
-          </div>
-          <div id="wifiSwitch" class="switch on"
-               onclick="toggleSwitch('wifiSwitch')"></div>
-        </div>
-
-        <div class="row">
-          <div class="row-left">
-            <div class="row-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="m8 7 8 10-8 4V3l8 4-8 10"/>
-              </svg>
-            </div>
-            <div>
-              <b>Bluetooth</b>
-              <div class="sub">دستگاه‌های نزدیک</div>
-            </div>
-          </div>
-          <div id="bluetoothSwitch" class="switch"
-               onclick="toggleSwitch('bluetoothSwitch')"></div>
-        </div>
-
-        <div class="row">
-          <div class="row-left">
-            <div class="row-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M3 12h18M12 3v18"/>
-                <circle cx="12" cy="12" r="8"/>
-              </svg>
-            </div>
-            <div>
-              <b>Airplane Mode</b>
-              <div class="sub">قطع ارتباطات بی‌سیم</div>
-            </div>
-          </div>
-          <div id="airplaneSwitch" class="switch"
-               onclick="toggleSwitch('airplaneSwitch')"></div>
-        </div>
-
-        <div class="row">
-          <div class="row-left">
-            <div class="row-icon">
-              <svg viewBox="0 0 24 24">
-                <rect x="4" y="3" width="16" height="18" rx="2"/>
-                <path d="M8 7h8M8 11h8M8 15h5"/>
-              </svg>
-            </div>
-            <div>
-              <b>SIM</b>
-              <div class="sub">مدیریت سیم‌کارت</div>
-            </div>
-          </div>
-          <span class="sub">در نسخه وب</span>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">دستگاه</div>
-
-      <div class="card">
-
-        <div class="row" onclick="openApp('storage')">
-          <div class="row-left">
-            <div class="row-icon">
-              <svg viewBox="0 0 24 24">
-                <rect x="4" y="3" width="16" height="18" rx="2"/>
-                <path d="M8 7h8M8 11h8M8 15h5"/>
-              </svg>
-            </div>
-            <div>
-              <b>Storage</b>
-              <div class="sub">فضای ذخیره‌سازی</div>
-            </div>
-          </div>
-          <span>›</span>
-        </div>
-
-        <div class="row">
-          <div class="row-left">
-            <div class="row-icon">
-              <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M12 7v5l3 2"/>
-              </svg>
-            </div>
-            <div>
-              <b>Display</b>
-              <div class="sub">روشنایی، اندازه متن و ظاهر</div>
-            </div>
-          </div>
-          <span>›</span>
-        </div>
-
-        <div class="row">
-          <div class="row-left">
-            <div class="row-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M5 10v4M8 8v8M12 5v14M16 8v8M19 10v4"/>
-              </svg>
-            </div>
-            <div>
-              <b>Sound</b>
-              <div class="sub">صدا و اعلان‌ها</div>
-            </div>
-          </div>
-          <span>›</span>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">سیستم</div>
-
-      <div class="card">
-
-        <div class="row">
-          <div class="row-left">
-            <div class="row-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 3v18M3 12h18"/>
-              </svg>
-            </div>
-            <div>
-              <b>Roham OS</b>
-              <div class="sub">Beta 3</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <b>About device</b>
-            <div class="sub">Roham OS • Beta 3</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
+<div class="topbar">
+<button class="back" onclick="closeApp('settings')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+<div class="title">Settings</div>
 </div>
+
+<div class="content">
+
+
+<div class="section">
+
+<div class="section-title">ظاهر</div>
+
+<div class="card">
+
+<div class="row">
+
+<div>
+<b>Dark Mode</b>
+<div class="sub">ظاهر روشن یا تاریک</div>
+</div>
+
+<div id="darkSwitch"
+class="switch on"
+onclick="toggleDark()"></div>
+
+</div>
+
+
+<div class="row">
+
+<div>
+<b>اندازه آیکون</b>
+<div class="sub">اندازه برنامه‌های صفحه اصلی</div>
+</div>
+
+<div class="choice">
+
+<button onclick="setIconSize('small')">کوچک</button>
+<button onclick="setIconSize('normal')">متوسط</button>
+<button onclick="setIconSize('large')">بزرگ</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<div class="section">
+
+<div class="section-title">والپیپر</div>
+
+<div class="card" style="padding:18px">
+
+<div id="wallpaperPreview"
+class="wallpaper-preview"></div>
+
+<input
+type="file"
+id="wallpaperInput"
+accept="image/*">
+
+<button class="primary"
+onclick="removeWallpaper()">
+حذف والپیپر
+</button>
+
+</div>
+</div>
+
+
+<div class="section">
+
+<div class="section-title">چیدمان صفحه اصلی</div>
+
+<div class="card">
+
+<div class="row">
+
+<div>
+<b>جابجایی برنامه‌ها</b>
+<div class="sub">
+روی آیکون نگه دار و آن را بکش
+</div>
+</div>
+
+</div>
+
+<div class="row">
+
+<div>
+<b>بازنشانی چیدمان</b>
+<div class="sub">
+برگرداندن ترتیب پیش‌فرض
+</div>
+</div>
+
+<button onclick="resetLayout()">
+بازنشانی
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<div class="section">
+
+<div class="section-title">اتصالات</div>
+
+<div class="card">
+
+<div class="row">
+<div class="row-left">
+<div class="row-icon">
+<svg viewBox="0 0 24 24">
+<path d="M2 8a15 15 0 0 1 20 0"/>
+<path d="M5 12a10 10 0 0 1 14 0"/>
+<path d="M8 16a5 5 0 0 1 8 0"/>
+<circle cx="12" cy="19" r="1"/>
+</svg>
+</div>
+
+<div>
+<b>Wi-Fi</b>
+<div class="sub">شبکه بی‌سیم</div>
+</div>
+</div>
+
+<div id="wifiSwitch"
+class="switch on"
+onclick="toggleSwitch('wifiSwitch')"></div>
+</div>
+
+
+<div class="row">
+
+<div class="row-left">
+
+<div class="row-icon">
+<svg viewBox="0 0 24 24">
+<path d="m8 7 8 10-8 4V3l8 4-8 10"/>
+</svg>
+</div>
+
+<div>
+<b>Bluetooth</b>
+<div class="sub">دستگاه‌های نزدیک</div>
+</div>
+
+</div>
+
+<div id="bluetoothSwitch"
+class="switch"
+onclick="toggleSwitch('bluetoothSwitch')"></div>
+
+</div>
+
+
+<div class="row">
+
+<div>
+<b>Airplane Mode</b>
+<div class="sub">حالت هواپیما</div>
+</div>
+
+<div id="airplaneSwitch"
+class="switch"
+onclick="toggleSwitch('airplaneSwitch')"></div>
+
+</div>
+
+</div>
+</div>
+
+
+<div class="section">
+
+<div class="section-title">دستگاه</div>
+
+<div class="card">
+
+<div class="row"
+onclick="openApp('storage')">
+
+<div>
+<b>Storage</b>
+<div class="sub">فضای ذخیره‌سازی</div>
+</div>
+
+<span>›</span>
+
+</div>
+
+
+<div class="row">
+
+<div>
+<b>Camera</b>
+<div class="sub">دوربین دستگاه</div>
+</div>
+
+<span>›</span>
+
+</div>
+
+
+<div class="row">
+
+<div>
+<b>Roham OS</b>
+<div class="sub">Beta 4</div>
+</div>
+
+<span>›</span>
+
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+
 
 <!-- ACCOUNT -->
 
 <div id="screen-account" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('account')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Roham Account</div>
-  </div>
 
-  <div class="content">
-    <div class="section">
-      <div class="section-title">حساب Roham</div>
+<div class="topbar">
 
-      <div class="card" style="padding:20px">
+<button class="back" onclick="closeApp('account')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
 
-        <input
-          id="accountName"
-          class="textbox"
-          placeholder="نام کاربری"
-        >
+<div class="title">Roham Account</div>
 
-        <input
-          id="accountEmail"
-          class="textbox"
-          style="margin-top:10px"
-          placeholder="ایمیل"
-        >
-
-        <button class="primary" onclick="saveAccount()">
-          ذخیره حساب
-        </button>
-
-        <div id="accountStatus"
-             class="note"
-             style="margin-top:15px"></div>
-
-      </div>
-    </div>
-  </div>
 </div>
+
+<div class="content">
+
+<div class="card" style="padding:20px">
+
+<input
+id="accountName"
+class="textbox"
+placeholder="نام کاربری">
+
+<input
+id="accountEmail"
+class="textbox"
+style="margin-top:10px"
+placeholder="ایمیل">
+
+<button
+class="primary"
+onclick="saveAccount()">
+ذخیره
+</button>
+
+<div id="accountStatus"
+class="note"
+style="margin-top:14px"></div>
+
+</div>
+
+</div>
+</div>
+
 
 <!-- AI -->
 
 <div id="screen-ai" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('ai')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Roham AI</div>
-  </div>
 
-  <iframe
-    class="fullframe"
-    src="https://rohammolaei123-debug.github.io/Roham-Ai/"
-    title="Roham AI">
-  </iframe>
+<div class="topbar">
+
+<button class="back" onclick="closeApp('ai')">
+<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+</button>
+
+<div class="title">Roham AI</div>
+
 </div>
 
-<!-- BROWSER -->
+<iframe
+class="fullframe"
+src="https://rohammolaei123-debug.github.io/Roham-Ai/">
+</iframe>
 
-<div id="screen-browser" class="screen">
-  <div class="topbar">
-    <button class="back" onclick="closeApp('browser')">
-      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
-    </button>
-    <div class="title">Roham Browser</div>
-  </div>
-
-  <div class="content" style="padding:0">
-    <div style="padding:12px;background:#11131a">
-      <input
-        id="browserUrl"
-        class="textbox"
-        value="https://www.google.com"
-      >
-      <button class="primary" onclick="loadBrowser()">
-        باز کردن
-      </button>
-    </div>
-
-    <iframe
-      id="browserFrame"
-      class="fullframe"
-      src="https://www.google.com/search?igu=1">
-    </iframe>
-  </div>
 </div>
+
 
 <script>
 
-const screens = [
-  "google","chrome","youtube","gmail","music","photos",
-  "drive","play","camera","calculator","files","storage",
-  "settings","account","ai","browser"
+/* ---------- APP DATA ---------- */
+
+const defaultApps=[
+
+{
+ id:"google",
+ name:"Google",
+ icon:`<svg viewBox="0 0 24 24">
+ <circle cx="12" cy="12" r="8"/>
+ <path d="M12 4v8h8"/>
+ </svg>`
+},
+
+{
+ id:"youtube",
+ name:"YouTube",
+ icon:`<svg viewBox="0 0 24 24">
+ <rect x="3" y="6" width="18" height="12" rx="4"/>
+ <path d="m10 9 5 3-5 3z"/>
+ </svg>`
+},
+
+{
+ id:"gmail",
+ name:"Gmail",
+ icon:`<svg viewBox="0 0 24 24">
+ <path d="M4 6v12h16V6"/>
+ <path d="m4 7 8 6 8-6"/>
+ </svg>`
+},
+
+{
+ id:"music",
+ name:"YouTube Music",
+ icon:`<svg viewBox="0 0 24 24">
+ <path d="M9 18V6l10-2v12"/>
+ <circle cx="6" cy="18" r="3"/>
+ <circle cx="16" cy="16" r="3"/>
+ </svg>`
+},
+
+{
+ id:"photos",
+ name:"Photos",
+ icon:`<svg viewBox="0 0 24 24">
+ <circle cx="12" cy="12" r="8"/>
+ <path d="M12 4v16M4 12h16"/>
+ </svg>`
+},
+
+{
+ id:"drive",
+ name:"OneDrive",
+ icon:`<svg viewBox="0 0 24 24">
+ <path d="m9 4 3-2 3 2 5 9-3 5H7l-3-5z"/>
+ <path d="m9 4 6 10M4 13h16"/>
+ </svg>`
+},
+
+{
+ id:"play",
+ name:"Play Store",
+ icon:`<svg viewBox="0 0 24 24">
+ <path d="m6 4 13 8-13 8z"/>
+ </svg>`
+},
+
+{
+ id:"vpn",
+ name:"HaloVPN",
+ icon:`<svg viewBox="0 0 24 24">
+ <path d="M6 10V7a6 6 0 0 1 12 0v3"/>
+ <rect x="4" y="10" width="16" height="10" rx="2"/>
+ <circle cx="12" cy="15" r="1"/>
+ </svg>`
+},
+
+{
+ id:"camera",
+ name:"Camera",
+ icon:`<svg viewBox="0 0 24 24">
+ <path d="M4 8h4l2-3h4l2 3h4v11H4z"/>
+ <circle cx="12" cy="13" r="4"/>
+ </svg>`
+},
+
+{
+ id:"calculator",
+ name:"Calculator",
+ icon:`<svg viewBox="0 0 24 24">
+ <rect x="5" y="3" width="14" height="18" rx="2"/>
+ <path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/>
+ </svg>`
+},
+
+{
+ id:"files",
+ name:"Files",
+ icon:`<svg viewBox="0 0 24 24">
+ <path d="M3 6h7l2 2h9v10H3z"/>
+ </svg>`
+},
+
+{
+ id:"storage",
+ name:"Storage",
+ icon:`<svg viewBox="0 0 24 24">
+ <rect x="5" y="3" width="14" height="18" rx="2"/>
+ <path d="M8 7h8M8 11h8M8 15h5"/>
+ </svg>`
+},
+
+{
+ id:"settings",
+ name:"Settings",
+ icon:`<svg viewBox="0 0 24 24">
+ <circle cx="12" cy="12" r="3"/>
+ <path d="M19 13v-2l2-1-2-3-2 1-2-1-1-2h-4l-1 2-2 1-2-1-2 3 2 1v2l-2 1 2 3 2-1 2 1 1 2h4l1-2 2-1 2 1 2-3z"/>
+ </svg>`
+},
+
+{
+ id:"account",
+ name:"Roham Account",
+ icon:`<svg viewBox="0 0 24 24">
+ <circle cx="12" cy="8" r="4"/>
+ <path d="M4 21c1-5 4-7 8-7s7 2 8 7"/>
+ </svg>`
+},
+
+{
+ id:"ai",
+ name:"Roham AI",
+ icon:`<svg viewBox="0 0 24 24">
+ <path d="M7 8a5 5 0 0 1 10 0v5a5 5 0 0 1-10 0z"/>
+ <path d="M4 11v3M20 11v3M9 21h6"/>
+ </svg>`
+}
+
 ];
 
+
+/* ---------- LAYOUT ---------- */
+
+let savedLayout;
+
+try{
+ savedLayout=JSON.parse(
+  localStorage.getItem("rohamLayout")||"null"
+ );
+}catch{
+ savedLayout=null;
+}
+
+let apps=defaultApps;
+
+if(Array.isArray(savedLayout)){
+
+ const map=new Map(
+  defaultApps.map(a=>[a.id,a])
+ );
+
+ const restored=[];
+
+ savedLayout.forEach(id=>{
+  if(map.has(id)){
+   restored.push(map.get(id));
+   map.delete(id);
+  }
+ });
+
+ map.forEach(a=>restored.push(a));
+
+ apps=restored;
+}
+
+function renderApps(){
+
+ const grid=document.getElementById("appGrid");
+
+ grid.innerHTML="";
+
+ apps.forEach((app,index)=>{
+
+  const el=document.createElement("button");
+
+  el.className="app";
+  el.draggable=true;
+  el.dataset.id=app.id;
+
+  el.innerHTML=
+   `<div class="icon">${app.icon}</div>
+    <span>${app.name}</span>`;
+
+  el.onclick=()=>{
+   openApp(app.id);
+  };
+
+  el.addEventListener("dragstart",()=>{
+   el.classList.add("dragging");
+  });
+
+  el.addEventListener("dragend",()=>{
+   el.classList.remove("dragging");
+   saveLayout();
+  });
+
+  el.addEventListener("dragover",e=>{
+   e.preventDefault();
+
+   const dragging=
+    document.querySelector(".dragging");
+
+   if(!dragging||dragging===el)return;
+
+   const rect=el.getBoundingClientRect();
+
+   const after=
+    e.clientX-rect.left >
+    rect.width/2;
+
+   if(after){
+    el.after(dragging);
+   }else{
+    el.before(dragging);
+   }
+
+   apps=
+    [...grid.children].map(x=>
+     defaultApps.find(a=>a.id===x.dataset.id)
+    );
+  });
+
+  grid.appendChild(el);
+
+ });
+
+}
+
+function saveLayout(){
+
+ localStorage.setItem(
+  "rohamLayout",
+  JSON.stringify(
+   apps.map(a=>a.id)
+  )
+ );
+}
+
+function resetLayout(){
+
+ apps=[...defaultApps];
+
+ localStorage.removeItem("rohamLayout");
+
+ renderApps();
+}
+
+renderApps();
+
+
+/* ---------- CLOCK ---------- */
+
+function updateClock(){
+
+ const now=new Date();
+
+ const time=now.toLocaleTimeString("fa-IR",{
+  hour:"2-digit",
+  minute:"2-digit"
+ });
+
+ const date=now.toLocaleDateString("fa-IR",{
+  weekday:"long",
+  year:"numeric",
+  month:"long",
+  day:"numeric"
+ });
+
+ document.getElementById("time").textContent=time;
+ document.getElementById("bigClock").textContent=time;
+ document.getElementById("date").textContent=date;
+}
+
+updateClock();
+setInterval(updateClock,1000);
+
+
+/* ---------- OPEN APPS ---------- */
+
 function openApp(name){
-  const el=document.getElementById("screen-"+name);
-  if(!el)return;
 
-  el.classList.add("active");
+ const el=
+  document.getElementById("screen-"+name);
 
-  if(name==="camera"){
-    startCamera();
-  }
+ if(!el)return;
 
-  if(name==="storage"){
-    updateStorage();
-  }
+ el.classList.add("active");
 
-  if(name==="account"){
-    loadAccount();
-  }
+ if(name==="camera"){
+  startCamera();
+ }
+
+ if(name==="storage"){
+  updateStorage();
+ }
+
+ if(name==="account"){
+  loadAccount();
+ }
 }
 
 function closeApp(name){
-  const el=document.getElementById("screen-"+name);
-  if(el)el.classList.remove("active");
+
+ const el=
+  document.getElementById("screen-"+name);
+
+ if(el)el.classList.remove("active");
 }
 
-function updateClock(){
-  const now=new Date();
 
-  const time=now.toLocaleTimeString("fa-IR",{
-    hour:"2-digit",
-    minute:"2-digit"
-  });
+/* ---------- SEARCH ---------- */
 
-  const date=now.toLocaleDateString("fa-IR",{
-    weekday:"long",
-    year:"numeric",
-    month:"long",
-    day:"numeric"
-  });
+document
+.getElementById("search")
+.addEventListener("keydown",e=>{
 
-  document.getElementById("time").textContent=time;
-  document.getElementById("bigClock").textContent=time;
-  document.getElementById("date").textContent=date;
-}
+ if(e.key!=="Enter")return;
 
-setInterval(updateClock,1000);
-updateClock();
+ const q=e.target.value.trim();
 
+ if(!q)return;
 
-/* SEARCH */
+ openApp("google");
 
-document.getElementById("search").addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
-    const q=e.target.value.trim();
+ const frame=
+ document.querySelector("#screen-google iframe");
 
-    if(q){
-      openApp("google");
+ frame.src=
+ "https://www.google.com/search?igu=1&q="+
+ encodeURIComponent(q);
 
-      const frame=document.querySelector("#screen-google iframe");
-
-      frame.src=
-        "https://www.google.com/search?igu=1&q="+
-        encodeURIComponent(q);
-    }
-  }
 });
 
 
-/* CALCULATOR */
+/* ---------- CALCULATOR ---------- */
 
 let calcValue="";
 
-function calcInput(value){
-  if(calcValue==="Error")calcValue="";
-  calcValue+=value;
-  updateCalc();
+function updateCalc(){
+ document.getElementById("calcDisplay")
+ .textContent=calcValue||"0";
+}
+
+function calcInput(v){
+
+ if(calcValue==="Error")calcValue="";
+
+ calcValue+=v;
+
+ updateCalc();
 }
 
 function calcClear(){
-  calcValue="";
-  updateCalc();
+
+ calcValue="";
+
+ updateCalc();
 }
 
 function calcBack(){
-  calcValue=calcValue.slice(0,-1);
-  updateCalc();
+
+ calcValue=
+ calcValue.slice(0,-1);
+
+ updateCalc();
 }
 
 function calcEqual(){
-  try{
 
-    if(!calcValue)return;
+ try{
 
-    /*
-      فقط عملیات ریاضی پایه اجازه داده می‌شوند.
-      کاراکترهای غیرمجاز حذف/رد می‌شوند.
-    */
-
-    if(!/^[0-9+\-*/().\s]+$/.test(calcValue)){
-      throw new Error();
-    }
-
-    const result=Function(
-      '"use strict"; return ('+calcValue+')'
-    )();
-
-    if(!Number.isFinite(result)){
-      throw new Error();
-    }
-
-    calcValue=String(result);
-
-  }catch{
-    calcValue="Error";
+  if(!/^[0-9+\-*/().\s]+$/.test(calcValue)){
+   throw new Error();
   }
 
-  updateCalc();
+  const result=
+   Function(
+    '"use strict";return('+calcValue+')'
+   )();
+
+  if(!Number.isFinite(result)){
+   throw new Error();
+  }
+
+  calcValue=String(result);
+
+ }catch{
+
+  calcValue="Error";
+ }
+
+ updateCalc();
 }
 
-function updateCalc(){
-  document.getElementById("calcDisplay").textContent=
-    calcValue || "0";
-}
 
-
-/* CAMERA */
+/* ---------- CAMERA ---------- */
 
 let cameraStream=null;
 let facing="environment";
 
 async function startCamera(){
 
-  if(!navigator.mediaDevices?.getUserMedia){
-    alert("دوربین در این مرورگر در دسترس نیست.");
-    return;
+ if(!navigator.mediaDevices?.getUserMedia){
+  alert("دوربین در این مرورگر در دسترس نیست.");
+  return;
+ }
+
+ try{
+
+  if(cameraStream){
+   cameraStream.getTracks()
+   .forEach(t=>t.stop());
   }
 
-  try{
+  cameraStream=
+   await navigator.mediaDevices.getUserMedia({
+    video:{
+     facingMode:{
+      ideal:facing
+     }
+    },
+    audio:false
+   });
 
-    if(cameraStream){
-      cameraStream.getTracks().forEach(t=>t.stop());
-    }
+  document.getElementById("cameraVideo")
+  .srcObject=cameraStream;
 
-    cameraStream=
-      await navigator.mediaDevices.getUserMedia({
-        video:{
-          facingMode:{
-            ideal:facing
-          }
-        },
-        audio:false
-      });
+ }catch(err){
 
-    const video=document.getElementById("cameraVideo");
+  alert("اجازه دسترسی به دوربین داده نشد.");
 
-    video.srcObject=cameraStream;
-
-  }catch(error){
-
-    alert(
-      "دسترسی دوربین داده نشد یا دوربین در دسترس نیست."
-    );
-
-    console.error(error);
-  }
+  console.error(err);
+ }
 }
 
 function flipCamera(){
 
-  facing=
-    facing==="environment"
-      ?"user"
-      :"environment";
+ facing=
+  facing==="environment"
+  ?"user"
+  :"environment";
 
-  startCamera();
+ startCamera();
 }
 
 function takePhoto(){
 
-  const video=document.getElementById("cameraVideo");
-  const canvas=document.getElementById("photoCanvas");
+ const video=
+  document.getElementById("cameraVideo");
 
-  if(!video.videoWidth)return;
+ if(!video.videoWidth)return;
 
-  canvas.width=video.videoWidth;
-  canvas.height=video.videoHeight;
+ const canvas=
+  document.getElementById("photoCanvas");
 
-  const ctx=canvas.getContext("2d");
+ canvas.width=video.videoWidth;
+ canvas.height=video.videoHeight;
 
-  ctx.drawImage(
-    video,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
+ const ctx=
+  canvas.getContext("2d");
 
-  const image=canvas.toDataURL("image/jpeg",.92);
+ ctx.drawImage(
+  video,0,0,
+  canvas.width,
+  canvas.height
+ );
 
-  const a=document.createElement("a");
-  a.href=image;
-  a.download="Roham-Photo-"+Date.now()+".jpg";
-  a.click();
+ const image=
+  canvas.toDataURL("image/jpeg",.92);
+
+ const a=
+  document.createElement("a");
+
+ a.href=image;
+ a.download=
+  "Roham-"+Date.now()+".jpg";
+
+ a.click();
 }
 
 function stopCamera(){
 
-  if(cameraStream){
+ if(cameraStream){
 
-    cameraStream
-      .getTracks()
-      .forEach(track=>track.stop());
+  cameraStream
+  .getTracks()
+  .forEach(t=>t.stop());
 
-    cameraStream=null;
-  }
+  cameraStream=null;
+ }
 }
 
 function closeCamera(){
-  stopCamera();
-  closeApp("camera");
+
+ stopCamera();
+
+ closeApp("camera");
 }
 
 
-/* STORAGE */
+/* ---------- STORAGE ---------- */
 
-function bytesToGB(bytes){
-  return bytes/(1024**3);
-}
+function formatBytes(bytes){
 
-function formatGB(bytes){
+ if(!bytes)return"0 B";
 
-  const gb=bytesToGB(bytes);
+ const units=[
+  "B","KB","MB","GB","TB"
+ ];
 
-  if(gb<1){
-    return (bytes/(1024**2)).toFixed(1)+" MB";
-  }
+ const i=
+  Math.floor(
+   Math.log(bytes)/Math.log(1024)
+  );
 
-  return gb.toFixed(2)+" GB";
+ return(
+  bytes/
+  Math.pow(1024,i)
+ ).toFixed(i?2:0)
+ +" "+units[i];
 }
 
 async function updateStorage(){
 
-  if(!navigator.storage?.estimate){
+ if(!navigator.storage?.estimate){
 
-    document.getElementById("storageUsed").textContent=
-      "در دسترس نیست";
+  document.getElementById("storageUsed")
+  .textContent="در دسترس نیست";
 
-    return;
-  }
+  return;
+ }
 
-  try{
+ try{
 
-    const estimate=
-      await navigator.storage.estimate();
+  const e=
+   await navigator.storage.estimate();
 
-    const usage=estimate.usage || 0;
-    const quota=estimate.quota || 0;
+  const usage=e.usage||0;
+  const quota=e.quota||0;
+  const free=
+   Math.max(quota-usage,0);
 
-    const free=Math.max(
-      quota-usage,
-      0
-    );
+  const percent=
+   quota
+   ? usage/quota*100
+   :0;
 
-    const percent=
-      quota
-      ? Math.min(
-          100,
-          (usage/quota)*100
-        )
-      : 0;
+  document.getElementById("storageUsed")
+  .textContent=
+   formatBytes(usage);
 
-    document.getElementById("storageUsed").textContent=
-      formatGB(usage);
+  document.getElementById("storageUsed2")
+  .textContent=
+   formatBytes(usage);
 
-    document.getElementById("storageUsed2").textContent=
-      formatGB(usage);
+  document.getElementById("storageQuota")
+  .textContent=
+   formatBytes(quota);
 
-    document.getElementById("storageQuota").textContent=
-      formatGB(quota);
+  document.getElementById("storageFree")
+  .textContent=
+   formatBytes(free)+" باقی مانده";
 
-    document.getElementById("storageFree").textContent=
-      formatGB(free)+" باقی مانده";
+  document.getElementById("storageFree2")
+  .textContent=
+   formatBytes(free);
 
-    document.getElementById("storageFree2").textContent=
-      formatGB(free);
+  document.getElementById("storageText")
+  .textContent=
+   percent.toFixed(1)+"٪ استفاده شده";
 
-    document.getElementById("storageText").textContent=
-      percent.toFixed(1)+"٪ از سهمیه Roham استفاده شده";
+  document.getElementById("storageBar")
+  .style.width=
+   Math.min(percent,100)+"%";
 
-    document.getElementById("storageBar").style.width=
-      percent+"%";
+ }catch(err){
 
-  }catch(error){
-
-    console.error(error);
-
-    document.getElementById("storageUsed").textContent=
-      "خطا";
-  }
+  console.error(err);
+ }
 }
 
 
-/* FILES */
+/* ---------- FILES ---------- */
 
 document
-  .getElementById("filePicker")
-  .addEventListener("change",e=>{
+.getElementById("filePicker")
+.addEventListener("change",e=>{
 
-    const file=e.target.files[0];
+ const file=e.target.files[0];
 
-    if(!file)return;
+ if(!file)return;
 
-    document.getElementById("fileName")
-      .textContent=file.name;
+ document.getElementById("fileName")
+ .textContent=file.name;
 
-    document.getElementById("fileSize")
-      .textContent=
-      formatGB(file.size);
-  });
+ document.getElementById("fileSize")
+ .textContent=formatBytes(file.size);
+});
 
 
-/* SETTINGS */
+/* ---------- SWITCHES ---------- */
 
 function toggleSwitch(id){
 
-  const el=document.getElementById(id);
+ const el=
+  document.getElementById(id);
 
-  if(!el)return;
-
-  el.classList.toggle("on");
+ if(el)el.classList.toggle("on");
 }
 
 
-/* ACCOUNT */
+/* ---------- DARK MODE ---------- */
+
+function toggleDark(){
+
+ const isLight=
+  document.body.classList.toggle("light");
+
+ const dark=
+  !isLight;
+
+ document.getElementById("darkSwitch")
+ .classList.toggle("on",dark);
+
+ localStorage.setItem(
+  "rohamDark",
+  dark?"1":"0"
+ );
+}
+
+function loadTheme(){
+
+ const dark=
+  localStorage.getItem("rohamDark");
+
+ if(dark==="0"){
+  document.body.classList.add("light");
+  document.getElementById("darkSwitch")
+  ?.classList.remove("on");
+ }
+}
+
+
+/* ---------- ICON SIZE ---------- */
+
+function setIconSize(size){
+
+ document.body.classList.remove(
+  "small-icons",
+  "large-icons"
+ );
+
+ if(size==="small"){
+  document.body.classList.add("small-icons");
+ }
+
+ if(size==="large"){
+  document.body.classList.add("large-icons");
+ }
+
+ localStorage.setItem(
+  "rohamIconSize",
+  size
+ );
+}
+
+function loadIconSize(){
+
+ const size=
+  localStorage.getItem("rohamIconSize");
+
+ if(size)setIconSize(size);
+}
+
+
+/* ---------- WALLPAPER ---------- */
+
+const wallpaperInput=
+ document.getElementById("wallpaperInput");
+
+wallpaperInput
+.addEventListener("change",e=>{
+
+ const file=e.target.files[0];
+
+ if(!file)return;
+
+ if(!file.type.startsWith("image/"))return;
+
+ const reader=
+  new FileReader();
+
+ reader.onload=()=>{
+
+  const data=reader.result;
+
+  localStorage.setItem(
+   "rohamWallpaper",
+   data
+  );
+
+  applyWallpaper(data);
+ };
+
+ reader.readAsDataURL(file);
+});
+
+function applyWallpaper(data){
+
+ const os=
+  document.getElementById("os");
+
+ const preview=
+  document.getElementById("wallpaperPreview");
+
+ if(data){
+
+  os.style.backgroundImage=
+   `url("${data}")`;
+
+  preview.style.backgroundImage=
+   `url("${data}")`;
+
+ }else{
+
+  os.style.backgroundImage="";
+
+  preview.style.backgroundImage="";
+ }
+}
+
+function removeWallpaper(){
+
+ localStorage.removeItem(
+  "rohamWallpaper"
+ );
+
+ applyWallpaper(null);
+}
+
+function loadWallpaper(){
+
+ const data=
+  localStorage.getItem("rohamWallpaper");
+
+ if(data){
+  applyWallpaper(data);
+ }
+}
+
+
+/* ---------- ACCOUNT ---------- */
 
 function saveAccount(){
 
-  const name=
-    document.getElementById("accountName").value.trim();
+ const data={
+  name:
+   document.getElementById("accountName").value.trim(),
 
-  const email=
-    document.getElementById("accountEmail").value.trim();
+  email:
+   document.getElementById("accountEmail").value.trim()
+ };
 
-  localStorage.setItem(
-    "rohamAccount",
-    JSON.stringify({
-      name,
-      email
-    })
-  );
+ localStorage.setItem(
+  "rohamAccount",
+  JSON.stringify(data)
+ );
 
-  document.getElementById("accountStatus")
-    .textContent=
-    "حساب Roham روی این دستگاه ذخیره شد.";
+ document.getElementById("accountStatus")
+ .textContent=
+ "حساب Roham ذخیره شد.";
 }
 
 function loadAccount(){
 
-  try{
+ try{
 
-    const data=
-      JSON.parse(
-        localStorage.getItem("rohamAccount") || "{}"
-      );
+  const data=
+   JSON.parse(
+    localStorage.getItem(
+     "rohamAccount"
+    )||"{}"
+   );
 
-    document.getElementById("accountName").value=
-      data.name || "";
+  document.getElementById("accountName")
+  .value=data.name||"";
 
-    document.getElementById("accountEmail").value=
-      data.email || "";
+  document.getElementById("accountEmail")
+  .value=data.email||"";
 
-    document.getElementById("accountStatus")
-      .textContent=
-      data.name
-        ?"حساب Roham ذخیره شده است."
-        :"هنوز حسابی ذخیره نشده است.";
-
-  }catch{}
+ }catch{}
 }
 
 
-/* BROWSER */
+/* ---------- LOAD SETTINGS ---------- */
 
-function loadBrowser(){
-
-  let url=
-    document.getElementById("browserUrl")
-      .value.trim();
-
-  if(!url)return;
-
-  if(!/^https?:\/\//i.test(url)){
-    url="https://www.google.com/search?igu=1&q="+
-      encodeURIComponent(url);
-  }
-
-  document.getElementById("browserFrame").src=url;
-}
+loadTheme();
+loadIconSize();
+loadWallpaper();
 
 </script>
 
