@@ -1,280 +1,428 @@
-```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#090d18">
-<title>Roham OS Beta 2</title>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b0b0f">
+<title>Roham OS Beta 3</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
 html,body{
   margin:0;
   width:100%;
   height:100%;
   overflow:hidden;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  background:#080b14;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+               "Segoe UI",sans-serif;
+  background:#08090d;
   color:#fff;
 }
-button,input,textarea{font:inherit}
-button{cursor:pointer}
 
-#os{
-  width:100%;
-  height:100%;
-  background:
-    radial-gradient(circle at 50% -10%,#30446f 0,#151d36 38%,#080b14 100%);
-  display:flex;
-  flex-direction:column;
+button{
+  font:inherit;
+  border:0;
+  cursor:pointer;
 }
 
-.status{
-  height:34px;
-  padding:7px 15px;
+#os{
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 10%,#263052 0,#10121d 32%,#07080b 75%);
+}
+
+.statusbar{
+  height:42px;
   display:flex;
+  align-items:center;
   justify-content:space-between;
-  font-size:13px;
+  padding:0 20px;
+  font-size:14px;
+  position:relative;
+  z-index:10;
+}
+
+.status-right{
+  display:flex;
+  gap:10px;
+  align-items:center;
 }
 
 .home{
-  flex:1;
+  height:calc(100% - 42px);
   overflow:auto;
-  padding:22px 16px 105px;
+  padding:25px 22px 100px;
 }
 
 .clock{
-  font-size:54px;
+  font-size:58px;
   font-weight:700;
   letter-spacing:-2px;
 }
 
 .date{
-  opacity:.7;
-  margin-bottom:20px;
+  opacity:.72;
+  margin-bottom:28px;
 }
 
 .search{
-  height:48px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:0 15px;
-  margin-bottom:23px;
-  border-radius:18px;
-  background:#ffffff15;
-  border:1px solid #ffffff20;
-  backdrop-filter:blur(20px);
-}
-
-.search input{
-  flex:1;
+  height:52px;
+  width:100%;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:17px;
   color:#fff;
-  background:transparent;
-  border:0;
-  outline:0;
-}
-
-.search button{
-  background:none;
-  color:#fff;
-  font-size:20px;
+  padding:0 18px;
+  outline:none;
+  margin-bottom:28px;
 }
 
 .grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:20px 10px;
+  gap:20px 13px;
 }
 
 .app{
-  background:none;
-  border:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:7px;
   color:#fff;
-  text-align:center;
-  font-size:12px;
-  padding:0;
+  background:none;
 }
 
 .icon{
-  width:58px;
-  height:58px;
-  margin:auto auto 7px;
-  display:grid;
-  place-items:center;
-  border-radius:17px;
-  font-size:28px;
-  background:#ffffff16;
-  border:1px solid #ffffff22;
-  box-shadow:0 7px 25px #0004;
-  transition:.12s;
+  width:62px;
+  height:62px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 8px 22px rgba(0,0,0,.18);
 }
 
-.app:active .icon{
-  transform:scale(.91);
+.icon svg{
+  width:31px;
+  height:31px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.app span{
+  font-size:12px;
+  white-space:nowrap;
 }
 
 .dock{
   position:fixed;
-  bottom:12px;
-  left:12px;
-  right:12px;
-  height:68px;
+  bottom:16px;
+  left:18px;
+  right:18px;
+  height:78px;
   border-radius:25px;
-  display:flex;
-  align-items:center;
-  justify-content:space-around;
-  background:#ffffff18;
-  border:1px solid #ffffff22;
+  background:rgba(20,22,29,.82);
   backdrop-filter:blur(25px);
-  z-index:5;
-}
-
-.page{
-  position:fixed;
-  inset:0;
-  display:none;
-  flex-direction:column;
-  background:#090d18;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  border:1px solid rgba(255,255,255,.1);
   z-index:20;
 }
 
-.page.show{
+.screen{
+  position:fixed;
+  inset:0;
+  background:#0a0b0f;
+  z-index:100;
+  display:none;
+  flex-direction:column;
+}
+
+.screen.active{
   display:flex;
 }
 
-.bar{
-  min-height:58px;
+.topbar{
+  height:64px;
+  flex-shrink:0;
   display:flex;
   align-items:center;
-  gap:10px;
-  padding:8px 12px;
-  border-bottom:1px solid #ffffff15;
+  padding:0 18px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:rgba(10,11,15,.94);
 }
 
-.bar button{
-  border:0;
-  border-radius:12px;
-  padding:8px 13px;
-  color:#fff;
-  background:#ffffff12;
+.back{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:rgba(255,255,255,.08);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-left:12px;
 }
 
-.bar h2{
-  margin:0;
-  font-size:18px;
+.back svg{
+  width:23px;
+  height:23px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:2;
+}
+
+.title{
+  font-size:21px;
+  font-weight:700;
 }
 
 .content{
   flex:1;
   overflow:auto;
-  padding:18px;
+  padding:20px;
+}
+
+.fullframe{
+  flex:1;
+  width:100%;
+  border:0;
+  background:white;
+}
+
+.section{
+  margin-bottom:24px;
+}
+
+.section-title{
+  color:#8f96a5;
+  font-size:13px;
+  margin:0 12px 9px;
 }
 
 .card{
-  padding:17px;
-  margin-bottom:12px;
+  background:#15171d;
   border-radius:18px;
-  background:#ffffff0d;
-  border:1px solid #ffffff15;
-}
-
-.big{
-  font-size:29px;
-  font-weight:700;
-}
-
-.muted{
-  opacity:.65;
-}
-
-.primary{
-  background:#607cff;
-  color:#fff;
-  border:0;
-  border-radius:12px;
-  padding:11px 16px;
-}
-
-.input{
-  width:100%;
-  padding:12px;
-  margin:6px 0 10px;
-  color:#fff;
-  background:#ffffff0d;
-  border:1px solid #ffffff20;
-  border-radius:12px;
-  outline:0;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.06);
 }
 
 .row{
+  min-height:62px;
+  padding:12px 17px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:13px 0;
-  border-bottom:1px solid #ffffff12;
+  border-bottom:1px solid rgba(255,255,255,.06);
 }
 
 .row:last-child{
   border-bottom:0;
 }
 
-.webwrap{
-  flex:1;
+.row-left{
   display:flex;
-  flex-direction:column;
+  align-items:center;
+  gap:14px;
 }
 
-.urlbar{
+.row-icon{
+  width:36px;
+  height:36px;
   display:flex;
-  gap:7px;
-  padding:8px;
-  background:#11172a;
+  align-items:center;
+  justify-content:center;
 }
 
-.urlbar input{
+.row-icon svg{
+  width:24px;
+  height:24px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:1.8;
+}
+
+.sub{
+  color:#8f96a5;
+  font-size:12px;
+  margin-top:3px;
+}
+
+.switch{
+  width:48px;
+  height:29px;
+  border-radius:20px;
+  background:#3a3d45;
+  position:relative;
+}
+
+.switch.on{
+  background:#2f7df6;
+}
+
+.switch:after{
+  content:"";
+  width:23px;
+  height:23px;
+  background:white;
+  border-radius:50%;
+  position:absolute;
+  top:3px;
+  right:3px;
+  transition:.2s;
+}
+
+.switch.on:after{
+  right:22px;
+}
+
+.calc{
+  max-width:480px;
+  margin:auto;
+}
+
+.calc-display{
+  height:130px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:flex-end;
+  font-size:48px;
+  padding:15px;
+  overflow:hidden;
+}
+
+.calc-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.calc-key{
+  aspect-ratio:1;
+  border-radius:50%;
+  background:#20232b;
+  color:white;
+  font-size:25px;
+}
+
+.calc-key.operator{
+  background:#315fae;
+}
+
+.calc-key.equal{
+  background:#2f7df6;
+}
+
+.camera{
+  position:relative;
   flex:1;
-  min-width:0;
-  padding:9px;
-  border:0;
-  border-radius:10px;
-  color:#111;
+  background:#000;
+  overflow:hidden;
 }
 
-.urlbar button{
-  border:0;
-  border-radius:10px;
-  padding:9px 13px;
-  background:#607cff;
-  color:#fff;
-}
-
-.webframe{
+.camera video{
   width:100%;
   height:100%;
-  border:0;
-  background:#fff;
+  object-fit:cover;
 }
 
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:95px;
-  transform:translateX(-50%);
-  z-index:100;
-  display:none;
-  padding:11px 17px;
+.camera-controls{
+  position:absolute;
+  bottom:30px;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:center;
+  gap:25px;
+}
+
+.camera-button{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  background:white;
+  border:5px solid rgba(255,255,255,.45);
+  background-clip:padding-box;
+}
+
+.camera-small{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:rgba(255,255,255,.2);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.storage-number{
+  font-size:42px;
+  font-weight:700;
+}
+
+.progress{
+  height:10px;
+  background:#292c34;
+  border-radius:20px;
+  overflow:hidden;
+  margin:18px 0;
+}
+
+.progress-bar{
+  height:100%;
+  width:0;
+  background:#2f7df6;
+  transition:.4s;
+}
+
+.note{
+  color:#9299a8;
+  font-size:12px;
+  line-height:1.8;
+}
+
+input.textbox{
+  width:100%;
+  height:52px;
+  background:#20232b;
+  border:1px solid #333744;
   border-radius:13px;
-  background:#242d47;
+  color:white;
+  padding:0 14px;
+  outline:none;
 }
 
-.preview{
-  display:block;
-  max-width:100%;
-  max-height:300px;
+.primary{
+  width:100%;
+  height:52px;
+  border-radius:14px;
+  background:#2f7df6;
+  color:white;
   margin-top:12px;
-  border-radius:15px;
+}
+
+@media(max-width:380px){
+  .grid{
+    grid-template-columns:repeat(4,1fr);
+    gap:16px 8px;
+  }
+  .icon{
+    width:55px;
+    height:55px;
+  }
 }
 </style>
 </head>
@@ -283,896 +431,1144 @@ button{cursor:pointer}
 
 <div id="os">
 
-<header class="status">
-  <span id="statusTime"></span>
-  <span>▮▮▮ 📶 🔋</span>
-</header>
-
-<main class="home">
-
-  <div class="clock" id="clock"></div>
-  <div class="date" id="date"></div>
-
-  <div class="search">
-    <span>🔎</span>
-    <input id="searchBox" placeholder="جستجو در Roham">
-    <button onclick="searchGoogle()">↵</button>
+  <div class="statusbar">
+    <span id="time">00:00</span>
+    <div class="status-right">
+      <span>Wi-Fi</span>
+      <span>▮▮▮</span>
+      <span>100%</span>
+    </div>
   </div>
 
-  <div class="grid" id="appGrid"></div>
+  <main class="home">
 
-</main>
+    <div class="clock" id="bigClock">00:00</div>
+    <div class="date" id="date">Roham OS</div>
 
-<nav class="dock">
-  <button class="app" onclick="openApp('google')">
-    <div class="icon">G</div>
-  </button>
+    <input
+      class="search"
+      id="search"
+      placeholder="جستجو در Roham OS"
+      autocomplete="off"
+    >
 
-  <button class="app" onclick="goHome()">
-    <div class="icon">⌂</div>
-  </button>
+    <div class="grid">
 
-  <button class="app" onclick="openApp('ai')">
-    <div class="icon">🤖</div>
-  </button>
+      <button class="app" onclick="openApp('google')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="8"/>
+            <path d="M12 4v8h8"/>
+          </svg>
+        </div>
+        <span>Google</span>
+      </button>
 
-  <button class="app" onclick="openApp('settings')">
-    <div class="icon">⚙️</div>
-  </button>
-</nav>
+      <button class="app" onclick="openApp('chrome')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/>
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 3v5M3 8h9M15 12l5 6"/>
+          </svg>
+        </div>
+        <span>Chrome</span>
+      </button>
+
+      <button class="app" onclick="openApp('youtube')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="6" width="18" height="12" rx="4"/>
+            <path d="m10 9 5 3-5 3z"/>
+          </svg>
+        </div>
+        <span>YouTube</span>
+      </button>
+
+      <button class="app" onclick="openApp('gmail')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 6v12h16V6"/>
+            <path d="m4 7 8 6 8-6"/>
+          </svg>
+        </div>
+        <span>Gmail</span>
+      </button>
+
+      <button class="app" onclick="openApp('music')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 18V6l10-2v12"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="16" cy="16" r="3"/>
+          </svg>
+        </div>
+        <span>YouTube Music</span>
+      </button>
+
+      <button class="app" onclick="openApp('photos')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="8"/>
+            <path d="M12 4v16M4 12h16"/>
+          </svg>
+        </div>
+        <span>Photos</span>
+      </button>
+
+      <button class="app" onclick="openApp('drive')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <path d="m9 4 3-2 3 2 5 9-3 5H7l-3-5z"/>
+            <path d="m9 4 6 10M4 13h16"/>
+          </svg>
+        </div>
+        <span>OneDrive</span>
+      </button>
+
+      <button class="app" onclick="openApp('play')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <path d="m6 4 13 8-13 8z"/>
+          </svg>
+        </div>
+        <span>Play Store</span>
+      </button>
+
+      <button class="app" onclick="openApp('camera')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 8h4l2-3h4l2 3h4v11H4z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <span>Camera</span>
+      </button>
+
+      <button class="app" onclick="openApp('calculator')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="5" y="3" width="14" height="18" rx="2"/>
+            <path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/>
+          </svg>
+        </div>
+        <span>Calculator</span>
+      </button>
+
+      <button class="app" onclick="openApp('files')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 6h7l2 2h9v10H3z"/>
+          </svg>
+        </div>
+        <span>Files</span>
+      </button>
+
+      <button class="app" onclick="openApp('storage')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="5" y="3" width="14" height="18" rx="2"/>
+            <path d="M8 7h8M8 11h8M8 15h5"/>
+          </svg>
+        </div>
+        <span>Storage</span>
+      </button>
+
+      <button class="app" onclick="openApp('settings')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19 13v-2l2-1-2-3-2 1-2-1-1-2h-4l-1 2-2 1-2-1-2 3 2 1v2l-2 1 2 3 2-1 2 1 1 2h4l1-2 2-1 2 1 2-3z"/>
+          </svg>
+        </div>
+        <span>Settings</span>
+      </button>
+
+      <button class="app" onclick="openApp('account')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c1-5 4-7 8-7s7 2 8 7"/>
+          </svg>
+        </div>
+        <span>Roham Account</span>
+      </button>
+
+      <button class="app" onclick="openApp('ai')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M7 8a5 5 0 0 1 10 0v5a5 5 0 0 1-10 0z"/>
+            <path d="M4 11v3M20 11v3M9 21h6"/>
+          </svg>
+        </div>
+        <span>Roham AI</span>
+      </button>
+
+      <button class="app" onclick="openApp('browser')">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3 12h18M12 3c3 3 4 6 4 9s-1 6-4 9M12 3c-3 3-4 6-4 9s1 6 4 9"/>
+          </svg>
+        </div>
+        <span>Roham Browser</span>
+      </button>
+
+    </div>
+  </main>
+
+  <div class="dock">
+    <button class="app" onclick="openApp('camera')">
+      <div class="icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 8h4l2-3h4l2 3h4v11H4z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+      </div>
+    </button>
+
+    <button class="app" onclick="openApp('calculator')">
+      <div class="icon">
+        <svg viewBox="0 0 24 24">
+          <rect x="5" y="3" width="14" height="18" rx="2"/>
+          <path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/>
+        </svg>
+      </div>
+    </button>
+
+    <button class="app" onclick="openApp('settings')">
+      <div class="icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19 13v-2l2-1-2-3-2 1-2-1-1-2h-4l-1 2-2 1-2-1-2 3 2 1v2l-2 1 2 3 2-1 2 1 1 2h4l1-2 2-1 2 1 2-3z"/>
+        </svg>
+      </div>
+    </button>
+  </div>
 
 </div>
 
-<div id="toast" class="toast"></div>
+<!-- APP SCREENS -->
 
-<div id="page" class="page">
-
-  <div class="bar">
-    <button onclick="goHome()">←</button>
-    <h2 id="pageTitle"></h2>
+<div id="screen-google" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('google')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Google</div>
   </div>
-
-  <div id="pageContent" class="content"></div>
-
+  <iframe class="fullframe" src="https://www.google.com/search?igu=1"></iframe>
 </div>
 
-<script>
+<div id="screen-chrome" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('chrome')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Chrome</div>
+  </div>
+  <iframe class="fullframe" src="https://www.google.com/chrome/"></iframe>
+</div>
 
-const apps = [
+<div id="screen-youtube" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('youtube')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">YouTube</div>
+  </div>
+  <iframe class="fullframe" src="https://www.youtube.com/"></iframe>
+</div>
 
-  ["google","Google","G","web","https://www.google.com/search?igu=1&q="],
-  ["youtube","YouTube","▶️","web","https://www.youtube.com"],
-  ["gmail","Gmail","✉️","web","https://mail.google.com"],
-  ["ytmusic","YouTube Music","🎵","web","https://music.youtube.com"],
-  ["chrome","Chrome","🌐","web","https://www.google.com/chrome/"],
-  ["onedrive","OneDrive","☁️","web","https://onedrive.live.com"],
-  ["photos","Google Photos","🖼️","web","https://photos.google.com"],
-  ["play","Google Play","▶️","web","https://play.google.com"],
+<div id="screen-gmail" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('gmail')">
+      <svg viewBox="0 0 24 24"><path d="m4 7 8 6 8-6"/></svg>
+    </button>
+    <div class="title">Gmail</div>
+  </div>
+  <iframe class="fullframe" src="https://mail.google.com/"></iframe>
+</div>
 
-  ["ai","Roham AI","🤖","web","https://rohammolaei123-debug.github.io/Roham-Ai/"],
-  ["account","Roham Account","👤","account"],
-  ["browser","Roham Browser","🧭","browser"],
+<div id="screen-music" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('music')">
+      <svg viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>
+    </button>
+    <div class="title">YouTube Music</div>
+  </div>
+  <iframe class="fullframe" src="https://music.youtube.com/"></iframe>
+</div>
 
-  ["whatsapp","WhatsApp","💬","web","https://web.whatsapp.com"],
-  ["telegram","Telegram","✈️","web","https://web.telegram.org"],
-  ["instagram","Instagram","📷","web","https://www.instagram.com"],
-  ["vpn","Hallow VPN","🛡️","web","https://hallow.com"],
+<div id="screen-photos" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('photos')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Google Photos</div>
+  </div>
+  <iframe class="fullframe" src="https://photos.google.com/"></iframe>
+</div>
 
-  ["camera","Camera","📸","camera"],
-  ["gallery","Gallery","🌄","gallery"],
-  ["files","Files","📁","files"],
-  ["recorder","Voice Recorder","🎙️","recorder"],
+<div id="screen-drive" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('drive')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">OneDrive</div>
+  </div>
+  <iframe class="fullframe" src="https://onedrive.live.com/"></iframe>
+</div>
 
-  ["notes","Notes","📝","notes"],
-  ["contacts","Contacts","👥","contacts"],
-  ["calculator","Calculator","🧮","calculator"],
+<div id="screen-play" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('play')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Google Play</div>
+  </div>
+  <iframe class="fullframe" src="https://play.google.com/store"></iframe>
+</div>
 
-  ["storage","Storage","💾","storage"],
-  ["settings","Settings","⚙️","settings"],
-  ["wifi","Wi-Fi","📶","settings"],
-  ["bluetooth","Bluetooth","🟦","settings"],
-  ["airplane","Airplane Mode","✈️","settings"]
+<!-- CAMERA -->
 
-];
+<div id="screen-camera" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeCamera()">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Camera</div>
+  </div>
 
-const grid=document.getElementById("appGrid");
+  <div class="camera">
+    <video id="cameraVideo" autoplay playsinline></video>
 
-apps.forEach(app=>{
+    <div class="camera-controls">
+      <button class="camera-small" onclick="flipCamera()">↻</button>
+      <button class="camera-button" onclick="takePhoto()"></button>
+      <button class="camera-small" onclick="stopCamera()">×</button>
+    </div>
+  </div>
 
-  const button=document.createElement("button");
+  <canvas id="photoCanvas" style="display:none"></canvas>
+</div>
 
-  button.className="app";
+<!-- CALCULATOR -->
 
-  button.innerHTML=
-    `<div class="icon">${app[2]}</div>${app[1]}`;
+<div id="screen-calculator" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('calculator')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Calculator</div>
+  </div>
 
-  button.onclick=()=>openApp(app[0]);
+  <div class="content">
+    <div class="calc">
+      <div id="calcDisplay" class="calc-display">0</div>
 
-  grid.appendChild(button);
+      <div class="calc-grid">
+        <button class="calc-key" onclick="calcClear()">AC</button>
+        <button class="calc-key" onclick="calcInput('(')">(</button>
+        <button class="calc-key" onclick="calcInput(')')">)</button>
+        <button class="calc-key operator" onclick="calcInput('/')">÷</button>
 
-});
+        <button class="calc-key" onclick="calcInput('7')">7</button>
+        <button class="calc-key" onclick="calcInput('8')">8</button>
+        <button class="calc-key" onclick="calcInput('9')">9</button>
+        <button class="calc-key operator" onclick="calcInput('*')">×</button>
 
+        <button class="calc-key" onclick="calcInput('4')">4</button>
+        <button class="calc-key" onclick="calcInput('5')">5</button>
+        <button class="calc-key" onclick="calcInput('6')">6</button>
+        <button class="calc-key operator" onclick="calcInput('-')">−</button>
 
-function updateClock(){
+        <button class="calc-key" onclick="calcInput('1')">1</button>
+        <button class="calc-key" onclick="calcInput('2')">2</button>
+        <button class="calc-key" onclick="calcInput('3')">3</button>
+        <button class="calc-key operator" onclick="calcInput('+')">+</button>
 
-  const now=new Date();
+        <button class="calc-key" onclick="calcInput('0')">0</button>
+        <button class="calc-key" onclick="calcInput('.')">.</button>
+        <button class="calc-key" onclick="calcBack()">⌫</button>
+        <button class="calc-key equal" onclick="calcEqual()">=</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-  document.getElementById("clock").textContent=
-    now.toLocaleTimeString("fa-IR",{
-      hour:"2-digit",
-      minute:"2-digit"
-    });
+<!-- STORAGE -->
 
-  document.getElementById("statusTime").textContent=
-    now.toLocaleTimeString("fa-IR",{
-      hour:"2-digit",
-      minute:"2-digit"
-    });
+<div id="screen-storage" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('storage')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Storage</div>
+  </div>
 
-  document.getElementById("date").textContent=
-    now.toLocaleDateString("fa-IR",{
-      weekday:"long",
-      year:"numeric",
-      month:"long",
-      day:"numeric"
-    });
+  <div class="content">
 
-}
+    <div class="section">
+      <div class="section-title">Roham OS Storage</div>
 
-setInterval(updateClock,1000);
-updateClock();
+      <div class="card">
+        <div style="padding:25px">
+          <div class="storage-number" id="storageUsed">در حال بررسی…</div>
+          <div class="sub" id="storageText">در حال محاسبه فضای قابل استفاده</div>
 
+          <div class="progress">
+            <div id="storageBar" class="progress-bar"></div>
+          </div>
 
-function goHome(){
+          <div id="storageFree" class="sub"></div>
+        </div>
+      </div>
+    </div>
 
-  document.getElementById("page").classList.remove("show");
-
-}
-
-
-function showPage(title,html){
-
-  document.getElementById("pageTitle").textContent=title;
-
-  document.getElementById("pageContent").innerHTML=html;
-
-  document.getElementById("page").classList.add("show");
-
-}
-
-
-function toast(message){
-
-  const t=document.getElementById("toast");
-
-  t.textContent=message;
-
-  t.style.display="block";
-
-  setTimeout(()=>{
-    t.style.display="none";
-  },1800);
-
-}
-
-
-function searchGoogle(){
-
-  const q=document.getElementById("searchBox").value.trim();
-
-  if(!q)return;
-
-  openWeb(
-    "Google",
-    "https://www.google.com/search?igu=1&q="+encodeURIComponent(q)
-  );
-
-}
-
-
-function openApp(id){
-
-  const app=apps.find(x=>x[0]===id);
-
-  if(!app)return;
-
-  if(app[3]==="web"){
-
-    openWeb(app[1],app[4]);
-
-    return;
-
-  }
-
-  if(id==="browser"){
-
-    showPage(
-      "Roham Browser",
-      `
-      <div class="webwrap">
-
-        <div class="urlbar">
-          <input id="browserURL" placeholder="https://example.com">
-          <button onclick="navigateBrowser()">برو</button>
+    <div class="section">
+      <div class="card">
+        <div class="row">
+          <div>
+            <b>فضای استفاده‌شده</b>
+            <div class="sub">داده‌های Roham OS در مرورگر</div>
+          </div>
+          <b id="storageUsed2">—</b>
         </div>
 
-        <iframe id="browserFrame" class="webframe"></iframe>
+        <div class="row">
+          <div>
+            <b>فضای قابل استفاده</b>
+            <div class="sub">سهمیه قابل دسترسی برای این برنامه</div>
+          </div>
+          <b id="storageQuota">—</b>
+        </div>
 
+        <div class="row">
+          <div>
+            <b>فضای باقی‌مانده</b>
+          </div>
+          <b id="storageFree2">—</b>
+        </div>
       </div>
-      `
-    );
+    </div>
 
-    return;
+    <div class="note">
+      توجه: در نسخه وب، این اعداد مربوط به فضای ذخیره‌سازی قابل دسترسی
+      برای Roham OS در مرورگر هستند و لزوماً ظرفیت کامل فیزیکی دستگاه نیستند.
+    </div>
 
-  }
+  </div>
+</div>
 
+<!-- FILES -->
 
-  if(id==="account"){
+<div id="screen-files" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('files')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Files</div>
+  </div>
 
-    const saved=
-      JSON.parse(localStorage.getItem("rohamAccount")||"null");
+  <div class="content">
 
-    showPage(
-      "Roham Account",
-      `
+    <div class="section">
+      <div class="section-title">فایل‌های دستگاه</div>
+
+      <div class="card">
+        <div class="row">
+          <div>
+            <b>انتخاب فایل</b>
+            <div class="sub">فایل را از دستگاه انتخاب کن</div>
+          </div>
+
+          <input type="file" id="filePicker">
+        </div>
+
+        <div class="row">
+          <div>
+            <b id="fileName">فایلی انتخاب نشده</b>
+            <div class="sub" id="fileSize"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SETTINGS -->
+
+<div id="screen-settings" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('settings')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Settings</div>
+  </div>
+
+  <div class="content">
+
+    <div class="section">
+      <div class="section-title">اتصالات</div>
+
       <div class="card">
 
-        <div class="big">👤 حساب Roham</div>
+        <div class="row">
+          <div class="row-left">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M2 8a15 15 0 0 1 20 0"/>
+                <path d="M5 12a10 10 0 0 1 14 0"/>
+                <path d="M8 16a5 5 0 0 1 8 0"/>
+                <circle cx="12" cy="19" r="1"/>
+              </svg>
+            </div>
+            <div>
+              <b>Wi-Fi</b>
+              <div class="sub">شبکه‌های بی‌سیم</div>
+            </div>
+          </div>
+          <div id="wifiSwitch" class="switch on"
+               onclick="toggleSwitch('wifiSwitch')"></div>
+        </div>
 
-        <p class="muted">
-          حساب آزمایشی Roham روی همین دستگاه ذخیره می‌شود.
-        </p>
+        <div class="row">
+          <div class="row-left">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="m8 7 8 10-8 4V3l8 4-8 10"/>
+              </svg>
+            </div>
+            <div>
+              <b>Bluetooth</b>
+              <div class="sub">دستگاه‌های نزدیک</div>
+            </div>
+          </div>
+          <div id="bluetoothSwitch" class="switch"
+               onclick="toggleSwitch('bluetoothSwitch')"></div>
+        </div>
+
+        <div class="row">
+          <div class="row-left">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M3 12h18M12 3v18"/>
+                <circle cx="12" cy="12" r="8"/>
+              </svg>
+            </div>
+            <div>
+              <b>Airplane Mode</b>
+              <div class="sub">قطع ارتباطات بی‌سیم</div>
+            </div>
+          </div>
+          <div id="airplaneSwitch" class="switch"
+               onclick="toggleSwitch('airplaneSwitch')"></div>
+        </div>
+
+        <div class="row">
+          <div class="row-left">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="4" y="3" width="16" height="18" rx="2"/>
+                <path d="M8 7h8M8 11h8M8 15h5"/>
+              </svg>
+            </div>
+            <div>
+              <b>SIM</b>
+              <div class="sub">مدیریت سیم‌کارت</div>
+            </div>
+          </div>
+          <span class="sub">در نسخه وب</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">دستگاه</div>
+
+      <div class="card">
+
+        <div class="row" onclick="openApp('storage')">
+          <div class="row-left">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="4" y="3" width="16" height="18" rx="2"/>
+                <path d="M8 7h8M8 11h8M8 15h5"/>
+              </svg>
+            </div>
+            <div>
+              <b>Storage</b>
+              <div class="sub">فضای ذخیره‌سازی</div>
+            </div>
+          </div>
+          <span>›</span>
+        </div>
+
+        <div class="row">
+          <div class="row-left">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 7v5l3 2"/>
+              </svg>
+            </div>
+            <div>
+              <b>Display</b>
+              <div class="sub">روشنایی، اندازه متن و ظاهر</div>
+            </div>
+          </div>
+          <span>›</span>
+        </div>
+
+        <div class="row">
+          <div class="row-left">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M5 10v4M8 8v8M12 5v14M16 8v8M19 10v4"/>
+              </svg>
+            </div>
+            <div>
+              <b>Sound</b>
+              <div class="sub">صدا و اعلان‌ها</div>
+            </div>
+          </div>
+          <span>›</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">سیستم</div>
+
+      <div class="card">
+
+        <div class="row">
+          <div class="row-left">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 3v18M3 12h18"/>
+              </svg>
+            </div>
+            <div>
+              <b>Roham OS</b>
+              <div class="sub">Beta 3</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <b>About device</b>
+            <div class="sub">Roham OS • Beta 3</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ACCOUNT -->
+
+<div id="screen-account" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('account')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Roham Account</div>
+  </div>
+
+  <div class="content">
+    <div class="section">
+      <div class="section-title">حساب Roham</div>
+
+      <div class="card" style="padding:20px">
 
         <input
           id="accountName"
-          class="input"
-          placeholder="نام"
-          value="${saved?.name||""}"
+          class="textbox"
+          placeholder="نام کاربری"
         >
 
         <input
           id="accountEmail"
-          class="input"
+          class="textbox"
+          style="margin-top:10px"
           placeholder="ایمیل"
-          value="${saved?.email||""}"
-        >
-
-        <input
-          id="accountPassword"
-          class="input"
-          type="password"
-          placeholder="رمز عبور"
-          value="${saved?.password||""}"
         >
 
         <button class="primary" onclick="saveAccount()">
           ذخیره حساب
         </button>
 
-        <button class="primary"
-          style="background:#9b3340;margin-right:6px"
-          onclick="deleteAccount()">
-          حذف حساب
-        </button>
+        <div id="accountStatus"
+             class="note"
+             style="margin-top:15px"></div>
 
       </div>
-      `
-    );
-
-    return;
-
-  }
-
-
-  if(id==="camera"){
-
-    showPage(
-      "Camera",
-      `
-      <div class="card">
-
-        <video
-          id="cameraVideo"
-          autoplay
-          playsinline
-          style="
-            width:100%;
-            border-radius:16px;
-            background:#000;
-          ">
-        </video>
-
-        <br><br>
-
-        <button class="primary" onclick="startCamera('environment')">
-          📷 دوربین پشت
-        </button>
-
-        <button class="primary"
-          style="margin-right:6px"
-          onclick="startCamera('user')">
-          🤳 سلفی
-        </button>
-
-        <p class="muted">
-          Safari برای استفاده از دوربین اجازه دسترسی می‌خواهد.
-        </p>
-
-      </div>
-      `
-    );
-
-    return;
-
-  }
-
-
-  if(id==="gallery"){
-
-    showPage(
-      "Gallery",
-      `
-      <div class="card">
-
-        <input
-          type="file"
-          id="galleryPicker"
-          accept="image/*"
-          multiple
-        >
-
-        <div id="galleryOutput"></div>
-
-      </div>
-      `
-    );
-
-    setTimeout(()=>{
-
-      document
-      .getElementById("galleryPicker")
-      .addEventListener("change",e=>{
-
-        const out=document.getElementById("galleryOutput");
-
-        out.innerHTML="";
-
-        [...e.target.files].forEach(file=>{
-
-          const img=document.createElement("img");
-
-          img.className="preview";
-
-          img.src=URL.createObjectURL(file);
-
-          out.appendChild(img);
-
-        });
-
-      });
-
-    },50);
-
-    return;
-
-  }
-
-
-  if(id==="files"){
-
-    showPage(
-      "Files",
-      `
-      <div class="card">
-
-        <input type="file" id="filePicker" multiple>
-
-        <div id="fileList" class="muted"></div>
-
-      </div>
-      `
-    );
-
-    setTimeout(()=>{
-
-      document
-      .getElementById("filePicker")
-      .addEventListener("change",e=>{
-
-        document.getElementById("fileList").innerHTML=
-          [...e.target.files]
-          .map(f=>"📄 "+f.name)
-          .join("<br>");
-
-      });
-
-    },50);
-
-    return;
-
-  }
-
-
-  if(id==="recorder"){
-
-    showPage(
-      "Voice Recorder",
-      `
-      <div class="card">
-
-        <button class="primary" onclick="startRecorder()">
-          🎙️ شروع ضبط
-        </button>
-
-        <button
-          class="primary"
-          style="margin-right:6px;background:#9b3340"
-          onclick="stopRecorder()">
-          توقف
-        </button>
-
-        <p id="recordStatus" class="muted">
-          آماده ضبط
-        </p>
-
-        <div id="recordings"></div>
-
-      </div>
-      `
-    );
-
-    return;
-
-  }
-
-
-  if(id==="notes"){
-
-    const note=
-      localStorage.getItem("rohamNote")||"";
-
-    showPage(
-      "Notes",
-      `
-      <textarea
-        id="noteText"
-        class="input"
-        style="height:55vh"
-        placeholder="یادداشت خود را بنویسید..."
-      >${note}</textarea>
-
-      <button class="primary" onclick="saveNote()">
-        ذخیره
-      </button>
-      `
-    );
-
-    return;
-
-  }
-
-
-  if(id==="contacts"){
-
-    showPage(
-      "Contacts",
-      `
-      <div class="card">
-
-        <input id="contactName"
-          class="input"
-          placeholder="نام">
-
-        <input id="contactNumber"
-          class="input"
-          placeholder="شماره">
-
-        <button class="primary" onclick="addContact()">
-          افزودن مخاطب
-        </button>
-
-      </div>
-
-      <div id="contactsList"></div>
-      `
-    );
-
-    renderContacts();
-
-    return;
-
-  }
-
-
-  if(id==="calculator"){
-
-    showPage(
-      "Calculator",
-      `
-      <input
-        id="calculatorInput"
-        class="input"
-        placeholder="مثلاً 12*8+4"
-      >
-
-      <button class="primary" onclick="calculate()">
-        محاسبه
-      </button>
-
-      <div id="calculatorResult" class="card"></div>
-      `
-    );
-
-    return;
-
-  }
-
-
-  if(id==="storage"){
-
-    showPage(
-      "Storage",
-      `
-      <div class="card">
-
-        <div class="big">💾 Roham Storage</div>
-
-        <p class="muted">
-          وضعیت حافظه در نسخه آزمایشی
-        </p>
-
-        <div class="row">
-          <span>سیستم</span>
-          <b>6.2 GB</b>
-        </div>
-
-        <div class="row">
-          <span>برنامه‌ها</span>
-          <b>2.8 GB</b>
-        </div>
-
-        <div class="row">
-          <span>خالی</span>
-          <b>18.4 GB</b>
-        </div>
-
-      </div>
-      `
-    );
-
-    return;
-
-  }
-
-
-  if(id==="settings"){
-
-    showPage(
-      "Settings",
-      `
-      <div class="card">
-
-        <div class="row">
-          <span>📶 Wi-Fi</span>
-          <b>آزمایشی</b>
-        </div>
-
-        <div class="row">
-          <span>🟦 Bluetooth</span>
-          <b>آزمایشی</b>
-        </div>
-
-        <div class="row">
-          <span>✈️ Airplane Mode</span>
-          <b>خاموش</b>
-        </div>
-
-        <div class="row">
-          <span>📱 SIM</span>
-          <b>نسخه Android</b>
-        </div>
-
-        <div class="row">
-          <span>🤖 Roham AI</span>
-          <b>فعال</b>
-        </div>
-
-        <div class="row">
-          <span>Roham OS</span>
-          <b>Beta 2</b>
-        </div>
-
-      </div>
-      `
-    );
-
-  }
-
-}
-
-
-function openWeb(title,url){
-
-  showPage(
-    title,
-    `
-    <div class="webwrap">
-
-      <div class="urlbar">
-
-        <input
-          id="webURL"
-          value="${url}"
-        >
-
-        <button onclick="navigateWeb()">
-          برو
-        </button>
-
-      </div>
-
-      <iframe
-        id="webFrame"
-        class="webframe"
-        src="${url}"
-        allow="camera; microphone; geolocation; fullscreen">
-      </iframe>
-
     </div>
-    `
-  );
+  </div>
+</div>
 
+<!-- AI -->
+
+<div id="screen-ai" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('ai')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Roham AI</div>
+  </div>
+
+  <iframe
+    class="fullframe"
+    src="https://rohammolaei123-debug.github.io/Roham-Ai/"
+    title="Roham AI">
+  </iframe>
+</div>
+
+<!-- BROWSER -->
+
+<div id="screen-browser" class="screen">
+  <div class="topbar">
+    <button class="back" onclick="closeApp('browser')">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="title">Roham Browser</div>
+  </div>
+
+  <div class="content" style="padding:0">
+    <div style="padding:12px;background:#11131a">
+      <input
+        id="browserUrl"
+        class="textbox"
+        value="https://www.google.com"
+      >
+      <button class="primary" onclick="loadBrowser()">
+        باز کردن
+      </button>
+    </div>
+
+    <iframe
+      id="browserFrame"
+      class="fullframe"
+      src="https://www.google.com/search?igu=1">
+    </iframe>
+  </div>
+</div>
+
+<script>
+
+const screens = [
+  "google","chrome","youtube","gmail","music","photos",
+  "drive","play","camera","calculator","files","storage",
+  "settings","account","ai","browser"
+];
+
+function openApp(name){
+  const el=document.getElementById("screen-"+name);
+  if(!el)return;
+
+  el.classList.add("active");
+
+  if(name==="camera"){
+    startCamera();
+  }
+
+  if(name==="storage"){
+    updateStorage();
+  }
+
+  if(name==="account"){
+    loadAccount();
+  }
+}
+
+function closeApp(name){
+  const el=document.getElementById("screen-"+name);
+  if(el)el.classList.remove("active");
+}
+
+function updateClock(){
+  const now=new Date();
+
+  const time=now.toLocaleTimeString("fa-IR",{
+    hour:"2-digit",
+    minute:"2-digit"
+  });
+
+  const date=now.toLocaleDateString("fa-IR",{
+    weekday:"long",
+    year:"numeric",
+    month:"long",
+    day:"numeric"
+  });
+
+  document.getElementById("time").textContent=time;
+  document.getElementById("bigClock").textContent=time;
+  document.getElementById("date").textContent=date;
+}
+
+setInterval(updateClock,1000);
+updateClock();
+
+
+/* SEARCH */
+
+document.getElementById("search").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    const q=e.target.value.trim();
+
+    if(q){
+      openApp("google");
+
+      const frame=document.querySelector("#screen-google iframe");
+
+      frame.src=
+        "https://www.google.com/search?igu=1&q="+
+        encodeURIComponent(q);
+    }
+  }
+});
+
+
+/* CALCULATOR */
+
+let calcValue="";
+
+function calcInput(value){
+  if(calcValue==="Error")calcValue="";
+  calcValue+=value;
+  updateCalc();
+}
+
+function calcClear(){
+  calcValue="";
+  updateCalc();
+}
+
+function calcBack(){
+  calcValue=calcValue.slice(0,-1);
+  updateCalc();
+}
+
+function calcEqual(){
+  try{
+
+    if(!calcValue)return;
+
+    /*
+      فقط عملیات ریاضی پایه اجازه داده می‌شوند.
+      کاراکترهای غیرمجاز حذف/رد می‌شوند.
+    */
+
+    if(!/^[0-9+\-*/().\s]+$/.test(calcValue)){
+      throw new Error();
+    }
+
+    const result=Function(
+      '"use strict"; return ('+calcValue+')'
+    )();
+
+    if(!Number.isFinite(result)){
+      throw new Error();
+    }
+
+    calcValue=String(result);
+
+  }catch{
+    calcValue="Error";
+  }
+
+  updateCalc();
+}
+
+function updateCalc(){
+  document.getElementById("calcDisplay").textContent=
+    calcValue || "0";
 }
 
 
-function navigateWeb(){
-
-  let url=document.getElementById("webURL").value.trim();
-
-  if(!/^https?:\/\//i.test(url))
-    url="https://"+url;
-
-  document.getElementById("webFrame").src=url;
-
-}
-
-
-function navigateBrowser(){
-
-  let url=document.getElementById("browserURL").value.trim();
-
-  if(!url)return;
-
-  if(!/^https?:\/\//i.test(url))
-    url="https://"+url;
-
-  document.getElementById("browserFrame").src=url;
-
-}
-
-
-function saveAccount(){
-
-  const account={
-
-    name:document.getElementById("accountName").value,
-
-    email:document.getElementById("accountEmail").value,
-
-    password:document.getElementById("accountPassword").value
-
-  };
-
-  localStorage.setItem(
-    "rohamAccount",
-    JSON.stringify(account)
-  );
-
-  toast("حساب Roham ذخیره شد");
-
-}
-
-
-function deleteAccount(){
-
-  localStorage.removeItem("rohamAccount");
-
-  toast("حساب Roham حذف شد");
-
-}
-
+/* CAMERA */
 
 let cameraStream=null;
+let facing="environment";
 
+async function startCamera(){
 
-async function startCamera(mode){
+  if(!navigator.mediaDevices?.getUserMedia){
+    alert("دوربین در این مرورگر در دسترس نیست.");
+    return;
+  }
 
   try{
 
-    if(cameraStream)
+    if(cameraStream){
       cameraStream.getTracks().forEach(t=>t.stop());
+    }
 
     cameraStream=
       await navigator.mediaDevices.getUserMedia({
-
         video:{
-          facingMode:mode
+          facingMode:{
+            ideal:facing
+          }
         },
-
         audio:false
-
       });
 
-    document.getElementById("cameraVideo").srcObject=
-      cameraStream;
+    const video=document.getElementById("cameraVideo");
 
-  }catch(e){
+    video.srcObject=cameraStream;
 
-    toast("دسترسی دوربین داده نشد");
+  }catch(error){
 
+    alert(
+      "دسترسی دوربین داده نشد یا دوربین در دسترس نیست."
+    );
+
+    console.error(error);
   }
+}
 
+function flipCamera(){
+
+  facing=
+    facing==="environment"
+      ?"user"
+      :"environment";
+
+  startCamera();
+}
+
+function takePhoto(){
+
+  const video=document.getElementById("cameraVideo");
+  const canvas=document.getElementById("photoCanvas");
+
+  if(!video.videoWidth)return;
+
+  canvas.width=video.videoWidth;
+  canvas.height=video.videoHeight;
+
+  const ctx=canvas.getContext("2d");
+
+  ctx.drawImage(
+    video,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  const image=canvas.toDataURL("image/jpeg",.92);
+
+  const a=document.createElement("a");
+  a.href=image;
+  a.download="Roham-Photo-"+Date.now()+".jpg";
+  a.click();
+}
+
+function stopCamera(){
+
+  if(cameraStream){
+
+    cameraStream
+      .getTracks()
+      .forEach(track=>track.stop());
+
+    cameraStream=null;
+  }
+}
+
+function closeCamera(){
+  stopCamera();
+  closeApp("camera");
 }
 
 
-let recorder=null;
-let chunks=[];
+/* STORAGE */
 
+function bytesToGB(bytes){
+  return bytes/(1024**3);
+}
 
-async function startRecorder(){
+function formatGB(bytes){
+
+  const gb=bytesToGB(bytes);
+
+  if(gb<1){
+    return (bytes/(1024**2)).toFixed(1)+" MB";
+  }
+
+  return gb.toFixed(2)+" GB";
+}
+
+async function updateStorage(){
+
+  if(!navigator.storage?.estimate){
+
+    document.getElementById("storageUsed").textContent=
+      "در دسترس نیست";
+
+    return;
+  }
 
   try{
 
-    const stream=
-      await navigator.mediaDevices.getUserMedia({
-        audio:true
-      });
+    const estimate=
+      await navigator.storage.estimate();
 
-    chunks=[];
+    const usage=estimate.usage || 0;
+    const quota=estimate.quota || 0;
 
-    recorder=new MediaRecorder(stream);
-
-    recorder.ondataavailable=e=>{
-      if(e.data.size)
-        chunks.push(e.data);
-    };
-
-    recorder.onstop=()=>{
-
-      const blob=
-        new Blob(chunks,{type:"audio/webm"});
-
-      const url=
-        URL.createObjectURL(blob);
-
-      document.getElementById("recordings").innerHTML+=
-        `
-        <div class="card">
-          <audio controls src="${url}"></audio>
-        </div>
-        `;
-
-      stream.getTracks().forEach(t=>t.stop());
-
-    };
-
-    recorder.start();
-
-    document.getElementById("recordStatus").textContent=
-      "در حال ضبط...";
-
-  }catch(e){
-
-    toast("دسترسی میکروفون داده نشد");
-
-  }
-
-}
-
-
-function stopRecorder(){
-
-  if(recorder && recorder.state!=="inactive"){
-
-    recorder.stop();
-
-    document.getElementById("recordStatus").textContent=
-      "ضبط متوقف شد";
-
-  }
-
-}
-
-
-function saveNote(){
-
-  localStorage.setItem(
-    "rohamNote",
-    document.getElementById("noteText").value
-  );
-
-  toast("یادداشت ذخیره شد");
-
-}
-
-
-function addContact(){
-
-  const contacts=
-    JSON.parse(
-      localStorage.getItem("rohamContacts")||"[]"
+    const free=Math.max(
+      quota-usage,
+      0
     );
 
-  contacts.push({
+    const percent=
+      quota
+      ? Math.min(
+          100,
+          (usage/quota)*100
+        )
+      : 0;
 
-    name:
-      document.getElementById("contactName").value,
+    document.getElementById("storageUsed").textContent=
+      formatGB(usage);
 
-    number:
-      document.getElementById("contactNumber").value
+    document.getElementById("storageUsed2").textContent=
+      formatGB(usage);
 
+    document.getElementById("storageQuota").textContent=
+      formatGB(quota);
+
+    document.getElementById("storageFree").textContent=
+      formatGB(free)+" باقی مانده";
+
+    document.getElementById("storageFree2").textContent=
+      formatGB(free);
+
+    document.getElementById("storageText").textContent=
+      percent.toFixed(1)+"٪ از سهمیه Roham استفاده شده";
+
+    document.getElementById("storageBar").style.width=
+      percent+"%";
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById("storageUsed").textContent=
+      "خطا";
+  }
+}
+
+
+/* FILES */
+
+document
+  .getElementById("filePicker")
+  .addEventListener("change",e=>{
+
+    const file=e.target.files[0];
+
+    if(!file)return;
+
+    document.getElementById("fileName")
+      .textContent=file.name;
+
+    document.getElementById("fileSize")
+      .textContent=
+      formatGB(file.size);
   });
 
+
+/* SETTINGS */
+
+function toggleSwitch(id){
+
+  const el=document.getElementById(id);
+
+  if(!el)return;
+
+  el.classList.toggle("on");
+}
+
+
+/* ACCOUNT */
+
+function saveAccount(){
+
+  const name=
+    document.getElementById("accountName").value.trim();
+
+  const email=
+    document.getElementById("accountEmail").value.trim();
+
   localStorage.setItem(
-    "rohamContacts",
-    JSON.stringify(contacts)
+    "rohamAccount",
+    JSON.stringify({
+      name,
+      email
+    })
   );
 
-  renderContacts();
-
+  document.getElementById("accountStatus")
+    .textContent=
+    "حساب Roham روی این دستگاه ذخیره شد.";
 }
 
-
-function renderContacts(){
-
-  const list=document.getElementById("contactsList");
-
-  if(!list)return;
-
-  const contacts=
-    JSON.parse(
-      localStorage.getItem("rohamContacts")||"[]"
-    );
-
-  list.innerHTML=
-    contacts.map(c=>
-      `
-      <div class="card">
-        👤 ${c.name}<br>
-        📞 ${c.number}
-      </div>
-      `
-    ).join("");
-
-}
-
-
-function calculate(){
-
-  const expression=
-    document.getElementById("calculatorInput").value;
+function loadAccount(){
 
   try{
 
-    const result=
-      Function(
-        '"use strict";return ('+expression+')'
-      )();
+    const data=
+      JSON.parse(
+        localStorage.getItem("rohamAccount") || "{}"
+      );
 
-    document.getElementById("calculatorResult")
-      .textContent=result;
+    document.getElementById("accountName").value=
+      data.name || "";
 
-  }catch{
+    document.getElementById("accountEmail").value=
+      data.email || "";
 
-    document.getElementById("calculatorResult")
-      .textContent="عبارت نامعتبر است";
+    document.getElementById("accountStatus")
+      .textContent=
+      data.name
+        ?"حساب Roham ذخیره شده است."
+        :"هنوز حسابی ذخیره نشده است.";
 
+  }catch{}
+}
+
+
+/* BROWSER */
+
+function loadBrowser(){
+
+  let url=
+    document.getElementById("browserUrl")
+      .value.trim();
+
+  if(!url)return;
+
+  if(!/^https?:\/\//i.test(url)){
+    url="https://www.google.com/search?igu=1&q="+
+      encodeURIComponent(url);
   }
 
+  document.getElementById("browserFrame").src=url;
 }
 
 </script>
 
 </body>
 </html>
-```
